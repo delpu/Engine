@@ -305,7 +305,7 @@ namespace Intersect.Client.Entities.Events
             base.DrawName(
                 textColor: textColor ?? new Color(CustomColors.Names.Events.Name),
                 borderColor: borderColor ?? new Color(CustomColors.Names.Events.Outline),
-                backgroundColor: backgroundColor ?? new Color(CustomColors.Names.Events.Background)
+                backgroundColor: backgroundColor ?? Color.Transparent//new Color(CustomColors.Names.Events.Background)
             );
         }
 
