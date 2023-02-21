@@ -989,7 +989,14 @@ namespace Intersect.Server.Entities
                 }
                 else
                 {
-                    classVital = classDescriptor.BaseVital[vital] + classDescriptor.VitalIncrease[vital] * (Level - 1);
+                    if (vital == (int)Vitals.Health)
+                    {
+                        classVital = classDescriptor.BaseVital[vital] + (classDescriptor.VitalIncrease[vital] * StatPointAllocations[2]);
+                    }
+                    else
+                    {
+                        classVital = classDescriptor.BaseVital[vital] + (classDescriptor.VitalIncrease[vital] * StatPointAllocations[3]);
+                    }
                 }
             }
 
