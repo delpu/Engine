@@ -1364,7 +1364,7 @@ namespace Intersect.Client.Entities
                 if (color != null)
                 {
                     textColor = color?.Name;
-                    backgroundColor = backgroundColor ?? color?.Background;
+                    backgroundColor = backgroundColor ??  Color.Transparent;// color?.Background;
                     borderColor = borderColor ?? color?.Outline;
                 }
             }

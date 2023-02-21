@@ -2277,19 +2277,19 @@ namespace Intersect.Client.Entities
                 {
                     textColor = CustomColors.Names.Players["Moderator"].Name;
                     borderColor = CustomColors.Names.Players["Moderator"].Outline;
-                    backgroundColor = CustomColors.Names.Players["Moderator"].Background;
+                    //backgroundColor = CustomColors.Names.Players["Moderator"].Background;
                 }
                 else if (Aggression == 2) //Admin
                 {
                     textColor = CustomColors.Names.Players["Admin"].Name;
                     borderColor = CustomColors.Names.Players["Admin"].Outline;
-                    backgroundColor = CustomColors.Names.Players["Admin"].Background;
+                   // backgroundColor = CustomColors.Names.Players["Admin"].Background;
                 }
                 else //No Power
                 {
                     textColor = CustomColors.Names.Players["Normal"].Name;
                     borderColor = CustomColors.Names.Players["Normal"].Outline;
-                    backgroundColor = CustomColors.Names.Players["Normal"].Background;
+                    //backgroundColor = CustomColors.Names.Players["Normal"].Background;
                 }
             }
 
