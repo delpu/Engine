@@ -953,28 +953,30 @@ namespace Intersect.Server.Entities
                 return;
             }
 
-            foreach (Vitals vital in Enum.GetValues(typeof(Vitals)))
+            var vital = Vitals.Health;
+
+            if (vital >= Vitals.VitalCount)
             {
-                if (vital >= Vitals.VitalCount)
-                {
-                    continue;
-                }
-
-                var vitalId = (int) vital;
-                var vitalValue = GetVital(vital);
-                var maxVitalValue = GetMaxVital(vital);
-                if (vitalValue >= maxVitalValue)
-                {
-                    continue;
-                }
-
-                var vitalRegenRate = (playerClass.VitalRegen[vitalId] + GetEquipmentVitalRegen(vital)) / 100f;
-                var regenValue = (int) Math.Max(1, maxVitalValue * vitalRegenRate) *
-                                 Math.Abs(Math.Sign(vitalRegenRate));
-
-                AddVital(vital, regenValue);
+                return;
             }
+
+            var vitalId = (int)vital;
+            var vitalValue = GetVital(vital);
+            var maxVitalValue = GetMaxVital(vital);
+            if (vitalValue >= maxVitalValue)
+            {
+                return;
+            }
+
+            var vitalRegenRate = (playerClass.VitalRegen[vitalId] + GetEquipmentVitalRegen(vital)) / 100f;
+            var regenValue = (int)Math.Max(1, maxVitalValue * vitalRegenRate) *
+                             Math.Abs(Math.Sign(vitalRegenRate));
+
+            AddVital(vital, regenValue);
+
         }
+
+       
 
         public override int GetMaxVital(int vital)
         {
