@@ -534,10 +534,10 @@ namespace Intersect.Client.Entities
             {
                 time *= PythagoreanMultiplier;
             }
-            if (IsBlocking)
-            {
-                time += time * Options.BlockingSlow;
-            }
+           // if (IsBlocking)
+            //{
+           //     time += time * Options.BlockingSlow;
+          //  }
 
             return Math.Min(1000f, time);
         }
@@ -547,6 +547,10 @@ namespace Intersect.Client.Entities
         //Movement Processing
         public virtual bool Update()
         {
+            if (IsBlocking)
+            {
+                return false;
+            }
             if (mDisposed)
             {
                 LatestMap = null;

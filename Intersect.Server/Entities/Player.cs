@@ -943,6 +943,41 @@ namespace Intersect.Server.Entities
             PacketSender.SendInventory(this);
         }
 
+        public override void ProcessRecharge()
+        {
+            Debug.Assert(ClassBase.Lookup != null, "ClassBase.Lookup != null");
+                var playerClass = ClassBase.Get(ClassId);
+                if (playerClass?.VitalRegen == null)
+            
+                {
+               
+                    return;
+            
+                }
+
+                var vital = Vitals.Mana;
+                if (vital >= Vitals.VitalCount)
+                {
+                    
+                    return;
+                }
+
+                var vitalId = (int)vital;
+                var vitalValue = GetVital(vital);
+                var maxVitalValue = GetMaxVital(vital);
+            
+                if (vitalValue >= maxVitalValue)
+                {
+                    return;
+                }
+
+                var vitalRegenRate = (playerClass.VitalRegen[vitalId] + GetEquipmentVitalRegen(vital)) / 100f + (BaseStats[3] + StatPointAllocations[3]) / 100f;
+                //var vitalRegenRate = (GetEquipmentVitalRegen(vital)) / 100f + (BaseStats[3] + StatPointAllocations[3]) / 1000f;
+                var regenValue = (int)Math.Max(1, maxVitalValue * vitalRegenRate) *
+                                 Math.Abs(Math.Sign(vitalRegenRate));
+                AddVital(vital, regenValue);
+        }
+
         public override void ProcessRegen()
         {
             Debug.Assert(ClassBase.Lookup != null, "ClassBase.Lookup != null");
@@ -6472,6 +6507,12 @@ namespace Intersect.Server.Entities
 
         public override int CanMove(Direction moveDir)
         {
+
+            if (Blocking)
+            {
+                return -5;
+            }
+
             //If crafting or locked by event return blocked
             if (OpenCraftingTableId != default && CraftingState != default)
             {

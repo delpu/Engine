@@ -55,12 +55,12 @@ namespace Intersect.Client.Core.Controls
 
         public void ResetDefaults()
         {
-            CreateControlMap(Control.MoveUp, new ControlValue(Keys.None, Keys.Up), new ControlValue(Keys.None, Keys.W));
-            CreateControlMap(Control.MoveDown, new ControlValue(Keys.None, Keys.Down), new ControlValue(Keys.None, Keys.S));
-            CreateControlMap(Control.MoveLeft, new ControlValue(Keys.None, Keys.Left), new ControlValue(Keys.None, Keys.A));
-            CreateControlMap(Control.MoveRight, new ControlValue(Keys.None, Keys.Right), new ControlValue(Keys.None, Keys.D));
-            CreateControlMap(Control.AttackInteract, new ControlValue(Keys.None, Keys.E), new ControlValue(Keys.None, Keys.LButton));
-            CreateControlMap(Control.Block, new ControlValue(Keys.None, Keys.Q), new ControlValue(Keys.None, Keys.RButton));
+            CreateControlMap(Control.MoveUp, new ControlValue(Keys.None, Keys.Up), ControlValue.Default);
+            CreateControlMap(Control.MoveDown, new ControlValue(Keys.None, Keys.Down), ControlValue.Default);
+            CreateControlMap(Control.MoveLeft, new ControlValue(Keys.None, Keys.Left), ControlValue.Default);
+            CreateControlMap(Control.MoveRight, new ControlValue(Keys.None, Keys.Right), ControlValue.Default);
+            CreateControlMap(Control.AttackInteract, new ControlValue(Keys.None, Keys.Z), ControlValue.Default);
+            CreateControlMap(Control.Block, new ControlValue(Keys.None, Keys.C), ControlValue.Default);
             CreateControlMap(Control.Running, new ControlValue(Keys.None, Keys.Shift), ControlValue.Default);
             CreateControlMap(Control.AutoTarget, new ControlValue(Keys.None, Keys.Tab), ControlValue.Default);
             CreateControlMap(Control.PickUp, new ControlValue(Keys.None, Keys.Space), ControlValue.Default);
@@ -79,7 +79,7 @@ namespace Intersect.Client.Core.Controls
             CreateControlMap(Control.OpenMenu, new ControlValue(Keys.None, Keys.Escape), ControlValue.Default);
             CreateControlMap(Control.OpenInventory, new ControlValue(Keys.None, Keys.I), ControlValue.Default);
             CreateControlMap(Control.OpenQuests, new ControlValue(Keys.None, Keys.L), ControlValue.Default);
-            CreateControlMap(Control.OpenCharacterInfo, new ControlValue(Keys.None, Keys.C), ControlValue.Default);
+            CreateControlMap(Control.OpenCharacterInfo, new ControlValue(Keys.None, Keys.N), ControlValue.Default);
             CreateControlMap(Control.OpenParties, new ControlValue(Keys.None, Keys.P), ControlValue.Default);
             CreateControlMap(Control.OpenSpells, new ControlValue(Keys.None, Keys.K), ControlValue.Default);
             CreateControlMap(Control.OpenFriends, new ControlValue(Keys.None, Keys.F), ControlValue.Default);

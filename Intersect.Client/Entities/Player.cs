@@ -238,7 +238,11 @@ namespace Intersect.Client.Entities
                 {
                     ProcessDirectionalInput();
                 }
-
+                //Holding block button for "auto blocking"
+                if (Controls.KeyDown(Control.Block))
+                {
+                    TryBlock();
+                }
                 if (Controls.KeyDown(Control.AttackInteract))
                 {
                     if (IsCasting)
@@ -260,11 +264,7 @@ namespace Intersect.Client.Entities
                     }
                 }
 
-                //Holding block button for "auto blocking"
-                if (Controls.KeyDown(Control.Block))
-                {
-                    TryBlock();
-                }
+          
             }
 
             if (TargetBox == default && this == Globals.Me && Interface.Interface.GameUi != default)
@@ -1167,6 +1167,11 @@ namespace Intersect.Client.Entities
                 return;
             }
 
+            if (IsBlocking)
+            {
+                return;
+            }
+
             if (Controls.KeyDown(Control.MoveUp))
             {
                 movey = 1;
@@ -1188,6 +1193,8 @@ namespace Intersect.Client.Entities
             }
 
             Running = Controls.KeyDown(Control.Running);
+
+           
 
             Globals.Me.MoveDir = Direction.None;
             if (movex != 0f || movey != 0f)
@@ -1504,7 +1511,7 @@ namespace Intersect.Client.Entities
         private void AutoTurnToTarget(Entity en)
         {
             if (!Globals.Database.AutoTurnToTarget || !Options.Instance.PlayerOpts.EnableAutoTurnToTarget ||
-                Controls.KeyDown(Control.TurnAround))
+                Controls.KeyDown(Control.TurnAround) || Controls.KeyDown(Control.Block))
             {
                 return;
             }
@@ -1535,6 +1542,7 @@ namespace Intersect.Client.Entities
 
         public bool TryBlock()
         {
+
             if (IsBlocking)
             {
                 return false;
@@ -1545,14 +1553,10 @@ namespace Intersect.Client.Entities
                 return false;
             }
 
-            if (Options.ShieldIndex > -1 && Globals.Me.MyEquipment[Options.ShieldIndex] > -1)
+            if (!IsMoving)
             {
-                var item = ItemBase.Get(Globals.Me.Inventory[Globals.Me.MyEquipment[Options.ShieldIndex]].ItemId);
-                if (item != null)
-                {
-                    PacketSender.SendBlock(true);
-                    return true;
-                }
+                PacketSender.SendBlock(true);
+                return true;
             }
 
             return false;
@@ -2014,6 +2018,10 @@ namespace Intersect.Client.Entities
         //Movement Processing
         private void ProcessDirectionalInput()
         {
+            if (Controls.KeyDown(Control.Block))
+            {
+                return;
+            }
             //Check if player is crafting
             if (Globals.InCraft == true)
             {
@@ -2038,6 +2046,11 @@ namespace Intersect.Client.Entities
             }
 
             if (AttackTimer > Timing.Global.Milliseconds && !Options.Instance.PlayerOpts.AllowCombatMovement)
+            {
+                return;
+            }
+
+            if (IsBlocking)
             {
                 return;
             }

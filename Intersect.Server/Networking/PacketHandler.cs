@@ -1030,7 +1030,7 @@ namespace Intersect.Server.Networking
         public void HandlePacket(Client client, BlockPacket packet)
         {
             var player = client?.Entity;
-            if (player == null)
+            if (player == null || player.IsCasting)
             {
                 return;
             }
@@ -1053,6 +1053,7 @@ namespace Intersect.Server.Networking
                     return;
                 }
             }
+           
 
             client.Entity.TryBlock(packet.Blocking);
         }

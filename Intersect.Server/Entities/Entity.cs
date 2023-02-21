@@ -196,6 +196,9 @@ namespace Intersect.Server.Entities
         public long AttackTimer { get; set; }
 
         [NotMapped, JsonIgnore]
+        public long ChargeTimer { get; set; } = Timing.Global.Milliseconds;
+
+        [NotMapped, JsonIgnore]
         public bool Blocking { get; set; }
 
         [NotMapped, JsonIgnore]
@@ -930,10 +933,10 @@ namespace Intersect.Server.Entities
             {
                 time *= PythagoreanMultiplier;
             }
-            if (Blocking)
-            {
-                time += time * Options.BlockingSlow;
-            }
+           // if (Blocking)
+          //  {
+          //      time += time * Options.BlockingSlow;
+          //  }
 
             return Math.Min(1000f, time);
         }
@@ -947,6 +950,11 @@ namespace Intersect.Server.Entities
             bool correction = false)
         {
             if (Timing.Global.Milliseconds < MoveTimer || (!Options.Combat.MovementCancelsCast && IsCasting))
+            {
+                return;
+            }
+
+            if (Blocking)
             {
                 return;
             }
@@ -1273,12 +1281,13 @@ namespace Intersect.Server.Entities
 
         public void TryBlock(bool blocking)
         {
-            if (AttackTimer < Timing.Global.Milliseconds)
+            if (ChargeTimer < Timing.Global.Milliseconds)
             {
                 if (blocking && !Blocking)
                 {
                     Blocking = true;
-                    AttackTimer = Timing.Global.Milliseconds + CalculateAttackTime();
+                    ProcessRecharge();
+                    ChargeTimer = Timing.Global.Milliseconds + (1000 - (2 * (BaseStats[3] + StatPointAllocations[3]) ));
                     PacketSender.SendEntityAttack(this, CalculateAttackTime(), true);
                 }
             }
@@ -1292,6 +1301,10 @@ namespace Intersect.Server.Entities
         public virtual bool CanAttack(Entity entity, SpellBase spell) => !IsCasting;
 
         public virtual void ProcessRegen()
+        {
+        }
+
+        public virtual void ProcessRecharge()
         {
         }
 
@@ -1899,7 +1912,7 @@ namespace Intersect.Server.Entities
             }
 
             //Check on each attack if the enemy is a player AND if they are blocking.
-            if (enemy is Player player && player.Blocking)
+         /*  if (enemy is Player player && player.Blocking)
             {
                 if (player.TryGetEquipmentSlot(Options.ShieldIndex, out var slot) && player.TryGetItemAt(slot, out var itm))
                 {
@@ -1941,7 +1954,7 @@ namespace Intersect.Server.Entities
                         PacketSender.SendActionMsg(enemy, Strings.Combat.blocked, CustomColors.Combat.Blocked);
                     }
                 }
-            }
+            } */
 
             //Calculate Damages
             if (baseDamage != 0)
