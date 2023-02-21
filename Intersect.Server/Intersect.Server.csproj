@@ -1,0 +1,134 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net462</TargetFramework>
+    <Configurations>Debug;Release;NoFody</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>AscensionGameDev.Intersect.Server</PackageId>
+    <Description>Library for the public Intersect Server API</Description>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <RootNamespace>Intersect.Server</RootNamespace>
+    <AssemblyName>Intersect Server</AssemblyName>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <FileAlignment>512</FileAlignment>
+    <GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration.ToLower())' == 'nofody'">
+    <DisableFody>true</DisableFody>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\Game\20221015235919_MultipleBonusEffectsMigration.cs" />
+    <Compile Remove="Migrations\Game\20221015235919_MultipleBonusEffectsMigration.Designer.cs" />
+    <Compile Remove="Networking\IntersectNetworkServer.cs" />
+    <Compile Remove="Networking\IntersectNetworkSocket.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Intersect.Tests.Server</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Intersect (Core)\Intersect.Core.csproj" />
+    <ProjectReference Include="..\Intersect.Network\Intersect.Network.csproj" />
+    <ProjectReference Include="..\Intersect.Server.Framework\Intersect.Server.Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(NetworkHandshakePublicKey)" />
+    <EmbeddedResource Include="$(NetworkHandshakePrivateKey)" />
+    <EmbeddedResource Include="Resources\libe_sqlite3_x64.so" />
+    <EmbeddedResource Include="Resources\libe_sqlite3.dylib" />
+    <EmbeddedResource Include="Resources\libe_sqlite3_x86.so" />
+    <EmbeddedResource Include="Resources\notifications\PasswordReset.html" />
+    <EmbeddedResource Include="Resources\e_sqlite3x64.dll" />
+    <EmbeddedResource Include="Resources\e_sqlite3x86.dll" />
+    <None Include="FodyWeavers.xml">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AscensionGameDev.Open.NAT" Version="2.1.1" />
+    <PackageReference Include="AscensionGameDev.WebApiThrottle" Version="1.5.4.2" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.6.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Markdown" Version="2.2.1" />
+    <PackageReference Include="Microsoft.AspNet.Cors" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Owin" Version="5.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.OwinSelfHost" Version="5.2.9" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="1.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="2.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.0.1" />
+    <PackageReference Include="Microsoft.Owin" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Cors" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Host.HttpListener" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Hosting" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Security" Version="4.2.2" />
+    <PackageReference Include="Microsoft.Owin.Security.OAuth" Version="4.2.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Validation" Version="15.5.31" />
+    <PackageReference Include="Mono.Data.Sqlite.Portable" Version="1.0.3.5" />
+    <PackageReference Include="MySqlConnector" Version="0.45.1" />
+    <PackageReference Include="NuGet.CommandLine" Version="4.9.6" />
+    <PackageReference Include="Owin" Version="1.0" />
+    <PackageReference Include="Owin.Security.AesDataProtectorProvider" Version="1.1.2" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.2" />
+    <PackageReference Include="Pomelo.JsonObject" Version="2.0.0" />
+    <PackageReference Include="Remotion.Linq" Version="2.2.0" />
+    <PackageReference Include="SmartThreadPool.dll" Version="2.2.6" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="1.1.11" />
+    <PackageReference Include="SQLitePCLRaw.core" Version="1.1.11" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.linux" Version="1.1.11" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.osx" Version="1.1.11" />
+    <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3.v110_xp" Version="1.1.11" />
+    <PackageReference Include="SQLitePCLRaw.provider.e_sqlite3.net45" Version="1.1.11" />
+    <PackageReference Include="Swashbuckle.Core" Version="5.6.0" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.6" />
+    <PackageReference Include="TaskParallelLibrary" Version="1.0.2856.0" />
+    <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
+  </ItemGroup>
+</Project>
