@@ -570,7 +570,8 @@ namespace Intersect.Client.MonoGame.Graphics
             GameShader shader = null,
             float rotationDegrees = 0,
             bool isUi = false,
-            bool drawImmediate = false
+            bool drawImmediate = false,
+            bool dozoom = false
         )
         {
             var texture = tex?.GetTexture();
@@ -642,6 +643,15 @@ namespace Intersect.Client.MonoGame.Graphics
             void Draw(FloatRect currentView, GameRenderTexture targetObject)
             {
                 StartSpritebatch(currentView, blendMode, shader, targetObject, false, null, drawImmediate);
+
+                var scale = new Vector2(tw / sw, th / sh);
+
+                if (dozoom)
+                {
+                    var zoomRatio = 1.8F;
+                    scale.X *= zoomRatio;
+                    scale.Y *= zoomRatio;
+                }
 
                 mSpriteBatch.Draw((Texture2D)texture, new Vector2(tx, ty),
                     new XNARectangle((int)sx, (int)sy, (int)sw, (int)sh), color, rotationDegrees, origin,

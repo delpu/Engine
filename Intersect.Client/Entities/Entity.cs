@@ -1091,7 +1091,7 @@ namespace Intersect.Client.Entities
                 //Check for player
                 if (string.Equals("Player", paperdoll, StringComparison.Ordinal))
                 {
-                    Graphics.DrawGameTexture(texture, srcRectangle, destRectangle, renderColor);
+                    Graphics.DrawGameTexture(texture, srcRectangle, destRectangle, renderColor, dozoom: true);
                 }
                 else if (equipSlot > -1)
                 {
