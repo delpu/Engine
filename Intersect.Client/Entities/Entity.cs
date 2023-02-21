@@ -154,6 +154,8 @@ namespace Intersect.Client.Entities
 
         public bool Passable { get; set; }
 
+        public bool Running;
+
         //Rendering Variables
         public HashSet<Entity> RenderList { get; set; }
 
@@ -523,6 +525,11 @@ namespace Intersect.Client.Entities
         public virtual float GetMovementTime()
         {
             var time = 1000f / (float) (1 + Math.Log(Stat[(int) Stats.Speed]));
+
+            if (Running)
+            {
+                time *= 0.5f;
+            }
             if (Dir > Direction.Right)
             {
                 time *= PythagoreanMultiplier;
@@ -1829,7 +1836,14 @@ namespace Intersect.Client.Entities
 
             if (IsMoving)
             {
-                SpriteAnimation = SpriteAnimations.Normal;
+                if (Running)
+                {
+                    SpriteAnimation = SpriteAnimations.Run;
+                }
+                else
+                {
+                    SpriteAnimation = SpriteAnimations.Normal;
+                }
                 LastActionTime = Timing.Global.Milliseconds;
             }
             else if (AttackTimer > Timing.Global.Milliseconds && !IsBlocking) //Attacking
@@ -1916,7 +1930,7 @@ namespace Intersect.Client.Entities
             {
                 ResetSpriteFrame();
             }
-            else if (SpriteAnimation == SpriteAnimations.Idle)
+            else if (SpriteAnimation == SpriteAnimations.Idle || SpriteAnimation == SpriteAnimations.Run)
             {
                 if (SpriteFrameTimer + Options.Instance.Sprites.IdleFrameDuration < Timing.Global.Milliseconds)
                 {

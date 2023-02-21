@@ -40,7 +40,7 @@ namespace Intersect.Client.Networking
 
         public static void SendMove()
         {
-            Network.SendPacket(new MovePacket(Globals.Me.MapId, Globals.Me.X, Globals.Me.Y, (byte)Globals.Me.Dir));
+            Network.SendPacket(new MovePacket(Globals.Me.MapId, Globals.Me.X, Globals.Me.Y, (byte)Globals.Me.Dir, Globals.Me.Running));
         }
 
         public static void SendChatMsg(string msg, byte channel)

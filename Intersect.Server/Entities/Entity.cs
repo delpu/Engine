@@ -39,6 +39,7 @@ namespace Intersect.Server.Entities
 
         [NotMapped, JsonIgnore] public Entity Target { get; set; } = null;
 
+        [NotMapped, JsonIgnore] public bool Running;
         public Entity() : this(Guid.NewGuid(), Guid.Empty)
         {
         }
@@ -921,6 +922,10 @@ namespace Intersect.Server.Entities
         public virtual float GetMovementTime()
         {
             var time = 1000f / (float) (1 + Math.Log(Stat[(int) Stats.Speed].Value()));
+            if (Running)
+            {
+                time *= 0.5f;
+            }
             if (Dir > Direction.Right)
             {
                 time *= PythagoreanMultiplier;

@@ -1187,6 +1187,7 @@ namespace Intersect.Client.Entities
                 movex = 1;
             }
 
+            Running = Controls.KeyDown(Control.Running);
 
             Globals.Me.MoveDir = Direction.None;
             if (movex != 0f || movey != 0f)

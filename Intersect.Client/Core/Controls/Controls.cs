@@ -61,6 +61,7 @@ namespace Intersect.Client.Core.Controls
             CreateControlMap(Control.MoveRight, new ControlValue(Keys.None, Keys.Right), new ControlValue(Keys.None, Keys.D));
             CreateControlMap(Control.AttackInteract, new ControlValue(Keys.None, Keys.E), new ControlValue(Keys.None, Keys.LButton));
             CreateControlMap(Control.Block, new ControlValue(Keys.None, Keys.Q), new ControlValue(Keys.None, Keys.RButton));
+            CreateControlMap(Control.Running, new ControlValue(Keys.None, Keys.Shift), ControlValue.Default);
             CreateControlMap(Control.AutoTarget, new ControlValue(Keys.None, Keys.Tab), ControlValue.Default);
             CreateControlMap(Control.PickUp, new ControlValue(Keys.None, Keys.Space), ControlValue.Default);
             CreateControlMap(Control.Enter, new ControlValue(Keys.None, Keys.Enter), ControlValue.Default);
