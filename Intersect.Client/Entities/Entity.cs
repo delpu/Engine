@@ -1975,7 +1975,7 @@ namespace Intersect.Client.Entities
             {
                 // No override for this
                 case SpriteAnimations.Normal: break;
-
+                case SpriteAnimations.Run: break;
                 case SpriteAnimations.Idle: break;
                 case SpriteAnimations.Attack:
                     if (this is Player player && ClassBase.TryGet(player.Class, out var classDescriptor))

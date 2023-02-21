@@ -1,4 +1,4 @@
-﻿using Intersect.Network.Packets.Server;
+using Intersect.Network.Packets.Server;
 using Intersect.Server.Entities;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace Intersect.Server.Maps
                 {
                     mMovements.Add(id, new List<EntityMovePacket>());
                 }
-                mMovements[id].Add(new EntityMovePacket(en.Id, en.GetEntityType(), en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, correction));
+                mMovements[id].Add(new EntityMovePacket(en.Id, en.GetEntityType(), en.MapId, (byte)en.X, (byte)en.Y, (byte)en.Dir, correction, en.Running));
             }
         }
 
