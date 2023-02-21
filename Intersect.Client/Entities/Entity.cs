@@ -1511,7 +1511,7 @@ namespace Intersect.Client.Entities
         {
             get
             {
-                if (LatestMap == default || !ShouldDraw)
+                if (LatestMap == default || !ShouldDraw || Vital[(int)Vitals.Health] < 1 || Vital[(int)Vitals.Health] == MaxVital[(int)Vitals.Health])
                 {
                     return true;
                 }
