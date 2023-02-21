@@ -1127,31 +1127,27 @@ namespace Intersect.Client.Entities
             }
         }
 
-        private int PickSpriteRow(Direction direction)
+        private static int PickSpriteRow(Direction direction)
         {
             switch (direction)
             {
                 case Direction.Down:
-                case Direction.DownLeft when mLastDirection != Direction.Left:
-                case Direction.DownRight when mLastDirection != Direction.Right:
                     return 0;
                 case Direction.Left:
-                case Direction.DownLeft when mLastDirection == Direction.Left:
-                case Direction.UpLeft when mLastDirection == Direction.Left:
+                case Direction.UpLeft:
+                case Direction.DownLeft:
                     return 1;
                 case Direction.Right:
-                case Direction.DownRight when mLastDirection == Direction.Right:
-                case Direction.UpRight when mLastDirection == Direction.Right:
+                case Direction.DownRight:
+                case Direction.UpRight:
                     return 2;
                 case Direction.Up:
-                case Direction.UpLeft when mLastDirection != Direction.Left:
-                case Direction.UpRight when mLastDirection != Direction.Right:
                     return 3;
                 default:
                     return 0;
             }
         }
-        
+
         public void DrawChatBubbles()
         {
             //Don't draw if the entity is hidden
