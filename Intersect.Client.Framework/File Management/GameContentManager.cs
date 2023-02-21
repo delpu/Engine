@@ -50,6 +50,8 @@ namespace Intersect.Client.Framework.File_Management
 
         protected Dictionary<string, IAsset> mMiscDict = new Dictionary<string, IAsset>();
 
+        protected Dictionary<string, IAsset> mTagDict = new Dictionary<string, IAsset>();
+
         protected Dictionary<string, IAsset> mMusicDict = new Dictionary<string, IAsset>();
 
         protected Dictionary<string, IAsset> mPaperdollDict = new Dictionary<string, IAsset>();
@@ -61,6 +63,7 @@ namespace Intersect.Client.Framework.File_Management
         protected Dictionary<string, IAsset> mSoundDict = new Dictionary<string, IAsset>();
 
         protected Dictionary<KeyValuePair<UI, string>, string> mUiDict = new Dictionary<KeyValuePair<UI, string>, string>();
+
 
         /// <summary>
         /// Contains all indexed files and their caches from sound pack files.
@@ -102,6 +105,7 @@ namespace Intersect.Client.Framework.File_Management
             LoadResources();
             LoadPaperdolls();
             LoadMisc();
+            LoadTags();
             LoadGui();
             LoadFonts();
             LoadShaders();
@@ -132,6 +136,8 @@ namespace Intersect.Client.Framework.File_Management
         public abstract void LoadGui();
 
         public abstract void LoadMisc();
+
+        public abstract void LoadTags();
 
         public abstract void LoadFonts();
 
@@ -198,6 +204,9 @@ namespace Intersect.Client.Framework.File_Management
 
                 case TextureType.Misc:
                     return mMiscDict.Keys.ToArray();
+
+                case TextureType.Tag:
+                    return mTagDict.Keys.ToArray();
             }
 
             return null;
@@ -271,6 +280,11 @@ namespace Intersect.Client.Framework.File_Management
 
                 case TextureType.Misc:
                     textureDict = mMiscDict;
+
+                    break;
+
+                case TextureType.Tag:
+                    textureDict = mTagDict;
 
                     break;
 

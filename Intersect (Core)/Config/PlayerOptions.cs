@@ -1,4 +1,5 @@
-﻿namespace Intersect.Config
+using Intersect.Enums;
+namespace Intersect.Config
 {
     /// <summary>
     /// Contains configurable options pertaining to the way Players are handled by the engine.
@@ -111,6 +112,35 @@
         /// </summary>
         public int TradeRange { get; set; } = 6;
 
+        /// <summary>
+		/// Configures whether or not to display Player's Tags.
+		/// NOTE: Npc Tag Sprites are always loaded from the "tags" resource folder.
+		/// *Recommended sizes: 32x16, 64x32, 128x64 and so on [2:1 px]
+		/// </summary>
+		public bool ShowTags
+        {
+            get;
+            set;
+        } = false;
+
+        /// <summary>
+		/// Configures the position of the Tags. Only works if ShowTags = true.
+		/// </summary>
+		public TagPosition TagPosition
+        {
+            get;
+            set;
+        } = TagPosition.Above;
+
+        public string[] CustomTagIcons
+        {
+            get;
+            set;
+        } = {
+            "Aru",
+            "Bobby",
+            "Rick"
+        };
     }
 
 }

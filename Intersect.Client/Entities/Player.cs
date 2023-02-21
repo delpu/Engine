@@ -6,9 +6,11 @@ using Intersect.Client.Core;
 using Intersect.Client.Core.Controls;
 using Intersect.Client.Entities.Events;
 using Intersect.Client.Entities.Projectiles;
+using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Entities;
 using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Items;
+using Intersect.Client.Framework.Content;
 using Intersect.Client.General;
 using Intersect.Client.Interface.Game;
 using Intersect.Client.Interface.Game.Chat;
@@ -2527,6 +2529,66 @@ namespace Intersect.Client.Entities
                 }
 
                 return Globals.Database.PlayerOverheadHpBar;
+            }
+        }
+
+        // Tags
+        public override void DrawTag()
+        {
+            // Variables
+            string playerName = this.Name;
+            bool customPlayerTag = Options.Player.CustomTagIcons.Contains(playerName);
+            var nameSize = Graphics.Renderer.MeasureText(playerName, Graphics.EntityNameFont, 1);
+            var nameCentHorPos = (int)Math.Ceiling(Origin.X);
+            var nameVertPos = GetLabelLocation(LabelType.Name);
+            var tagPos = Options.Player.TagPosition;
+            float x, y;
+            // Feature Check
+            if (!Options.Player.ShowTags || !customPlayerTag)
+            {
+                return;
+            }
+            // Player Tags
+            else if (customPlayerTag)
+            {
+                // Lets load the player's custom tag texture right away.
+                var tagTexture = Globals.ContentManager.GetTexture(TextureType.Tag, $@"Player_{playerName}.png");
+                // If the texture is null, we do nothing.
+                if (tagTexture == null)
+                {
+                    return;
+                }
+                // Before we draw the sprite, lets have it's position set.
+                switch (tagPos)
+                {
+                    case TagPosition.Above:
+                    default:
+                        // Position the tag 2 pixels above the name label.
+                        x = nameCentHorPos - (tagTexture.GetWidth() / 2);
+                        y = nameVertPos - tagTexture.GetHeight() - 2;
+
+                        break;
+                    case TagPosition.Under:
+                        // Position the tag 2 pixels under the name label.
+                        x = nameCentHorPos - (tagTexture.GetWidth() / 2);
+                        y = nameVertPos + nameSize.Y + 2;
+
+                        break;
+                    case TagPosition.Prefix:
+                        // Position the tag as prefix (2 pixels left from the name label).
+                        x = nameCentHorPos - (nameSize.X / 2) - tagTexture.GetWidth() - 6;
+                        y = nameVertPos + (nameSize.Y / 2) - (tagTexture.GetHeight() / 2);
+
+                        break;
+                    case TagPosition.Suffix:
+                        // Position the tag as suffix (2 pixels right from the name label).
+                        x = nameCentHorPos + (nameSize.X / 2) + 6;
+                        y = nameVertPos + (nameSize.Y / 2) - (tagTexture.GetHeight() / 2);
+
+                        break;
+                }
+                // And finally, we draw the tag.
+                Graphics.DrawGameTexture(tagTexture, x, y);
             }
         }
 
