@@ -1074,7 +1074,7 @@ namespace Intersect.Client.Entities
 
             var srcRectangle = new FloatRect(frame * frameWidth, d * frameHeight, frameWidth, frameHeight);
             var destRectangle = new FloatRect(
-                (int)Math.Ceiling(Origin.X - frameWidth / 2f),
+                (int)Math.Ceiling(Origin.X - frameWidth ),
                 (int)Math.Ceiling(Origin.Y - frameHeight),
                 srcRectangle.Width,
                 srcRectangle.Height
@@ -1758,13 +1758,13 @@ namespace Intersect.Client.Entities
             );
 
             var destRectangle = new FloatRect(
-                (float)Math.Ceiling(WorldPos.X + (WorldPos.Width - targetTexture.GetWidth() / 2) / 2),
-                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight()) / 2),
+                (float)Math.Ceiling(WorldPos.X + (WorldPos.Width - targetTexture.GetWidth() / 2) / 8),
+                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight() / 12) / 2),
                 srcRectangle.Width,
                 srcRectangle.Height
             );
 
-            Graphics.DrawGameTexture(targetTexture, srcRectangle, destRectangle, Color.White);
+            Graphics.DrawGameTexture(targetTexture, srcRectangle, destRectangle, Color.White, dozoom: false);
         }
 
         public virtual bool CanBeAttacked => true;

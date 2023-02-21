@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 using Intersect.Client.Framework.Graphics;
@@ -95,7 +95,7 @@ namespace Intersect.Client.MonoGame.Graphics
 
             if (mPackFrame != null)
             {
-                ((MonoTexture) mPackFrame.PackTexture)?.LoadTexture();
+                ((MonoTexture)mPackFrame.PackTexture)?.LoadTexture();
 
                 return;
             }
@@ -236,7 +236,7 @@ namespace Intersect.Client.MonoGame.Graphics
             var pack = GetTexturePackFrame();
             if (pack != null)
             {
-                tex = (Texture2D) mPackFrame.PackTexture.GetTexture();
+                tex = (Texture2D)mPackFrame.PackTexture.GetTexture();
                 if (pack.Rotated)
                 {
                     var z = x1;

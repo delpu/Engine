@@ -1,4 +1,4 @@
-﻿using Intersect.Client.Framework.Graphics;
+using Intersect.Client.Framework.Graphics;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -71,12 +71,12 @@ namespace Intersect.Client.MonoGame.Graphics
 
         public override void End()
         {
-            ((MonoRenderer) Core.Graphics.Renderer).EndSpriteBatch();
+            ((MonoRenderer)Core.Graphics.Renderer).EndSpriteBatch();
         }
 
         public override void Clear(Color color)
         {
-            ((MonoRenderer) Core.Graphics.Renderer).EndSpriteBatch();
+            ((MonoRenderer)Core.Graphics.Renderer).EndSpriteBatch();
             mGraphicsDevice.SetRenderTarget(mRenderTexture);
             mGraphicsDevice.Clear(MonoRenderer.ConvertColor(color));
             mGraphicsDevice.SetRenderTarget(null);
