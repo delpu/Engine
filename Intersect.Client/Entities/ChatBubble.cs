@@ -31,6 +31,8 @@ namespace Intersect.Client.Entities
 
         private Rectangle mTextureBounds;
 
+        public Entity Owner => mOwner;
+
         public ChatBubble(Entity owner, string text)
         {
             if (string.IsNullOrEmpty(text))

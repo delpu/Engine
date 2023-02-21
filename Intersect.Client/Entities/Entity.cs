@@ -1711,7 +1711,7 @@ namespace Intersect.Client.Entities
             {
                 return;
             }
-
+            mChatBubbles.RemoveAll(bubble => bubble.Owner == this);
             mChatBubbles.Add(new ChatBubble(this, text));
         }
 
