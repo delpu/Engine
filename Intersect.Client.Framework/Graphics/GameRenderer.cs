@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -75,7 +75,8 @@ namespace Intersect.Client.Framework.Graphics
             GameShader shader = null,
             float rotationDegrees = 0.0f,
             bool isUi = false,
-            bool drawImmediate = false
+            bool drawImmediate = false,
+            bool dozoom = false
         );
 
         public int Fps => GetFps();
