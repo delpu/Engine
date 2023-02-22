@@ -1038,7 +1038,7 @@ namespace Intersect.Client.Entities
             {
                 var spellBase = SpellBase.Get(Spells[index].Id);
 
-                if (spellBase.CastDuration > 0 && (Options.Instance.CombatOpts.MovementCancelsCast && Globals.Me.IsMoving))
+                if (spellBase.CastDuration > 0 && (Options.Instance.CombatOpts.MovementCancelsCast && Globals.Me.IsMoving && !spellBase.IgnoreCancelOnMoving))
                 {
                     return;
                 }
@@ -2065,7 +2065,7 @@ namespace Intersect.Client.Entities
                 if (!IsMoving && MoveTimer < Timing.Global.Milliseconds &&
                     (Options.Combat.MovementCancelsCast || !IsCasting))
                 {
-                    if (Options.Combat.MovementCancelsCast)
+                    if (Options.Combat.MovementCancelsCast && !IgnoreOnMoveSpell())
                     {
                         CastTime = 0;
                     }
