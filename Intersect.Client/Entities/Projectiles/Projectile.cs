@@ -243,13 +243,13 @@ namespace Intersect.Client.Entities.Projectiles
                         case Direction.Right:
                             return Direction.Left;
                         case Direction.UpLeft:
-                            return Direction.DownLeft;
+                            return Direction.Left;
                         case Direction.UpRight:
-                            return Direction.DownRight;
+                            return Direction.Right;
                         case Direction.DownRight:
-                            return Direction.UpLeft;
+                            return Direction.Left;
                         case Direction.DownLeft:
-                            return Direction.UpRight;
+                            return Direction.Right;
                         default:
                             return projectionDir;
                     }
@@ -265,13 +265,13 @@ namespace Intersect.Client.Entities.Projectiles
                         case Direction.Right:
                             return Direction.Up;
                         case Direction.UpLeft:
-                            return Direction.DownRight;
+                            return Direction.Right;
                         case Direction.UpRight:
-                            return Direction.UpLeft;
+                            return Direction.Left;
                         case Direction.DownRight:
-                            return Direction.DownLeft;
+                            return Direction.Left;
                         case Direction.DownLeft:
-                            return Direction.UpRight;
+                            return Direction.Right;
                         default:
                             return projectionDir;
                     }
@@ -287,13 +287,13 @@ namespace Intersect.Client.Entities.Projectiles
                         case Direction.Right:
                             return Direction.Down;
                         case Direction.UpLeft:
-                            return Direction.UpRight;
+                            return Direction.Right;
                         case Direction.UpRight:
-                            return Direction.DownRight;
+                            return Direction.Right;
                         case Direction.DownRight:
-                            return Direction.DownLeft;
+                            return Direction.Left;
                         case Direction.DownLeft:
-                            return Direction.UpLeft;
+                            return Direction.Left;
                         default:
                             return projectionDir;
                     }
@@ -301,13 +301,13 @@ namespace Intersect.Client.Entities.Projectiles
                     switch (projectionDir)
                     {
                         case Direction.Up:
-                            return Direction.UpLeft;
+                            return Direction.Left;
                         case Direction.Down:
-                            return Direction.DownRight;
+                            return Direction.Right;
                         case Direction.Left:
-                            return Direction.DownLeft;
+                            return Direction.Left;
                         case Direction.Right:
-                            return Direction.UpRight;
+                            return Direction.Right;
                         case Direction.UpLeft:
                             return Direction.Left;
                         case Direction.UpRight:
@@ -323,13 +323,13 @@ namespace Intersect.Client.Entities.Projectiles
                     switch (projectionDir)
                     {
                         case Direction.Up:
-                            return Direction.UpRight;
+                            return Direction.Right;
                         case Direction.Down:
-                            return Direction.DownLeft;
+                            return Direction.Left;
                         case Direction.Left:
-                            return Direction.UpLeft;
+                            return Direction.Left;
                         case Direction.Right:
-                            return Direction.DownRight;
+                            return Direction.Right;
                         case Direction.UpLeft:
                             return Direction.Up;
                         case Direction.UpRight:
@@ -345,13 +345,13 @@ namespace Intersect.Client.Entities.Projectiles
                     switch (projectionDir)
                     {
                         case Direction.Up:
-                            return Direction.DownLeft;
+                            return Direction.Left;
                         case Direction.Down:
-                            return Direction.UpRight;
+                            return Direction.Right;
                         case Direction.Left:
                             return Direction.DownRight;
                         case Direction.Right:
-                            return Direction.UpLeft;
+                            return Direction.Left;
                         case Direction.UpLeft:
                             return Direction.Down;
                         case Direction.UpRight:
@@ -367,13 +367,13 @@ namespace Intersect.Client.Entities.Projectiles
                     switch (projectionDir)
                     {
                         case Direction.Up:
-                            return Direction.DownRight;
+                            return Direction.Right;
                         case Direction.Down:
-                            return Direction.UpLeft;
+                            return Direction.Left;
                         case Direction.Left:
-                            return Direction.UpRight;
+                            return Direction.Right;
                         case Direction.Right:
-                            return Direction.DownLeft;
+                            return Direction.Left;
                         case Direction.UpLeft:
                             return Direction.Right;
                         case Direction.UpRight:

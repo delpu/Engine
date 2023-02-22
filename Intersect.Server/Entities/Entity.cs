@@ -2384,10 +2384,23 @@ namespace Intersect.Server.Entities
                             {
                                 if (MapController.TryGetInstanceFromMap(MapId, MapInstanceId, out var mapInstance))
                                 {
+                                    //no diagonal projectiles
+                                    var ProDirection = Direction.None;
+                                    if (Dir == Direction.UpLeft || Dir == Direction.DownLeft){
+                                        ProDirection = Direction.Left;
+                                    }
+                                    else if ((Dir == Direction.UpRight || Dir == Direction.DownRight))
+                                    {
+                                        ProDirection = Direction.Right;
+                                    }
+                                    else
+                                    {
+                                        ProDirection = Dir;
+                                    }
                                     mapInstance
                                         .SpawnMapProjectile(
                                             this, projectileBase, spellBase, null, MapId, (byte)X, (byte)Y, (byte)Z,
-                                            Dir, CastTarget
+                                            ProDirection, CastTarget
                                         );
                                 }
                             }
