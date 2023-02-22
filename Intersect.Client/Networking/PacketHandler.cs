@@ -631,7 +631,7 @@ namespace Intersect.Client.Networking
                 return;
             }
 
-            if (en is Player && Options.Combat.MovementCancelsCast)
+            if (en is Player plyr && Options.Combat.MovementCancelsCast && !plyr.IgnoreOnMoveSpell())
             {
                 en.CastTime = 0;
             }
