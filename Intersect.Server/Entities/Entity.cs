@@ -44,6 +44,8 @@ namespace Intersect.Server.Entities
         {
         }
 
+        [NotMapped, JsonIgnore]
+        public long DashTransmissionTimer { get; set; }
         //Initialization
         public Entity(Guid instanceId, Guid mapInstanceId)
         {
@@ -302,6 +304,26 @@ namespace Intersect.Server.Entities
             {
                 IsDisposed = true;
             }
+        }
+
+
+        public List<Entity> GetEntitiesOnTile(int tileX, int tileY)
+        {
+            var tileEntities = new List<Entity>();
+
+            if (Map != null && Map.TryGetInstance(MapInstanceId, out var mapInstance))
+            {
+                foreach (var en in mapInstance.GetCachedEntities())
+                {
+                    if (en.Id == Id) continue;
+                    if (en != null && en.X == tileX && en.Y == tileY && en.Z == Z && !en.Passable)
+                    {
+                        tileEntities.Add(en);
+                    }
+                }
+            }
+
+            return tileEntities;
         }
 
         public virtual void Update(long timeMs)
