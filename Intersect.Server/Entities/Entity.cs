@@ -949,7 +949,7 @@ namespace Intersect.Server.Entities
         public virtual void Move(Direction moveDir, Player forPlayer, bool doNotUpdate = false,
             bool correction = false)
         {
-            if (Timing.Global.Milliseconds < MoveTimer || (!Options.Combat.MovementCancelsCast && IsCasting))
+            if (Timing.Global.Milliseconds < MoveTimer || (!Options.Combat.MovementCancelsCast && IsCasting && !IgnoreOnMoveSpell()))
             {
                 return;
             }
@@ -961,7 +961,7 @@ namespace Intersect.Server.Entities
 
             lock (EntityLock)
             {
-                if (this is Player && IsCasting && Options.Combat.MovementCancelsCast)
+                if (this is Player && IsCasting && Options.Combat.MovementCancelsCast && !IgnoreOnMoveSpell())
                 {
                     CastTime = 0;
                     CastTarget = null;
