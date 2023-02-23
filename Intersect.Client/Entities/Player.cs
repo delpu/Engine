@@ -2063,7 +2063,7 @@ namespace Intersect.Client.Entities
             {
                 //Try to move if able and not casting spells.
                 if (!IsMoving && MoveTimer < Timing.Global.Milliseconds &&
-                    (Options.Combat.MovementCancelsCast || !IsCasting))
+                    (Options.Combat.MovementCancelsCast || !IsCasting || IgnoreOnMoveSpell()))
                 {
                     if (Options.Combat.MovementCancelsCast && !IgnoreOnMoveSpell())
                     {
