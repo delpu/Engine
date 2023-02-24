@@ -22,6 +22,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20230224144757_AddPlayerDeath.cs" />
+    <Compile Remove="Migrations\20230224144757_AddPlayerDeath.Designer.cs" />
     <Compile Remove="Migrations\Game\20221015235919_MultipleBonusEffectsMigration.cs" />
     <Compile Remove="Migrations\Game\20221015235919_MultipleBonusEffectsMigration.Designer.cs" />
     <Compile Remove="Networking\IntersectNetworkServer.cs" />

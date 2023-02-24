@@ -1926,6 +1926,16 @@ namespace Intersect.Client.Networking
                 Globals.Entities[packet.PlayerId].DashQueue.Clear();
                 Globals.Entities[packet.PlayerId].Dashing = null;
                 Globals.Entities[packet.PlayerId].DashTimer = 0;
+                Globals.Entities[packet.PlayerId].IsDead = true;
+            }
+        }
+
+        //PlayerRespawnPacket
+        public void HandlePacket(IPacketSender packetSender, PlayerDeathUpdatePacket packet)
+        {
+            if (Globals.Entities.ContainsKey(packet.PlayerId))
+            {
+                Globals.Entities[packet.PlayerId].IsDead = packet.IsDead;
             }
         }
 
@@ -1950,6 +1960,26 @@ namespace Intersect.Client.Networking
             {
                 Interface.Interface.GameUi.NotifyCloseBag();
             }
+        }
+
+        public void HandlePacket(IPacketSender packetSender, PlayerDeathTypePacket packet)
+        {
+            if (Globals.Me == null || Interface.Interface.GameUi == null)
+            {
+                return;
+            }
+
+            Interface.Interface.GameUi.RespawnWindow.SetType(packet.Type);
+        }
+
+        public void HandlePacket(IPacketSender packetSender, RespawnFinishedPacket packet)
+        {
+            if (Globals.Me == null || Interface.Interface.GameUi == null)
+            {
+                return;
+            }
+
+            Interface.Interface.GameUi.RespawnWindow.ServerRespawned();
         }
 
         //BagUpdatePacket

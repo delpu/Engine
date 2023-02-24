@@ -66,6 +66,27 @@ namespace Intersect.Server.Networking
             DroppedPackets = 0;
         }
 
+        public void HandlePacket(Client client, RequestRespawnPacket packet)
+        {
+            var player = client?.Entity;
+
+            if (player == null)
+            {
+                return;
+            }
+
+            if (!player.PlayerDead)
+            {
+                // Maybe the client's out of sync?
+                PacketSender.SendPlayerDeathInfoTo(player, player);
+                PacketSender.SendRespawnFinished(player);
+                return;
+            }
+
+            player.AcceptRespawn();
+        }
+
+     
         public PacketHandler(IServerContext context, PacketHandlerRegistry packetHandlerRegistry)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));

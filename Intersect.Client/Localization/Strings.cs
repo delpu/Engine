@@ -720,6 +720,23 @@ namespace Intersect.Client.Localization
             public static LocalizedString listening = @"Listening";
 
         }
+        public partial struct RespawnWindow
+        {
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString DeathDungeon = @"You've lost a life! ";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString DeathItems = @"You've died! ";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString DeathPvE = @"You've died!";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString DeathSafe = @"You've died!";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString RespawnButton = @"Respawn";
+        }
 
         public partial struct Crafting
         {

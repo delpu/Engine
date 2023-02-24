@@ -104,6 +104,7 @@ namespace Intersect.Client.Interface.Game
 
         public Menu GameMenu { get; private set; }
 
+        public PlayerRespawnWindow RespawnWindow;
         public void InitGameGui()
         {
             mChatBox = new Chatbox(GameCanvas, this);
@@ -120,6 +121,7 @@ namespace Intersect.Client.Interface.Game
             mQuestOfferWindow = new QuestOfferWindow(GameCanvas);
             mMapItemWindow = new MapItemWindow(GameCanvas);
             mBankWindow = new BankWindow(GameCanvas);
+            RespawnWindow = new PlayerRespawnWindow(GameCanvas);
         }
 
         //Chatbox
@@ -323,7 +325,7 @@ namespace Intersect.Client.Interface.Game
             {
                 PlayerBox?.SetEntity(Globals.Me);
             }
-
+            RespawnWindow?.Update();
             mChatBox?.Update();
             GameMenu?.Update(mShouldUpdateQuestLog);
             mShouldUpdateQuestLog = false;

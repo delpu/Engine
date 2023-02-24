@@ -349,6 +349,10 @@ namespace Intersect.Server.Entities
             }
             else if (entity is Player player)
             {
+                if (player.PlayerDead)
+                {
+                    return false;
+                }
                 var friendly = spell != null && spell.Combat.Friendly;
                 if (friendly && IsAllyOf(player))
                 {
@@ -1418,6 +1422,10 @@ namespace Intersect.Server.Entities
             {
                 foreach (var entity in instance.GetCachedEntities())
                 {
+                    if (entity is Player pl && pl.PlayerDead)
+                    {
+                        continue;
+                    }
                     if (entity != null && !entity.IsDead() && entity != this && entity.Id != avoidId)
                     {
                         //TODO Check if NPC is allowed to attack player with new conditions

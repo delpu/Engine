@@ -552,12 +552,12 @@ namespace Intersect.Server.Entities
                     {
                         //Set a target if a projectile
                         CollisionIndex = en.Id;
-                        if (en is Player)
+                        if (en is Player ply)
                         {
                             if (this is Player)
                             {
                                 //Check if this target player is passable....
-                                if (!Options.Instance.Passability.Passable[(int)targetMap.ZoneType])
+                                if (!Options.Instance.Passability.Passable[(int)targetMap.ZoneType] && !ply.PlayerDead)
                                 {
                                     return (int)EntityTypes.Player;
                                 }
@@ -2221,6 +2221,11 @@ namespace Intersect.Server.Entities
                 reason = SpellCastFailureReason.InvalidSpell;
                 return false;
             }
+            if (target is Player player && player.PlayerDead)
+            {
+                reason = SpellCastFailureReason.TargetDead;
+                return false;
+            }
 
             // Is this spell on cooldown?
             if (SpellCooldowns.ContainsKey(spell.Id) && SpellCooldowns[spell.Id] > Timing.Global.MillisecondsUtc)
@@ -2796,6 +2801,10 @@ namespace Intersect.Server.Entities
 
         public bool InRangeOf(Entity target, int range)
         {
+            if (target is Player player && player.PlayerDead)
+            {
+                return false;
+            }
             var dist = GetDistanceTo(target);
             if (dist == 9999)
             {

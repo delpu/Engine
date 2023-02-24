@@ -105,6 +105,12 @@ namespace Intersect.Server.Networking
 
                 SendEntityDataTo(client.Entity, player);
 
+                if (player.PlayerDead)
+                {
+                    //player.AcceptRespawn();
+                }
+
+
                 //Search for login activated events and run them
                 player.StartCommonEventsWithTrigger(CommonEventTrigger.Login);
 
@@ -360,6 +366,7 @@ namespace Intersect.Server.Networking
                 //If a player, send equipment to all (for paperdolls)
                 case Player entityPlayer:
                     SendPlayerEquipmentTo(player, entityPlayer);
+                    SendPlayerDeathInfoTo(player, entityPlayer);
                     break;
 
                 case Npc npc:
@@ -400,6 +407,10 @@ namespace Intersect.Server.Networking
                 {
                     SendNpcAggressionTo(player, npc);
                 }
+                if (sendEntity is Player play)
+                {
+                    SendPlayerDeathInfoTo(player, play);
+                }
             }
         }
 
@@ -437,6 +448,46 @@ namespace Intersect.Server.Networking
             }
         }
 
+        public static void SendPlayerDeathInfoOf(Player player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            SendDataToProximityOnMapInstance(player.MapId, player.MapInstanceId, new PlayerDeathUpdatePacket(player.Id, player.PlayerDead));
+        }
+
+        public static void SendPlayerDeathInfoTo(Player me, Player player)
+        {
+            if (me == null || player == null)
+            {
+                return;
+            }
+
+            me.SendPacket(new PlayerDeathUpdatePacket(player.Id, player.PlayerDead));
+        }
+
+        public static void SendPlayerDeathType(Player player, DeathType type)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            player.SendPacket(new PlayerDeathTypePacket(type));
+        }
+
+        public static void SendRespawnFinished(Player player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            player.SendPacket(new RespawnFinishedPacket());
+        }
+
         //EntityDataPacket
         public static void SendEntityDataToProximity(Entity en, Player except = null)
         {
@@ -456,6 +507,7 @@ namespace Intersect.Server.Networking
                     foreach (Player entityToSendTo in map.GetPlayersOnSharedInstance(en.MapInstanceId, except))
                     {
                         SendEntityDataTo(entityToSendTo, en);
+                        SendPlayerDeathInfoOf(entityToSendTo);
                     }
                 }
             }

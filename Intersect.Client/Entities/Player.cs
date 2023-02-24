@@ -220,7 +220,7 @@ namespace Intersect.Client.Entities
                      Globals.GameShop == null &&
                      Globals.InBank == false &&
                      Globals.InCraft == false &&
-                     Globals.InTrade == false &&
+                     Globals.InTrade == false && !IsDead &&
                      !Interface.Interface.HasInputFocus());
 
         public override bool Update()
@@ -364,6 +364,11 @@ namespace Intersect.Client.Entities
 
         public void TryDropItem(int inventorySlotIndex)
         {
+            if (IsDead)
+            {
+                return;
+            }
+
             var inventorySlot = Inventory[inventorySlotIndex];
             if (!ItemBase.TryGet(inventorySlot.ItemId, out var itemDescriptor))
             {
@@ -432,6 +437,11 @@ namespace Intersect.Client.Entities
 
         public void TryUseItem(int index)
         {
+            if (IsDead)
+            {
+                return;
+            }
+
             if (!IsItemOnCooldown(index) &&
                 index >= 0 && index < Globals.Me.Inventory.Length && Globals.Me.Inventory[index]?.Quantity > 0)
             {
@@ -1064,6 +1074,12 @@ namespace Intersect.Client.Entities
                 return;
             }
 
+            if (IsDead)
+            {
+                return;
+            }
+
+
             for (var i = 0; i < Spells.Length; i++)
             {
                 if (Spells[i].Id == spellId)
@@ -1564,6 +1580,12 @@ namespace Intersect.Client.Entities
 
         public bool TryAttack()
         {
+            if (IsDead)
+            {
+                return false;
+            }
+
+
             if (AttackTimer > Timing.Global.Milliseconds)
             {
                 return false;
@@ -1646,7 +1668,7 @@ namespace Intersect.Client.Entities
                     }
 
                     // Skip if the entity can't be attacked.
-                    if (!en.Value.CanBeAttacked)
+                    if (!en.Value.CanBeAttacked())
                     {
                         continue;
                     }
@@ -2018,6 +2040,11 @@ namespace Intersect.Client.Entities
         //Movement Processing
         private void ProcessDirectionalInput()
         {
+            if (IsDead)
+            {
+                return;
+            }
+
             if (Controls.KeyDown(Control.Block))
             {
                 return;
@@ -2324,6 +2351,10 @@ namespace Intersect.Client.Entities
 
         private void DrawNameAndLabels(Color textColor, Color borderColor, Color backgroundColor)
         {
+            if (IsDead)
+            {
+                return;
+            }
             base.DrawName(textColor, borderColor, backgroundColor);
             DrawLabels(HeaderLabel.Text, 0, HeaderLabel.Color, textColor, borderColor, backgroundColor);
             DrawLabels(FooterLabel.Text, 1, FooterLabel.Color, textColor, borderColor, backgroundColor);

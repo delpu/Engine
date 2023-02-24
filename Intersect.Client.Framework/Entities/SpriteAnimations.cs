@@ -9,5 +9,6 @@ namespace Intersect.Client.Framework.Entities
         Cast,
         Weapon,
         Run,
+        Dead,
     }
 }

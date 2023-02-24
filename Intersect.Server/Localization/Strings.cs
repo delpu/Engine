@@ -270,6 +270,9 @@ namespace Intersect.Server.Localization
             public readonly LocalizedString cooldown = @"This skill is on cooldown.";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public readonly LocalizedString targetdead = @"Your target is not alive.";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public readonly LocalizedString critical = @"CRITICAL HIT!";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -1526,7 +1529,23 @@ namespace Intersect.Server.Localization
             public readonly GuildsNamespace Guilds = new GuildsNamespace();
 
         }
+        public sealed partial class TradingNamespace : LocaleNamespace
+        {
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public readonly LocalizedString PvPTrade = @"You can't trade an enemy!";
+        }
 
+        public sealed partial class FriendsNamespace : LocaleNamespace
+        {
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public readonly LocalizedString FriendEnemy = @"You can't send friend requests to a player that you can currently harm!";
+        }
+
+        public sealed partial class PartiesNamespace : LocaleNamespace
+        {
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public readonly LocalizedString PartyEnemy = @"You can't send party requests to a player that you can currently harm!";
+        }
         // ReSharper restore MemberHidesStaticFromOuterClass
 
         #endregion
