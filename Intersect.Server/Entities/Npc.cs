@@ -349,6 +349,10 @@ namespace Intersect.Server.Entities
             }
             else if (entity is Player player)
             {
+                if (player.PlayerDead)
+                {
+                    return false;
+                }
                 var friendly = spell != null && spell.Combat.Friendly;
                 if (friendly && IsAllyOf(player))
                 {

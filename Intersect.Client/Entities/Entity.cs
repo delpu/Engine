@@ -1840,6 +1840,7 @@ namespace Intersect.Client.Entities
                 return;
             }
 
+
             SpriteAnimation = SpriteAnimations.Normal;
             if (AnimatedTextures.TryGetValue(SpriteAnimations.Idle, out _) && LastActionTime + Options.Instance.Sprites.TimeBeforeIdle < Timing.Global.Milliseconds)
             {
@@ -1860,7 +1861,7 @@ namespace Intersect.Client.Entities
             }
             else if (IsDead)
             {
-                SpriteAnimation = SpriteAnimations.Corps;
+                SpriteAnimation = SpriteAnimations.Dead;
 
             }
             else if (AttackTimer > Timing.Global.Milliseconds && !IsBlocking) //Attacking
@@ -1994,6 +1995,7 @@ namespace Intersect.Client.Entities
                 case SpriteAnimations.Normal: break;
                 case SpriteAnimations.Run: break;
                 case SpriteAnimations.Idle: break;
+                case SpriteAnimations.Dead: break;
                 case SpriteAnimations.Attack:
                     if (this is Player player && ClassBase.TryGet(player.Class, out var classDescriptor))
                     {

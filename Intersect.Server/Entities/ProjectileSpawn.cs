@@ -74,7 +74,10 @@ namespace Intersect.Server.Entities
             }
 
             Player targetPlayer = targetEntity as Player;
-
+            if (targetEntity is Player player && player.PlayerDead)
+            {
+                return false;
+            }
             if (targetEntity != null && targetEntity != Parent.Owner)
             {
                 // Have we collided with this entity before? If so, cancel out.
@@ -82,10 +85,6 @@ namespace Intersect.Server.Entities
                 {
                     if (!Parent.Base.PierceTarget)
                     {
-                        if (targetPlayer.PlayerDead)
-                        {
-                            return false;
-                        }
                         if (targetPlayer != null)
                         {
                             if(targetPlayer.Map.ZoneType == Enums.MapZones.Safe ||

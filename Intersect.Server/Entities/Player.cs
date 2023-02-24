@@ -351,6 +351,11 @@ namespace Intersect.Server.Entities
             //Send guild list update to all members when coming online
             Guild?.UpdateMemberList();
 
+            if (PlayerDead)
+            {
+                PacketSender.SendPlayerDeathType(this, DeathType.Safe);
+            }
+
             // If we are configured to do so, send a notification of us logging in to all online friends.
             if (Options.Player.EnableFriendLoginNotifications)
             {
@@ -879,13 +884,18 @@ namespace Intersect.Server.Entities
             }
 
             PacketSender.SendEntityDataToProximity(this);
-
+            PacketSender.SendRespawnFinished(this);
             //Search death common event trigger
             StartCommonEventsWithTrigger(CommonEventTrigger.OnRespawn);
         }
 
         public override void Die(bool dropItems = true, Entity killer = null)
         {
+            if (PlayerDead)
+            {
+                return;
+            }
+            var currentMapZoneType = MapController.Get(Map.Id).ZoneType;
             CastTime = 0;
             CastTarget = null;
 
@@ -918,19 +928,20 @@ namespace Intersect.Server.Entities
 
 
             // EXP Loss - don't lose in shared instance, or in an Arena zone
+            double expLoss = -1;
             if (InstanceType != MapInstanceType.Shared || Options.Instance.Instancing.LoseExpOnInstanceDeath)
             {
                 if (Options.Instance.PlayerOpts.ExpLossOnDeathPercent > 0)
                 {
                     if (Options.Instance.PlayerOpts.ExpLossFromCurrentExp)
                     {
-                        var ExpLoss = (this.Exp * (Options.Instance.PlayerOpts.ExpLossOnDeathPercent / 100.0));
-                        TakeExperience((long)ExpLoss);
+                       // var ExpLoss = (this.Exp * (Options.Instance.PlayerOpts.ExpLossOnDeathPercent / 100.0));
+                        TakeExperience((long)expLoss);
                     }
                     else
                     {
-                        var ExpLoss = (GetExperienceToNextLevel(this.Level) * (Options.Instance.PlayerOpts.ExpLossOnDeathPercent / 100.0));
-                        TakeExperience((long)ExpLoss);
+                      //  var ExpLoss = (GetExperienceToNextLevel(this.Level) * (Options.Instance.PlayerOpts.ExpLossOnDeathPercent / 100.0));
+                        TakeExperience((long)expLoss);
                     }
                 }
             }
@@ -939,8 +950,26 @@ namespace Intersect.Server.Entities
             Statuses.Clear();
             CachedStatuses = new Status[0];
             CombatTimer = 0;
+            PacketSender.SendPlayerDeathType(this, GetDeathType((long)expLoss), (long)expLoss, ItemsLost);
             PacketSender.SendEntityDie(this);
             PacketSender.SendInventory(this);
+        }
+
+        private DeathType GetDeathType(long expLoss)
+        {
+            if (expLoss <= 0)
+            {
+                return DeathType.Safe;
+            }
+            if (ItemsLost.Count > 0)
+            {
+                return DeathType.PvP;
+            }
+            if (expLoss > 0)
+            {
+                return DeathType.PvE;
+            }
+            return DeathType.PvE;
         }
 
         public override void ProcessRecharge()
@@ -2031,6 +2060,11 @@ namespace Intersect.Server.Entities
                     if (fromLogin)
                     {
                         isValid = false;
+                        if (PlayerDead)
+                        {
+                            Reset();
+                            SendPlayerDeathStatus();
+                        }
                     }
                     if (Party != null && Party.Count > 0 && !Options.Instance.Instancing.RejoinableSharedInstances) // Always valid warp if solo/instances are rejoinable
                     {
@@ -4387,6 +4421,11 @@ namespace Intersect.Server.Entities
         //Friends
         public void FriendRequest(Player fromPlayer)
         {
+            if (Map?.ZoneType != MapZones.Safe && !fromPlayer.IsAllyOf(this))
+            {
+                PacketSender.SendChatMsg(fromPlayer, Strings.Friends.FriendEnemy, ChatMessageType.Friend, CustomColors.Alerts.Error);
+                return;
+            }
             if (fromPlayer.FriendRequests.ContainsKey(this))
             {
                 fromPlayer.FriendRequests.Remove(this);
@@ -4430,6 +4469,11 @@ namespace Intersect.Server.Entities
             if (Trading.Requests == null)
             {
                 Trading = new Trading(this);
+            }
+            if (Map?.ZoneType != MapZones.Safe && !fromPlayer.IsAllyOf(this))
+            {
+                PacketSender.SendChatMsg(fromPlayer, Strings.Trading.PvPTrade, ChatMessageType.Trading, CustomColors.Alerts.Error);
+                return;
             }
 
             if (fromPlayer.Trading.Requests == null)
@@ -4691,6 +4735,11 @@ namespace Intersect.Server.Entities
         //Parties
         public void InviteToParty(Player fromPlayer)
         {
+            if (Map?.ZoneType == MapZones.Safe && !fromPlayer.IsAllyOf(this))
+            {
+                PacketSender.SendChatMsg(fromPlayer, Strings.Parties.PartyEnemy, ChatMessageType.Friend, CustomColors.Alerts.Error);
+                return;
+            }
             if (Party.Count != 0)
             {
                 PacketSender.SendChatMsg(fromPlayer, Strings.Parties.inparty.ToString(Name), ChatMessageType.Party, CustomColors.Alerts.Error);
@@ -5056,6 +5105,9 @@ namespace Intersect.Server.Entities
                             break;
                         case SpellCastFailureReason.OnCooldown:
                             PacketSender.SendChatMsg(this, Strings.Combat.cooldown, ChatMessageType.Combat);
+                            break;
+                        case SpellCastFailureReason.TargetDead:
+                            PacketSender.SendChatMsg(this, Strings.Combat.targetdead, ChatMessageType.Combat);
                             break;
                     }
                 }
@@ -6362,6 +6414,11 @@ namespace Intersect.Server.Entities
             }
         }
 
+        public override bool IsPassable()
+        {
+            return base.IsPassable() || PlayerDead;
+        }
+
         static bool IsEventOneBlockAway(Event evt)
         {
             //todo this
@@ -6851,6 +6908,8 @@ namespace Intersect.Server.Entities
             PacketSender.SendSpellCooldowns(this);
         }
 
+        [NotMapped, JsonIgnore]
+        public List<Item> ItemsLost { get; set; } = new List<Item>();
 
         public bool PlayerDead { get; set; }
 
@@ -6861,7 +6920,7 @@ namespace Intersect.Server.Entities
             SendPlayerDeathStatus();
         }
 
-        private void SendPlayerDeathStatus()
+        public void SendPlayerDeathStatus()
         {
             PacketSender.SendPlayerDeathInfoOf(this);
         }

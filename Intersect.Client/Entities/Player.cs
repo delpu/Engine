@@ -2351,6 +2351,10 @@ namespace Intersect.Client.Entities
 
         private void DrawNameAndLabels(Color textColor, Color borderColor, Color backgroundColor)
         {
+            if (IsDead)
+            {
+                return;
+            }
             base.DrawName(textColor, borderColor, backgroundColor);
             DrawLabels(HeaderLabel.Text, 0, HeaderLabel.Color, textColor, borderColor, backgroundColor);
             DrawLabels(FooterLabel.Text, 1, FooterLabel.Color, textColor, borderColor, backgroundColor);

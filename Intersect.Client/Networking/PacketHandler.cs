@@ -1962,6 +1962,26 @@ namespace Intersect.Client.Networking
             }
         }
 
+        public void HandlePacket(IPacketSender packetSender, PlayerDeathTypePacket packet)
+        {
+            if (Globals.Me == null || Interface.Interface.GameUi == null)
+            {
+                return;
+            }
+
+            Interface.Interface.GameUi.RespawnWindow.SetType(packet.Type, packet.ExpLost, packet.ItemsLost);
+        }
+
+        public void HandlePacket(IPacketSender packetSender, RespawnFinishedPacket packet)
+        {
+            if (Globals.Me == null || Interface.Interface.GameUi == null)
+            {
+                return;
+            }
+
+            Interface.Interface.GameUi.RespawnWindow.ServerRespawned();
+        }
+
         //BagUpdatePacket
         public void HandlePacket(IPacketSender packetSender, BagUpdatePacket packet)
         {

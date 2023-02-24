@@ -1,4 +1,4 @@
-﻿namespace Intersect.GameObjects.Events
+namespace Intersect.GameObjects.Events
 {
 
     public enum MoveRouteEnum
@@ -236,6 +236,12 @@
 
         //Reset Stats
         ResetStatPointAllocations,
+    }
+    public enum DeathType
+    {
+        PvE = 0,
+        PvP,
+        Safe,
     }
 
 }

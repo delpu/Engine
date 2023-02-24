@@ -350,6 +350,12 @@ namespace Intersect.Client.Networking
             Network.SendPacket(new DeleteCharacterPacket(charId));
         }
 
+        public static void SendRequestRespawn()
+        {
+            Network.SendPacket(new RequestRespawnPacket());
+        }
+
+
         public static void SendNewCharacter()
         {
             Network.SendPacket(new NewCharacterPacket());
