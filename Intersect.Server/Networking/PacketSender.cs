@@ -107,7 +107,7 @@ namespace Intersect.Server.Networking
 
                 if (player.PlayerDead)
                 {
-                    //player.AcceptRespawn();
+                    player.AcceptRespawn();
                 }
 
 
