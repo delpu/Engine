@@ -1709,6 +1709,11 @@ namespace Intersect.Client.Entities
                 return;
             }
 
+            if (IsDead)
+            {
+                return;
+            }
+
             var castingSpell = SpellBase.Get(SpellCast);
             if (castingSpell == null)
             {
@@ -1778,7 +1783,10 @@ namespace Intersect.Client.Entities
             Graphics.DrawGameTexture(targetTexture, srcRectangle, destRectangle, Color.White, dozoom: false);
         }
 
-        public virtual bool CanBeAttacked => true;
+        public virtual bool CanBeAttacked()
+        {
+            return !IsDead;
+        }
 
         //Chatting
         public void AddChatBubble(string text)
@@ -1849,6 +1857,11 @@ namespace Intersect.Client.Entities
                     SpriteAnimation = SpriteAnimations.Normal;
                 }
                 LastActionTime = Timing.Global.Milliseconds;
+            }
+            else if (IsDead)
+            {
+                SpriteAnimation = SpriteAnimations.Corps;
+
             }
             else if (AttackTimer > Timing.Global.Milliseconds && !IsBlocking) //Attacking
             {
@@ -2243,7 +2256,7 @@ namespace Intersect.Client.Entities
                                     case Player player:
                                         //Return the entity key as this should block the player.  Only exception is if the MapZone this entity is on is passable.
                                         var entityMap = Maps.MapInstance.Get(player.MapId);
-                                        if (Options.Instance.Passability.Passable[(int)entityMap.ZoneType])
+                                        if (Options.Instance.Passability.Passable[(int)entityMap.ZoneType] || ((Player)en.Value).IsDead)
                                         {
                                             continue;
                                         }
@@ -2336,7 +2349,7 @@ namespace Intersect.Client.Entities
                 return -2;
             }
         }
-
+        public bool IsDead;
         ~Entity()
         {
             Dispose();

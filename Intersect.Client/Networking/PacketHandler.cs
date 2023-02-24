@@ -1926,6 +1926,16 @@ namespace Intersect.Client.Networking
                 Globals.Entities[packet.PlayerId].DashQueue.Clear();
                 Globals.Entities[packet.PlayerId].Dashing = null;
                 Globals.Entities[packet.PlayerId].DashTimer = 0;
+                Globals.Entities[packet.PlayerId].IsDead = true;
+            }
+        }
+
+        //PlayerRespawnPacket
+        public void HandlePacket(IPacketSender packetSender, PlayerDeathUpdatePacket packet)
+        {
+            if (Globals.Entities.ContainsKey(packet.PlayerId))
+            {
+                Globals.Entities[packet.PlayerId].IsDead = packet.IsDead;
             }
         }
 

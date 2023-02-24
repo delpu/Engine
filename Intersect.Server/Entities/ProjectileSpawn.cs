@@ -82,7 +82,11 @@ namespace Intersect.Server.Entities
                 {
                     if (!Parent.Base.PierceTarget)
                     {
-                        if(targetPlayer != null)
+                        if (targetPlayer.PlayerDead)
+                        {
+                            return false;
+                        }
+                        if (targetPlayer != null)
                         {
                             if(targetPlayer.Map.ZoneType == Enums.MapZones.Safe ||
                                 Parent.Owner is Player plyr && plyr.InParty(targetPlayer))

@@ -480,6 +480,11 @@ namespace Intersect.Client.Interface.Game.Chat
 
         void TrySendMessage()
         {
+            if (Globals.Me?.IsDead ?? true)
+            {
+                return;
+            }
+
             var msg = mChatboxInput.Text.Trim();
             if (string.IsNullOrWhiteSpace(msg) || string.Equals(msg, GetDefaultInputText(), StringComparison.Ordinal))
             {

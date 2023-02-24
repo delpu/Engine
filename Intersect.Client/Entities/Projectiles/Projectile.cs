@@ -116,12 +116,9 @@ namespace Intersect.Client.Entities.Projectiles
         }
 
         /// <inheritdoc />
-        public override bool CanBeAttacked
+        public override bool CanBeAttacked()
         {
-            get
-            {
-                return false;
-            }
+            return false;
         }
 
         //Find out which animation data to load depending on what spawn wave we are on during projection.
