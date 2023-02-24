@@ -950,28 +950,22 @@ namespace Intersect.Server.Entities
             Statuses.Clear();
             CachedStatuses = new Status[0];
             CombatTimer = 0;
-            PacketSender.SendPlayerDeathType(this, GetDeathType((long)expLoss), (long)expLoss, ItemsLost);
+            var DeathTypeZone = DeathType.Safe;
+            if (currentMapZoneType == MapZones.Arena)
+            {
+                DeathTypeZone = DeathType.Safe;
+            }
+            else
+            {
+                DeathTypeZone = DeathType.PvP;
+            }
+
+            PacketSender.SendPlayerDeathType(this, DeathTypeZone);
             PacketSender.SendEntityDie(this);
             PacketSender.SendInventory(this);
         }
 
-        private DeathType GetDeathType(long expLoss)
-        {
-            if (expLoss <= 0)
-            {
-                return DeathType.Safe;
-            }
-            if (ItemsLost.Count > 0)
-            {
-                return DeathType.PvP;
-            }
-            if (expLoss > 0)
-            {
-                return DeathType.PvE;
-            }
-            return DeathType.PvE;
-        }
-
+   
         public override void ProcessRecharge()
         {
             if (PlayerDead)
@@ -6908,8 +6902,7 @@ namespace Intersect.Server.Entities
             PacketSender.SendSpellCooldowns(this);
         }
 
-        [NotMapped, JsonIgnore]
-        public List<Item> ItemsLost { get; set; } = new List<Item>();
+ 
 
         public bool PlayerDead { get; set; }
 

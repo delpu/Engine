@@ -22,7 +22,6 @@ namespace Intersect.Client.Interface.Game
 
         private ImagePanel Background;
 
-        private ScrollControl TextContainer;
         private RichLabel DeathText;
         private Label DeathTextTemplate;
 
@@ -36,9 +35,8 @@ namespace Intersect.Client.Interface.Game
 
             Background = new ImagePanel(GameCanvas, "PlayerRespawnWindow");
 
-            TextContainer = new ScrollControl(Background, "TextContainer");
-            DeathTextTemplate = new Label(TextContainer, "DeathInfoLabel");
-            DeathText = new RichLabel(TextContainer);
+            DeathTextTemplate = new Label(Background, "EventDialogLabel");
+            DeathText = new RichLabel(Background);
 
             NormalRespawnButton = new Button(Background, "NormalRespawnButton")
             {
@@ -46,11 +44,11 @@ namespace Intersect.Client.Interface.Game
             };
             NormalRespawnButton.Clicked += NormalRespawnButton_Clicked;
 
-
+           
             Interface.InputBlockingElements.Add(Background);
 
             Background.LoadJsonUi(GameContentManager.UI.InGame, Graphics.Renderer.GetResolutionString());
-            SetType(DeathType.Safe, -1, new List<string>());
+            SetType(DeathType.Safe);
         }
 
         public void Update()
@@ -64,27 +62,24 @@ namespace Intersect.Client.Interface.Game
             Graphics.DrawGameTexture(Graphics.Renderer.GetWhiteTexture(), new FloatRect(0, 0, 1, 1), Graphics.CurrentView, new Color(150, 0, 0, 0));
 
             NormalRespawnButton.IsDisabled = RequestingRespawn;
-            LeaveInstanceButton.IsDisabled = RequestingRespawn;
-            DungeonRespawnButton.IsDisabled = RequestingRespawn;
+
         }
 
-        public void SetType(DeathType deathType, long expLost, List<string> itemsLost)
+        public void SetType(DeathType deathType)
         {
             DeathText.ClearText();
-            DungeonRespawnButton.Hide();
-            LeaveInstanceButton.Hide();
             NormalRespawnButton.Hide();
-            DeathText.Width = TextContainer.Width - TextContainer.GetVerticalScrollBar().Width;
+            DeathText.Width = Background.Width - (Background.Padding.Left + Background.Padding.Right);
             DeathText.Height = Background.Height - (Background.Padding.Bottom + Background.Padding.Top);
             if (deathType == DeathType.PvE)
             {
-                DeathText.AddText(Strings.RespawnWindow.DeathPvE.ToString(expLost), DeathTextTemplate);
+                DeathText.AddText(Strings.RespawnWindow.DeathPvE.ToString(), DeathTextTemplate);
                 NormalRespawnButton.Show();
                 return;
             }
             if (deathType == DeathType.PvP)
             {
-                DeathText.AddText(Strings.RespawnWindow.DeathItems.ToString(expLost), DeathTextTemplate);
+                DeathText.AddText(Strings.RespawnWindow.DeathItems.ToString(), DeathTextTemplate);
                 NormalRespawnButton.Show();
                 return;
             }
@@ -94,8 +89,7 @@ namespace Intersect.Client.Interface.Game
                 NormalRespawnButton.Show();
                 return;
             }
-            DeathText.SizeToChildren(false, true);
-            TextContainer.ScrollToTop();
+            DeathText.AddText(Strings.RespawnWindow.DeathSafe, DeathTextTemplate);
         }
 
         #region Handlers
@@ -104,12 +98,14 @@ namespace Intersect.Client.Interface.Game
             RequestRespawn();
         }
 
+       
         private void RequestRespawn()
         {
             RequestingRespawn = true;
             PacketSender.SendRequestRespawn();
         }
 
+      
 
         public void ServerRespawned()
         {

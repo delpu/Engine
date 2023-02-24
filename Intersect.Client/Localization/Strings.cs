@@ -723,13 +723,13 @@ namespace Intersect.Client.Localization
         public partial struct RespawnWindow
         {
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public static LocalizedString DeathDungeon = @"You've lost a life! Your party has {00} remaining.";
+            public static LocalizedString DeathDungeon = @"You've lost a life! ";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public static LocalizedString DeathItems = @"You've died! You've lost {00} experience points and some of your items...";
+            public static LocalizedString DeathItems = @"You've died! ";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public static LocalizedString DeathPvE = @"You've died! You've lost {00} experience points...";
+            public static LocalizedString DeathPvE = @"You've died!";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public static LocalizedString DeathSafe = @"You've died!";

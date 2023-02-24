@@ -468,23 +468,14 @@ namespace Intersect.Server.Networking
             me.SendPacket(new PlayerDeathUpdatePacket(player.Id, player.PlayerDead));
         }
 
-        public static void SendPlayerDeathType(Player player, DeathType type, long expLost = -1, List<Item> itemsLost = null)
+        public static void SendPlayerDeathType(Player player, DeathType type)
         {
             if (player == null)
             {
                 return;
             }
 
-            var itemImageStrings = new List<string>();
-            if (itemsLost != null && itemsLost.Count > 0)
-            {
-                foreach (var item in itemsLost)
-                {
-                    itemImageStrings.Add(item?.Descriptor?.Icon);
-                }
-            }
-
-            player.SendPacket(new PlayerDeathTypePacket(type, expLost, itemImageStrings.Distinct().ToList()));
+            player.SendPacket(new PlayerDeathTypePacket(type));
         }
 
         public static void SendRespawnFinished(Player player)

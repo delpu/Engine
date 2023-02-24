@@ -325,7 +325,7 @@ namespace Intersect.Client.Interface.Game
             {
                 PlayerBox?.SetEntity(Globals.Me);
             }
-            RespawnWindow.Update();
+            RespawnWindow?.Update();
             mChatBox?.Update();
             GameMenu?.Update(mShouldUpdateQuestLog);
             mShouldUpdateQuestLog = false;

@@ -11,20 +11,13 @@ namespace Intersect.Network.Packets.Server
         {
         }
 
-        public PlayerDeathTypePacket(DeathType type, long expLost, List<string> itemsLost)
+        public PlayerDeathTypePacket(DeathType type)
         {
             Type = type;
-            ExpLost = expLost;
-            ItemsLost = itemsLost;
         }
 
         [Key(0)]
         public DeathType Type = DeathType.PvE;
 
-        [Key(1)]
-        public long ExpLost = -1;
-
-        [Key(2)]
-        public List<string> ItemsLost = new List<string>();
     }
 }

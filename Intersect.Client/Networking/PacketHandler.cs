@@ -1969,7 +1969,7 @@ namespace Intersect.Client.Networking
                 return;
             }
 
-            Interface.Interface.GameUi.RespawnWindow.SetType(packet.Type, packet.ExpLost, packet.ItemsLost);
+            Interface.Interface.GameUi.RespawnWindow.SetType(packet.Type);
         }
 
         public void HandlePacket(IPacketSender packetSender, RespawnFinishedPacket packet)
