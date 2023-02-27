@@ -281,6 +281,12 @@ namespace Intersect.Client.Core
         public static void OnKeyReleased(Keys modifier, Keys key)
         {
             KeyUp?.Invoke(modifier, key);
+
+            if(key == Keys.Shift)
+            {
+                PacketSender.SendPlayerRunning(!Globals.Me.Running);
+            }
+
             if (Interface.Interface.HasInputFocus())
             {
                 return;
