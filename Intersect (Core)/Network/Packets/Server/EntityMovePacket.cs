@@ -13,7 +13,7 @@ namespace Intersect.Network.Packets.Server
         {
         }
 
-        public EntityMovePacket(Guid id, EntityTypes type, Guid mapId, byte x, byte y, byte dir, bool correction, bool run)
+        public EntityMovePacket(Guid id, EntityTypes type, Guid mapId, byte x, byte y, byte dir, bool correction)
         {
             Id = id;
             Type = type;
@@ -22,7 +22,6 @@ namespace Intersect.Network.Packets.Server
             Y = y;
             Direction = dir;
             Correction = correction;
-            Run = run;
         }
 
         [Key(0)]
@@ -45,9 +44,6 @@ namespace Intersect.Network.Packets.Server
 
         [Key(6)]
         public bool Correction { get; set; }
-
-        [Key(7)]
-        public bool Run { get; set; }
 
     }
 
