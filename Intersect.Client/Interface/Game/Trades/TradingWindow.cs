@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Intersect.Client.Core;
@@ -29,6 +29,8 @@ namespace Intersect.Client.Interface.Game.Trades
 
         private WindowControl mTradeWindow;
 
+        private Label mOtherPlayerAccepted;
+
         //Name tags
         private Label mYourOffer;
 
@@ -58,6 +60,12 @@ namespace Intersect.Client.Interface.Game.Trades
             {
                 Text = Strings.Trading.theiroffer
             };
+
+            mOtherPlayerAccepted = new Label(mTradeWindow, "OtherPlayerAcceptedLabel")
+            {
+                Text = Strings.Trading.OtherPlayer
+            };
+
 
             mTrade = new Button(mTradeWindow, "TradeButton");
             mTrade.SetText(Strings.Trading.accept);
@@ -121,6 +129,7 @@ namespace Intersect.Client.Interface.Game.Trades
 
         public void Close()
         {
+            Globals.TradeAccepted = false;
             mContextMenu?.Close();
             mTradeWindow.Close();
         }
@@ -156,13 +165,19 @@ namespace Intersect.Client.Interface.Game.Trades
                             continue;
                         }
 
-                        g += item.Price * Globals.Trade[n, i].Quantity;
+                        if (item.ItemType == Enums.ItemTypes.Currency && item.Name.ToLower().Contains("gold"))
+                        {
+                            g += Globals.Trade[n, i].Quantity;
+                        }
+                        else
+                        {
+                            g += item.Price * Globals.Trade[n, i].Quantity;
+                        }
                         TradeSegment[n].Items[i].Pnl.IsHidden = false;
                         if (item.IsStackable)
                         {
                             TradeSegment[n].Values[i].IsHidden = Globals.Trade[n, i].Quantity <= 1;
-                            TradeSegment[n].Values[i].Text =
-                                Strings.FormatQuantityAbbreviated(Globals.Trade[n, i].Quantity);
+                            TradeSegment[n].Values[i].Text = Strings.FormatQuantityAbbreviated(Globals.Trade[n, i].Quantity);
                         }
                         else
                         {
@@ -187,6 +202,7 @@ namespace Intersect.Client.Interface.Game.Trades
                 TradeSegment[n].GoldValue.Text = Strings.Trading.value.ToString(g);
                 g = 0;
             }
+            mOtherPlayerAccepted.IsHidden = !Globals.TradeAccepted;
         }
 
         public FloatRect RenderBounds()
@@ -205,6 +221,7 @@ namespace Intersect.Client.Interface.Game.Trades
         //Trade the item
         void trade_Clicked(Base sender, ClickedEventArgs arguments)
         {
+            mTrade.IsDisabled = true;
             mTrade.Text = Strings.Trading.pending;
             PacketSender.SendAcceptTrade();
         }

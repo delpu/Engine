@@ -2259,6 +2259,10 @@ namespace Intersect.Server.Networking
                 player.Trading.Counterparty.Trading.Counterparty = null;
                 player.Trading.Counterparty = null;
             }
+            else
+            {
+                PacketSender.SendTradeAcceptPacketTo(player.Trading.Counterparty);
+            }
         }
 
         //DeclineTradePacket

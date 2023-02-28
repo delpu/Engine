@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 using Intersect.Client.Entities;
@@ -232,6 +232,10 @@ namespace Intersect.Client.General
             return default;
         }
 
+    }
+    public static partial class Globals
+    {
+        public static bool TradeAccepted { get; set; }
     }
 
 }

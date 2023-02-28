@@ -916,6 +916,17 @@ namespace Intersect.Server.Networking
             }
         }
 
+        //AceptTrade
+        public static void SendTradeAcceptPacketTo(Player player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            player?.SendPacket(new TradeAcceptedPacket());
+        }
+
         //EntityVitalsPacket
         public static EntityVitalsPacket GenerateEntityVitalsPacket(Entity en)
         {
