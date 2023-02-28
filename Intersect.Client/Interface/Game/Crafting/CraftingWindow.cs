@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using Intersect.Client.Core;
 using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Gwen.Control;
@@ -10,6 +10,7 @@ using Intersect.Client.Interface.Game.Chat;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
 using Intersect.GameObjects;
+using System;
 using Intersect.GameObjects.Crafting;
 using Intersect.Utilities;
 
@@ -37,6 +38,8 @@ namespace Intersect.Client.Interface.Game.Crafting
         private int mRemainingCrafts = 0;
 
         private Guid mCraftId;
+
+        public bool Refresh = false;
 
         //Controls
         private WindowControl mCraftWindow;
@@ -73,7 +76,7 @@ namespace Intersect.Client.Interface.Game.Crafting
 
         public CraftingWindow(Canvas gameCanvas)
         {
-            mCraftWindow = new WindowControl(gameCanvas, Globals.ActiveCraftingTable.Name, false, "CraftingWindow");
+            mCraftWindow = new WindowControl(gameCanvas, Globals.ActiveCraftingTable.Name.ToUpper(), false, "CraftingWindow");
             mCraftWindow.DisableResizing();
 
             mItemContainer = new ScrollControl(mCraftWindow, "IngredientsContainer");
@@ -114,7 +117,11 @@ namespace Intersect.Client.Interface.Game.Crafting
             mCraftAll.SetText(Strings.Crafting.craftall.ToString(1));
             mCraftAll.Clicked += craftAll_Clicked;
 
+          //  _CraftingWindow(); Search in crafting - TODO json
+
             mCraftWindow.LoadJsonUi(GameContentManager.UI.InGame, Graphics.Renderer.GetResolutionString());
+
+
 
             Interface.InputBlockingElements.Add(mCraftWindow);
 
@@ -509,5 +516,55 @@ namespace Intersect.Client.Interface.Game.Crafting
         }
 
     }
+    public partial class CraftingWindow
+    {
+        private TextBox mSearch;
+        private ImagePanel mTextboxBg;
+        private List<Guid> mCrafts;
+        private Label mSearchLabel;
+        private Button mClearButton;
 
+        private void _CraftingWindow()
+        {
+            mTextboxBg = new ImagePanel(mCraftWindow, "Textbox");
+            mSearch = new TextBox(mTextboxBg, "SearchBox");
+            mSearchLabel = new Label(mCraftWindow, "SearchLabel");
+            mSearchLabel.Text = "Search:";
+            mClearButton = new Button(mCraftWindow, "ClearButton");
+            mClearButton.Pressed += mClear_Pressed;
+            mClearButton.Text = "Clear";
+            mClearButton.Hide();
+            mSearch.TextChanged += mSearch_textChanged;
+        }
+
+        private void mSearch_textChanged(Base control, EventArgs args)
+        {
+            LoadCrafts();
+            Refresh = true;
+            LoadCraftItems(mCraftId);
+            mRecipes.ScrollToTop();
+        }
+
+        private void LoadCrafts()
+        {
+            var items = Globals.ActiveCraftingTable.Crafts
+                .Where(craftId => CraftIsValid(craftId))
+                .ToList();
+            mCrafts = items;
+        }
+        private bool CraftIsValid(Guid craftId)
+        {
+            var craft = CraftBase.Get(craftId);
+
+            return !Globals.ActiveCraftingTable.HiddenCrafts.Contains(craftId) && Utilities.SearchHelper.IsSearchable(craft.Name, mSearch.Text);
+        }
+
+        private void mClear_Pressed(Base control, EventArgs args)
+        {
+            mSearch.Text = string.Empty;
+            LoadCrafts();
+            Refresh = true;
+            LoadCraftItems(mCraftId);
+        }
+    }
 }

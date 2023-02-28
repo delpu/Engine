@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 using Intersect.GameObjects.Crafting;
@@ -13,6 +14,8 @@ namespace Intersect.GameObjects
     {
 
         [NotMapped] public DbList<CraftBase> Crafts = new DbList<CraftBase>();
+
+        [NotMapped] public List<Guid> HiddenCrafts = new List<Guid>();
 
         [JsonConstructor]
         public CraftingTableBase(Guid id) : base(id)

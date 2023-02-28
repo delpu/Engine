@@ -742,7 +742,7 @@ namespace Intersect.Client.Localization
         {
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public static LocalizedString craft = @"Craft 1";
+            public static LocalizedString craft = @"Craft";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public static LocalizedString craftall = @"Craft {00}";
