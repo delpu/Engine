@@ -35,6 +35,8 @@ namespace Intersect.Client.Entities
         //Animation Timer (for animated sprites)
         public long AnimationTimer { get; set; }
 
+        public bool IsAttacking => AttackTimer > Timing.Global.Milliseconds;
+
         //Combat
         public long AttackTimer { get; set; } = 0;
         public int AttackTime { get; set; } = -1;
@@ -582,7 +584,7 @@ namespace Intersect.Client.Entities
             elapsedtime = ecTime;
             if (Dashing != null)
             {
-                WalkFrame = Options.Instance.Sprites.NormalSheetDashFrame; //Fix the frame whilst dashing
+                WalkFrame = Options.Instance.Sprites.NormalDashFrame; //Fix the frame whilst dashing
             }
             else if (mWalkTimer < Timing.Global.Milliseconds)
             {
@@ -1015,27 +1017,27 @@ namespace Intersect.Client.Entities
 
             string transformedSprite = "";
 
-            //If the entity has transformed, apply that sprite instead.
-            for (var n = 0; n < Status.Count; n++)
+            // Loop through the entity status list in reverse.
+            for (int i = Status.Count - 1; i >= 0; i--)
             {
-                if (Status[n].Type == StatusTypes.Transform)
+                var status = Status[i];
+                switch (status.Type)
                 {
-                    sprite = Status[n].Data;
-                    transformedSprite = sprite;
+                    case StatusTypes.Transform:
+                        sprite = status.Data;
+                        transformedSprite = sprite;
+                        break;
+                    // If entity is stealth, don't render unless the entity is the player or is within their party.
+                    case StatusTypes.Stealth:
+                        if (this != Globals.Me && !(this is Player player && Globals.Me.IsInMyParty(player)))
+                        {
+                            return;
+                        }
+
+                        renderColor.A /= 2;
+                        break;
                 }
 
-                //If unit is stealthed, don't render unless the entity is the player.
-                if (Status[n].Type == StatusTypes.Stealth)
-                {
-                    if (this != Globals.Me && !(this is Player player && Globals.Me.IsInMyParty(player)))
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        renderColor.A /= 2;
-                    }
-                }
             }
 
             if (transformedSprite != TransformedSprite)
@@ -1078,9 +1080,7 @@ namespace Intersect.Client.Entities
             }
             else if (SpriteAnimation == SpriteAnimations.Normal)
             {
-                frame = AttackTimer - CalculateAttackTime() / 2 > Timing.Global.Milliseconds || IsBlocking
-                    ? Options.Instance.Sprites.NormalSheetAttackFrame
-                    : WalkFrame;
+                frame = NormalSpriteAnimationFrame;
             }
 
             var srcRectangle = new FloatRect(frame * frameWidth, d * frameHeight, frameWidth, frameHeight);
@@ -1130,7 +1130,7 @@ namespace Intersect.Client.Entities
                             if (ItemBase.TryGet(itemId, out var itemDescriptor))
                             {
                                 var itemPaperdoll = Gender == 0 ? itemDescriptor.MalePaperdoll : itemDescriptor.FemalePaperdoll;
-                                DrawEquipment(itemPaperdoll, item.Color * renderColor, destRectangle);
+                                DrawEquipment(itemPaperdoll, item.Color * renderColor);
                             }
                         }
                     }
@@ -1159,6 +1159,40 @@ namespace Intersect.Client.Entities
             }
         }
 
+        private int NormalSpriteAnimationFrame
+        {
+            get
+            {
+                int frame;
+
+                if (IsBlocking)
+                {
+                    frame = Options.Instance.Sprites.NormalBlockFrame;
+                }
+                else if (IsCasting)
+                {
+                    frame = Options.Instance.Sprites.NormalCastFrame;
+                }
+                // Checks if the entity is attacking or not.
+                // Note: the calculation is different compared to IsAttacking because
+                // frames are intended to behave differently for normal sprite-sheets.
+                else if (AttackTimer - (CalculateAttackTime() / 2f) > Timing.Global.Milliseconds)
+                {
+                    frame = Options.Instance.Sprites.NormalAttackFrame;
+                }
+                else
+                {
+                    frame = WalkFrame;
+                }
+
+                if (frame >= SpriteFrames)
+                {
+                    frame = SpriteFrames / 2;
+                }
+
+                return frame;
+            }
+        }
         public void DrawChatBubbles()
         {
             //Don't draw if the entity is hidden
@@ -1181,7 +1215,7 @@ namespace Intersect.Client.Entities
             }
         }
 
-        public virtual void DrawEquipment(string filename, Color renderColor, FloatRect entityRect)
+        public virtual void DrawEquipment(string filename, Color renderColor)
         {
             var map = Maps.MapInstance.Get(MapId);
             if (map == null || map.HideEquipment)
@@ -1189,8 +1223,12 @@ namespace Intersect.Client.Entities
                 return;
             }
 
-            var filenameNoExt = Path.GetFileNameWithoutExtension(filename);
-            string filenameSuffix = SpriteAnimation.ToString();
+            // Paperdoll textures and Frames.
+            GameTexture paperdollTex = null;
+            int spriteFrames = SpriteFrames;
+
+            // Extract filename without it's extension.
+            string filenameNoExt = Path.GetFileNameWithoutExtension(filename);
 
             if (SpriteAnimation == SpriteAnimations.Attack ||
                 SpriteAnimation == SpriteAnimations.Cast ||
@@ -1198,14 +1236,24 @@ namespace Intersect.Client.Entities
             {
                 var animationName = Path.GetFileNameWithoutExtension(AnimatedTextures[SpriteAnimation].Name);
                 int separatorIndex = animationName.IndexOf('_') + 1;
-                filenameSuffix = animationName.Substring(separatorIndex);
+                var customAnimationName = animationName.Substring(separatorIndex);
+                // Try to get custom paperdoll texture.
+                var customPaperdollTex =
+                    Globals.ContentManager.GetTexture(TextureType.Paperdoll,
+                        $"{filenameNoExt}_{customAnimationName}.png");
+                // If custom paperdoll texture exists, use it.
+                if (customPaperdollTex != null)
+                {
+                    paperdollTex = customPaperdollTex;
+                }
             }
 
-            var paperdollTex = Globals.ContentManager.GetTexture(
-                TextureType.Paperdoll, $"{filenameNoExt}_{filenameSuffix}.png"
-            );
-
-            var spriteFrames = SpriteFrames;
+            // If there's no custom paperdoll: use the paperdoll texture based on the SpriteAnimation.
+            if (paperdollTex == null && !string.IsNullOrEmpty($"{SpriteAnimation}"))
+            {
+                paperdollTex = Globals.ContentManager.GetTexture(TextureType.Paperdoll,
+                    $"{filenameNoExt}_{SpriteAnimation}.png");
+            }
 
             if (paperdollTex == null)
             {
@@ -1219,17 +1267,15 @@ namespace Intersect.Client.Entities
             }
 
             var d = PickSpriteRow(Dir);
-
+            // Calculate: direction, frame width and frame height.
+            //var d = (Dir + (Options.Instance.Sprites.Directions - 1)) % Options.Instance.Sprites.Directions;
             var frameWidth = paperdollTex.GetWidth() / spriteFrames;
             var frameHeight = paperdollTex.GetHeight() / Options.Instance.Sprites.Directions;
 
             var frame = SpriteFrame;
             if (SpriteAnimation == SpriteAnimations.Normal)
             {
-                frame = (AttackTimer - CalculateAttackTime() / 2 > Timing.Global.Milliseconds ||
-                         IsBlocking)
-                    ? Options.Instance.Sprites.NormalSheetAttackFrame
-                    : WalkFrame;
+                frame = NormalSpriteAnimationFrame;
             }
 
             var srcRectangle = new FloatRect(frame * frameWidth, d * frameHeight, frameWidth, frameHeight);
@@ -1243,12 +1289,12 @@ namespace Intersect.Client.Entities
             Graphics.DrawGameTexture(paperdollTex, srcRectangle, destRectangle, renderColor);
         }
 
-        protected virtual bool CalculateOrigin()
+        protected virtual void CalculateOrigin()
         {
             if (LatestMap == default)
             {
                 mOrigin = default;
-                return false;
+                return;
             }
 
             mOrigin = new Pointf(
@@ -1256,7 +1302,7 @@ namespace Intersect.Client.Entities
                 LatestMap.Y + Y * Options.TileHeight + OffsetY + Options.TileHeight
             );
 
-            return true;
+            return;
         }
 
         public virtual float GetTop(int overrideHeight = -1)
@@ -1832,7 +1878,7 @@ namespace Intersect.Client.Entities
             Status = Status.OrderByDescending(x => x.RemainingMs).ToList();
         }
 
-        public void UpdateSpriteAnimation()
+        private void UpdateSpriteAnimation()
         {
             //Exit if textures haven't been loaded yet
             if (AnimatedTextures.Count == 0)
@@ -1840,14 +1886,18 @@ namespace Intersect.Client.Entities
                 return;
             }
 
+            var timingMilliseconds = Timing.Global.Milliseconds;
+            var isNotBlockingAndCasting = !IsBlocking && !IsCasting;
 
             SpriteAnimation = SpriteAnimations.Normal;
-            if (AnimatedTextures.TryGetValue(SpriteAnimations.Idle, out _) && LastActionTime + Options.Instance.Sprites.TimeBeforeIdle < Timing.Global.Milliseconds)
+            if (AnimatedTextures.TryGetValue(SpriteAnimations.Idle, out _) &&
+                LastActionTime + Options.Instance.Sprites.IdleStartDelay < timingMilliseconds &&
+                isNotBlockingAndCasting)
             {
                 SpriteAnimation = SpriteAnimations.Idle;
             }
 
-            if (IsMoving)
+            if (IsMoving && !IsAttacking && isNotBlockingAndCasting)
             {
                 if (Running)
                 {
@@ -1857,16 +1907,22 @@ namespace Intersect.Client.Entities
                 {
                     SpriteAnimation = SpriteAnimations.Normal;
                 }
-                LastActionTime = Timing.Global.Milliseconds;
+                LastActionTime = timingMilliseconds;
             }
             else if (IsDead)
             {
                 SpriteAnimation = SpriteAnimations.Dead;
 
             }
-            else if (AttackTimer > Timing.Global.Milliseconds && !IsBlocking) //Attacking
+            if (IsAttacking && isNotBlockingAndCasting)
             {
-                var timeIn = CalculateAttackTime() - (AttackTimer - Timing.Global.Milliseconds);
+                // Normal sprite-sheets has their own handler for attacking frames.
+                if (AnimatedTextures.TryGetValue(SpriteAnimations.Normal, out _))
+                {
+                    return;
+                }
+
+                var timeInAttack = CalculateAttackTime() - (AttackTimer - timingMilliseconds);
                 LastActionTime = Timing.Global.Milliseconds;
 
                 if (AnimatedTextures.TryGetValue(SpriteAnimations.Attack, out _))
@@ -1911,18 +1967,27 @@ namespace Intersect.Client.Entities
                     }
                 }
 
-                if (SpriteAnimation != SpriteAnimations.Normal && SpriteAnimation != SpriteAnimations.Idle)
+                switch (SpriteAnimation)
                 {
-                    SpriteFrame = (int)Math.Floor((timeIn / (CalculateAttackTime() / (float)SpriteFrames)));
-                }
+                    case SpriteAnimations.Cast:
+                    case SpriteAnimations.Idle:
+                    case SpriteAnimations.Normal:
+                        break;
+                    case SpriteAnimations.Attack:
+                    case SpriteAnimations.Shoot:
+                    case SpriteAnimations.Weapon:
+                    default:
+                        SpriteFrame = (int)Math.Floor((timeInAttack / (CalculateAttackTime() / (float)SpriteFrames)));
+                break;
             }
-            else if (IsCasting)
+        }
+            if (IsCasting)
             {
                 var spell = SpellBase.Get(SpellCast);
                 if (spell != null)
                 {
                     var duration = spell.CastDuration;
-                    var timeIn = duration - (CastTime - Timing.Global.Milliseconds);
+                    var timeInCast = duration - (CastTime - timingMilliseconds);
 
                     if (AnimatedTextures.TryGetValue(SpriteAnimations.Cast, out _))
                     {
@@ -1939,9 +2004,9 @@ namespace Intersect.Client.Entities
                         }
                     }
 
-                    SpriteFrame = (int)Math.Floor((timeIn / (duration / (float)SpriteFrames)));
+                    SpriteFrame = (int)Math.Floor((timeInCast / (duration / (float)SpriteFrames)));
                 }
-                LastActionTime = Timing.Global.Milliseconds;
+                LastActionTime = timingMilliseconds;
             }
 
             if (SpriteAnimation == SpriteAnimations.Normal)
@@ -1950,14 +2015,14 @@ namespace Intersect.Client.Entities
             }
             else if (SpriteAnimation == SpriteAnimations.Idle || SpriteAnimation == SpriteAnimations.Run)
             {
-                if (SpriteFrameTimer + Options.Instance.Sprites.IdleFrameDuration < Timing.Global.Milliseconds)
+                if (SpriteFrameTimer + Options.Instance.Sprites.IdleFrameDuration < timingMilliseconds)
                 {
                     SpriteFrame++;
                     if (SpriteFrame >= SpriteFrames)
                     {
                         SpriteFrame = 0;
                     }
-                    SpriteFrameTimer = Timing.Global.Milliseconds;
+                    SpriteFrameTimer = timingMilliseconds;
                 }
             }
         }

@@ -257,7 +257,7 @@ namespace Intersect.Client.Entities
                     }
                     else if (!Globals.Me.TryAttack())
                     {
-                        if (Globals.Me.AttackTimer < Timing.Global.Milliseconds)
+                        if (!Globals.Me.IsAttacking)
                         {
                             Globals.Me.AttackTimer = Timing.Global.Milliseconds + Globals.Me.CalculateAttackTime();
                         }
@@ -1560,15 +1560,16 @@ namespace Intersect.Client.Entities
                 return false;
             }
 
-            if (AttackTimer > Timing.Global.Milliseconds)
+            if (IsAttacking)
             {
                 return false;
             }
 
             if (!IsMoving)
             {
+                IsBlocking = true;
                 PacketSender.SendBlock(true);
-                return true;
+                return IsBlocking;
             }
 
             return false;
@@ -1576,23 +1577,8 @@ namespace Intersect.Client.Entities
 
         public bool TryAttack()
         {
-            if (IsDead)
-            {
-                return false;
-            }
 
-
-            if (AttackTimer > Timing.Global.Milliseconds)
-            {
-                return false;
-            }
-
-            if (IsBlocking)
-            {
-                return false;
-            }
-
-            if (IsMoving && !Options.Instance.PlayerOpts.AllowCombatMovement)
+            if (IsAttacking || IsBlocking || IsDead || (IsMoving && !Options.Instance.PlayerOpts.AllowCombatMovement))
             {
                 return false;
             }
@@ -2293,7 +2279,7 @@ namespace Intersect.Client.Entities
             }
         }
 
-        public override void DrawEquipment(string filename, Color renderColor, FloatRect entityRect)
+        public override void DrawEquipment(string filename, Color renderColor)
         {
             //check if player is stunned or snared, if so don't let them move.
             for (var n = 0; n < Status.Count; n++)
@@ -2304,7 +2290,7 @@ namespace Intersect.Client.Entities
                 }
             }
 
-            base.DrawEquipment(filename, renderColor, entityRect);
+            base.DrawEquipment(filename, renderColor);
         }
 
         //Override of the original function, used for rendering the color of a player based on rank

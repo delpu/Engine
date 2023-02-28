@@ -6611,7 +6611,7 @@ namespace Intersect.Server.Entities
                 return -5;
             }
 
-            if (Blocking)
+            if (IsBlocking)
             {
                 return -5;
             }

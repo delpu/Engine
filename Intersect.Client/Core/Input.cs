@@ -352,7 +352,7 @@ namespace Intersect.Client.Core
                     return;
                 }
 
-                if (Globals.Me.AttackTimer < Timing.Global.Milliseconds)
+                if (!Globals.Me.IsAttacking)
                 {
                     Globals.Me.AttackTimer = Timing.Global.Milliseconds + Globals.Me.CalculateAttackTime();
                 }
