@@ -2094,6 +2094,17 @@ namespace Intersect.Client.Networking
             }
         }
 
+        //TradeAccept
+        public void HandlePacket(IPacketSender packetSender, TradeAcceptedPacket packet)
+        {
+            if (Globals.Me == null)
+            {
+                return;
+            }
+
+            Globals.TradeAccepted = true;
+        }
+
         //EnteringGamePacket
         public void HandlePacket(IPacketSender packetSender, EnteringGamePacket packet)
         {
