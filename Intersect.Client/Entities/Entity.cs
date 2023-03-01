@@ -1147,13 +1147,13 @@ namespace Intersect.Client.Entities
                 case Direction.Left:
                 case Direction.UpLeft:
                 case Direction.DownLeft:
-                    return 1;
+                    return 3;
                 case Direction.Right:
                 case Direction.DownRight:
                 case Direction.UpRight:
                     return 2;
                 case Direction.Up:
-                    return 3;
+                    return 1;
                 default:
                     return 0;
             }
@@ -1534,7 +1534,7 @@ namespace Intersect.Client.Entities
 
         public float GetLabelLocation(LabelType type)
         {
-            var y = GetTop() - 8;
+            var y = GetTop() + 54;
 
             //Need room for HP bar if not an event.
             if (!(this is Event) && ShouldDrawHpBar)
@@ -1658,8 +1658,9 @@ namespace Intersect.Client.Entities
 
         public void DrawHpBar()
         {
+           
             // Are we supposed to hide this HP bar?
-            if (!ShouldDrawHpBar)
+            if (!ShouldDrawHpBar || ShouldDrawCastingBar)
             {
                 return;
             }
@@ -1712,7 +1713,7 @@ namespace Intersect.Client.Entities
             if (sprite != null)
             {
                 y -= sprite.Height / Options.Instance.Sprites.Directions;
-                y -= boundingTeture.Height + 2;
+                y -= boundingTeture.Height - 184;
             }
 
             y += boundingTeture.Height / 2;
@@ -1776,7 +1777,7 @@ namespace Intersect.Client.Entities
             var x = (int)Math.Ceiling(Origin.X);
             var y = (int)Math.Ceiling(Origin.Y);
 
-            y += 2 + boundingTexture.Height / 2;
+            y += 80 + boundingTexture.Height / 2;
 
             if (castBackground != null)
             {
@@ -1820,8 +1821,8 @@ namespace Intersect.Client.Entities
             );
 
             var destRectangle = new FloatRect(
-                (float)Math.Ceiling(WorldPos.X + (WorldPos.Width - targetTexture.GetWidth() / 2) / 8),
-                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight() / 12) / 2),
+                (float)Math.Ceiling(WorldPos.X + (WorldPos.Width - targetTexture.GetWidth() / 2) * 2),
+                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight() / 16) ),
                 srcRectangle.Width,
                 srcRectangle.Height
             );
