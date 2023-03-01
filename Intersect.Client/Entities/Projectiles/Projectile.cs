@@ -154,14 +154,40 @@ namespace Intersect.Client.Entities.Projectiles
                     {
                         if (mMyBase.SpawnLocations[x, y].Directions[d] == true)
                         {
-                            var s = new ProjectileSpawns(
+                            if (Dir == Direction.Left || Dir == Direction.UpLeft || Dir == Direction.DownLeft)
+                            {
+                                var s = new ProjectileSpawns(
                                 (byte)FindProjectileRotationDir(Dir, (Direction)d),
                                 (byte)(X + FindProjectileRotationX(Dir, x - 2, y - 2)),
-                                (byte)(Y + FindProjectileRotationY(Dir, x - 2, y - 2)), Z, MapId, animBase,
+                                (byte)(Y + FindProjectileRotationY(Dir, x - 3, y - 2)), Z, MapId, animBase,
                                 mMyBase.Animations[spawn].AutoRotate, mMyBase, this
-                            );
 
-                            Spawns[mSpawnedAmount] = s;
+                            );
+                                Spawns[mSpawnedAmount] = s;
+                            }
+                            else if (Dir == Direction.Right || Dir == Direction.UpRight || Dir == Direction.DownRight)
+                            {
+                                var s = new ProjectileSpawns(
+                               (byte)FindProjectileRotationDir(Dir, (Direction)d),
+                               (byte)(X + FindProjectileRotationX(Dir, x - 2, y - 2)),
+                               (byte)(Y + FindProjectileRotationY(Dir, x - 1, y - 2)), Z, MapId, animBase,
+                               mMyBase.Animations[spawn].AutoRotate, mMyBase, this
+
+                            );
+                                Spawns[mSpawnedAmount] = s;
+                            }
+                            else if (Dir == Direction.Down || Dir == Direction.Up)
+                            {
+                                var s = new ProjectileSpawns(
+                               (byte)FindProjectileRotationDir(Dir, (Direction)d),
+                               (byte)(X + FindProjectileRotationX(Dir, x - 2 , y - 2)),
+                               (byte)(Y + FindProjectileRotationY(Dir, x - 2, y - 2)), Z, MapId, animBase,
+                               mMyBase.Animations[spawn].AutoRotate, mMyBase, this
+
+                            );
+                                Spawns[mSpawnedAmount] = s;
+                            }
+
                             if (Collided(mSpawnedAmount))
                             {
                                 Spawns[mSpawnedAmount].Dispose();

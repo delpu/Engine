@@ -1311,7 +1311,7 @@ namespace Intersect.Server.Entities
             {
                 if (blocking && !IsBlocking)
                 {
-                    IsBlocking = true;
+                    IsBlocking = false;
                     ProcessRecharge();
                     ChargeTimer = Timing.Global.Milliseconds + (1000 - (2 * (BaseStats[3] + StatPointAllocations[3]) ));
                     PacketSender.SendEntityAttack(this, CalculateAttackTime(), true);

@@ -171,7 +171,7 @@ namespace Intersect.Client.Entities
                             ),
                             new FloatRect(
                                 mRenderX - frameWidth / 2, mRenderY - frameHeight / 2, frameWidth, frameHeight
-                            ), Color.White, null, GameBlendModes.None, null, rotationDegrees // dozoom
+                            ), Color.White, null, GameBlendModes.None, null, rotationDegrees, dozoom: true// dozoom
                         );
                     }
                 }
@@ -212,7 +212,7 @@ namespace Intersect.Client.Entities
                             ),
                             new FloatRect(
                                 mRenderX - frameWidth / 2, mRenderY - frameHeight / 2, frameWidth, frameHeight
-                            ), Color.White, null, GameBlendModes.None, null, rotationDegrees // dozoom
+                            ), Color.White, null, GameBlendModes.None, null, rotationDegrees, dozoom: true // dozoom
                         );
                     }
                 }
