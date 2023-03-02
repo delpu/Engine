@@ -32,6 +32,7 @@ namespace Intersect.Enums
 
         Knockback = 13,
 
+
     }
 
 }

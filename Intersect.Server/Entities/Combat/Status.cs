@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -163,6 +163,8 @@ namespace Intersect.Server.Entities.Combat
                 en.Statuses.TryAdd(Spell, this);
                 en.CachedStatuses = en.Statuses.Values.ToArray();
             }
+
+      
 
             // If this is a taunt, force the target properly for players and NPCs
             if (Type == StatusTypes.Taunt)

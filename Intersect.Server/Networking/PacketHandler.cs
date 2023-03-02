@@ -1118,7 +1118,9 @@ namespace Intersect.Server.Networking
             {
                 if (Options.Combat.EnableCombatChatMessages)
                 {
-                    PacketSender.SendChatMsg(player, Strings.Combat.channelingnoattack, ChatMessageType.Combat);
+                    player.CastTime = 0;
+                    player.CastTarget = null;
+                    //PacketSender.SendChatMsg(player, Strings.Combat.channelingnoattack, ChatMessageType.Combat);
                 }
 
                 return;

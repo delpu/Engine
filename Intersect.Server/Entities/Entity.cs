@@ -386,7 +386,7 @@ namespace Intersect.Server.Entities
                     //Blocking timers
                     if(IsBlocking && !IsAttacking)
                     {
-                        IsBlocking = false;
+                        IsBlocking = true;
                         PacketSender.SendEntityAttack(this, -1);
                     }
                 }
@@ -1311,6 +1311,8 @@ namespace Intersect.Server.Entities
             {
                 if (blocking && !IsBlocking)
                 {
+                    CastTime = 0;
+                    CastTarget = null;
                     IsBlocking = false;
                     ProcessRecharge();
                     ChargeTimer = Timing.Global.Milliseconds + (1000 - (2 * (BaseStats[3] + StatPointAllocations[3]) ));

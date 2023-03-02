@@ -1408,7 +1408,9 @@ namespace Intersect.Server.Entities
             {
                 if (Options.Combat.EnableCombatChatMessages)
                 {
-                    PacketSender.SendChatMsg(this, Strings.Combat.channelingnoattack, ChatMessageType.Combat);
+                    CastTime = 0;
+                    CastTarget = null;
+                    //PacketSender.SendChatMsg(this, Strings.Combat.channelingnoattack, ChatMessageType.Combat);
                 }
 
                 return;
