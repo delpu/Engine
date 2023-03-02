@@ -282,7 +282,7 @@ namespace Intersect.Client.Core
         {
             KeyUp?.Invoke(modifier, key);
 
-            if(key == Keys.Shift)
+            if(key == Keys.Shift && Globals.Me != null)
             {
                 PacketSender.SendPlayerRunning(!Globals.Me.Running);
             }
