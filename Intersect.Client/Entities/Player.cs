@@ -250,9 +250,9 @@ namespace Intersect.Client.Entities
                         if (IsCastingCheckTimer < Timing.Global.Milliseconds &&
                             Options.Combat.EnableCombatChatMessages)
                         {
-                            //ChatboxMsg.AddMessage(new ChatboxMsg(Strings.Combat.AttackWhileCastingDeny,
-                            //  CustomColors.Alerts.Declined, ChatMessageType.Combat));
-                            CastTime = 0;
+                            ChatboxMsg.AddMessage(new ChatboxMsg(Strings.Combat.AttackWhileCastingDeny,
+                              CustomColors.Alerts.Declined, ChatMessageType.Combat));
+                            //CastTime = 0;
                             IsCastingCheckTimer = Timing.Global.Milliseconds + 350;
                         }
                     }

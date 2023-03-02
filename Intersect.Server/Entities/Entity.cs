@@ -386,7 +386,7 @@ namespace Intersect.Server.Entities
                     //Blocking timers
                     if(IsBlocking && !IsAttacking)
                     {
-                        IsBlocking = true;
+                        IsBlocking = false;
                         PacketSender.SendEntityAttack(this, -1);
                     }
                 }
