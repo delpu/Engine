@@ -1215,6 +1215,10 @@ namespace Intersect.Client.Entities
             }
         }
 
+       
+
+       
+
         public virtual void DrawEquipment(string filename, Color renderColor)
         {
             var map = Maps.MapInstance.Get(MapId);

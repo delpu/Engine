@@ -475,6 +475,7 @@ namespace Intersect.Client.Core
                         DrawOverheadInfo(entity);
                         if (entity.GetType() != typeof(Event))
                         {
+                            entity.DrawTag();
                             entity.DrawHpBar();
                             entity.DrawCastingBar();
                         }
@@ -493,6 +494,7 @@ namespace Intersect.Client.Core
                         DrawOverheadInfo(entity);
                         if (entity.GetType() != typeof(Event))
                         {
+                            entity.DrawTag();
                             entity.DrawHpBar();
                             entity.DrawCastingBar();
                         }

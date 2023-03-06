@@ -1177,6 +1177,7 @@ namespace Intersect.Client.Entities
         //Input Handling
         private void HandleInput()
         {
+
             var movex = 0f;
             var movey = 0f;
             if (Interface.Interface.HasInputFocus())
@@ -1192,6 +1193,7 @@ namespace Intersect.Client.Entities
             if (Controls.KeyDown(Control.MoveUp))
             {
                 movey += 1;
+
             }
 
             if (Controls.KeyDown(Control.MoveDown))
@@ -2339,6 +2341,7 @@ namespace Intersect.Client.Entities
             {
                 return;
             }
+           
             base.DrawName(textColor, borderColor, backgroundColor);
             DrawLabels(HeaderLabel.Text, 0, HeaderLabel.Color, textColor, borderColor, backgroundColor);
             DrawLabels(FooterLabel.Text, 1, FooterLabel.Color, textColor, borderColor, backgroundColor);
@@ -2521,6 +2524,35 @@ namespace Intersect.Client.Entities
                     }
                 }
             }
+        }
+
+        public void DrawPartyIndicators()
+        {
+            //Don't draw if the entity is hidden
+            if (IsHidden)
+            {
+                return;
+            }
+
+            //If unit is stealthed, don't render unless the entity is the player or party member.
+            if (!ShouldDraw)
+            {
+                return;
+            }
+            float x, y;
+            string tagFileName = string.Empty;
+            tagFileName = $@"PartyIndicator.png";
+            var tagTexture = Globals.ContentManager.GetTexture(TextureType.Tag, tagFileName);
+            if (tagTexture == null)
+            {
+                return;
+            }
+            var nameCentHorPos = (int)Math.Ceiling(Origin.X);
+            var nameVertPos = GetLabelLocation(LabelType.Name);
+            x = nameCentHorPos - (tagTexture.GetWidth() / 2);
+            y = nameVertPos - tagTexture.GetHeight() - 2;
+            Graphics.DrawGameTexture(tagTexture, x, y);
+
         }
 
         protected override bool ShouldDrawHpBar
