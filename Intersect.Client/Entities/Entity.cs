@@ -1085,7 +1085,7 @@ namespace Intersect.Client.Entities
 
             var srcRectangle = new FloatRect(frame * frameWidth, d * frameHeight, frameWidth, frameHeight);
             var destRectangle = new FloatRect(
-                (int)Math.Ceiling(Origin.X - frameWidth ),
+                (int)Math.Ceiling(Origin.X - frameWidth /2f),
                 (int)Math.Ceiling(Origin.Y - frameHeight),
                 srcRectangle.Width,
                 srcRectangle.Height
@@ -1102,7 +1102,7 @@ namespace Intersect.Client.Entities
                 //Check for player
                 if (string.Equals("Player", paperdoll, StringComparison.Ordinal))
                 {
-                    Graphics.DrawGameTexture(texture, srcRectangle, destRectangle, renderColor, dozoom: true);
+                    Graphics.DrawGameTexture(texture, srcRectangle, destRectangle, renderColor, dozoom: false);
                 }
                 else if (equipSlot > -1)
                 {
@@ -1534,7 +1534,7 @@ namespace Intersect.Client.Entities
 
         public float GetLabelLocation(LabelType type)
         {
-            var y = GetTop() + 54;
+            var y = GetTop() - 8;
 
             //Need room for HP bar if not an event.
             if (!(this is Event) && ShouldDrawHpBar)
@@ -1713,7 +1713,7 @@ namespace Intersect.Client.Entities
             if (sprite != null)
             {
                 y -= sprite.Height / Options.Instance.Sprites.Directions;
-                y -= boundingTeture.Height - 184;
+                y -= boundingTeture.Height +2;
             }
 
             y += boundingTeture.Height / 2;
@@ -1777,7 +1777,7 @@ namespace Intersect.Client.Entities
             var x = (int)Math.Ceiling(Origin.X);
             var y = (int)Math.Ceiling(Origin.Y);
 
-            y += 80 + boundingTexture.Height / 2;
+            y += 2 + boundingTexture.Height / 2;
 
             if (castBackground != null)
             {
@@ -1821,8 +1821,8 @@ namespace Intersect.Client.Entities
             );
 
             var destRectangle = new FloatRect(
-                (float)Math.Ceiling(WorldPos.X + (WorldPos.Width - targetTexture.GetWidth() / 2) * 2),
-                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight() / 16) ),
+                (float)Math.Ceiling(WorldPos.X + (WorldPos.Width - targetTexture.GetWidth() / 2) / 2),
+                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight()) / 2 ),
                 srcRectangle.Width,
                 srcRectangle.Height
             );
