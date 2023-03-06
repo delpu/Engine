@@ -648,7 +648,7 @@ namespace Intersect.Client.MonoGame.Graphics
 
                 if (dozoom)
                 {
-                    var zoomRatio = 2F;
+                    var zoomRatio = 1.5F;
                     scale.X *= zoomRatio;
                     scale.Y *= zoomRatio;
                 }

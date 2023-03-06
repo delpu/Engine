@@ -1534,7 +1534,7 @@ namespace Intersect.Client.Entities
 
         public float GetLabelLocation(LabelType type)
         {
-            var y = GetTop() - 8;
+            var y = GetTop() + 20;
 
             //Need room for HP bar if not an event.
             if (!(this is Event) && ShouldDrawHpBar)
