@@ -119,6 +119,9 @@ namespace Intersect.GameObjects
         //Dash Info
         public SpellDashOpts Dash { get; set; } = new SpellDashOpts();
 
+        //Revive Info
+        public SpellReviveOpts Revive { get; set; } = new SpellReviveOpts();
+
         //Event Info
         [Column("Event")]
         public Guid EventId { get; set; }
@@ -275,6 +278,20 @@ namespace Intersect.GameObjects
 
         public bool IgnoreZDimensionAttributes { get; set; }
 
+    }
+
+    [Owned]
+    public partial class SpellReviveOpts
+    {
+        [NotMapped] public int[] VitalRestore = new int[(int)Vitals.VitalCount];
+
+        [Column("VitalRestore")]
+        [JsonIgnore]
+        public string VitalRestoreJson
+        {
+            get => DatabaseUtils.SaveIntArray(VitalRestore, (int)Vitals.VitalCount);
+            set => VitalRestore = DatabaseUtils.LoadIntArray(value, (int)Vitals.VitalCount);
+        }
     }
 
 }

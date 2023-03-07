@@ -5098,6 +5098,10 @@ Tick timer saved in server config.json.";
 
             public static LocalizedString ignorezdimension = @"Z-Dimension Blocks";
 
+            public static LocalizedString revivehp = @"HP (%):";
+
+            public static LocalizedString revivemp = @"MP (%):";
+
             public static LocalizedString ishotdot = @"HOT/DOT?";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -5167,6 +5171,7 @@ Tick timer saved in server config.json.";
                 {2, @"Warp to Target"},
                 {3, @"Dash"},
                 {4, @"Event"},
+                {5, @"Revive"},
             };
 
             public static LocalizedString undo = @"Undo Changes";

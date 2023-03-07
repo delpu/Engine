@@ -1430,9 +1430,9 @@ namespace Intersect.Server.Entities
         }
 
         //Vitals
-        public void RestoreVital(Vitals vital)
+        public void RestoreVital(Vitals vital, int percentage = 100)
         {
-            SetVital(vital, GetMaxVital(vital));
+            SetVital(vital, (int)((float)GetMaxVital(vital) / (float)100 * (float)percentage));
         }
 
         public void AddVital(Vitals vital, int amount)
@@ -2227,7 +2227,7 @@ namespace Intersect.Server.Entities
                 reason = SpellCastFailureReason.InvalidSpell;
                 return false;
             }
-            if (target is Player player && player.PlayerDead)
+            if (target is Player player && player.PlayerDead && spell.SpellType != SpellTypes.Revive)
             {
                 reason = SpellCastFailureReason.TargetDead;
                 return false;
@@ -3006,6 +3006,16 @@ namespace Intersect.Server.Entities
             }
 
             Dead = false;
+        }
+
+        public virtual void Reset(Vitals vital, int percentage)
+        {
+            RestoreVital(vital, percentage);
+
+            if (vital == Vitals.Health)
+            {
+                Dead = false;
+            }
         }
 
         //Empty virtual functions for players

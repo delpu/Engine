@@ -5259,6 +5259,25 @@ namespace Intersect.Server.Entities
                     base.CastSpell(spellId, spellSlot); //To get cooldown :P
 
                     break;
+                case SpellTypes.Revive:
+                    if (CastTarget == null)
+                    {
+                        return;
+                    }
+
+                    if (CastTarget is Player playerTarget && playerTarget.PlayerDead)
+                    {
+                        for(int i = 0; i < spellBase.Revive.VitalRestore.Length; i++)
+                        {
+                            playerTarget.Reset((Vitals)i, spellBase.Revive.VitalRestore[i]);
+                        }
+
+                        playerTarget.PlayerDead = false;
+                        playerTarget.SendPlayerDeathStatus();
+                        PacketSender.SendEntityDataToProximity(playerTarget);
+                        PacketSender.SendRespawnFinished(playerTarget);
+                    }
+                    break;
                 default:
                     base.CastSpell(spellId, spellSlot);
 

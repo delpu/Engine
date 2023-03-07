@@ -2046,6 +2046,7 @@ namespace Intersect.Client.Localization
                 {2, @"Warp to Target"},
                 {3, @"Dash"},
                 {4, @"Special"},
+                {5, @"Revive"},
             };
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

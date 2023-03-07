@@ -264,6 +264,9 @@ namespace Intersect.Editor.Forms.Editors
                 cmbDirection.Items.Add(Strings.Direction.dir[i]);
             }
 
+            lblReviveHP.Text = Strings.SpellEditor.revivehp;
+            lblReviveMP.Text = Strings.SpellEditor.revivemp;
+
             btnVisualMapSelector.Text = Strings.Warping.visual;
 
             grpEvent.Text = Strings.SpellEditor.Event;
@@ -342,6 +345,7 @@ namespace Intersect.Editor.Forms.Editors
             grpWarp.Hide();
             grpDash.Hide();
             grpEvent.Hide();
+            grpRevive.Hide();
             cmbTargetType.Enabled = true;
 
             // Reset our combat data location, since event type spells can move it.
@@ -411,21 +415,26 @@ namespace Intersect.Editor.Forms.Editors
                 chkIgnoreInactiveResources.Checked = mEditorItem.Dash.IgnoreInactiveResources;
                 chkIgnoreZDimensionBlocks.Checked = mEditorItem.Dash.IgnoreZDimensionAttributes;
             }
-
-            if (cmbType.SelectedIndex == (int) SpellTypes.Event)
+            else if (cmbType.SelectedIndex == (int) SpellTypes.Event)
             {
                 grpEvent.Show();
                 cmbEvent.SelectedIndex = EventBase.ListIndex(mEditorItem.EventId) + 1;
                 // Move our combat data down a little bit, it's not a very clean solution but it'll let us display it properly.
                 grpCombat.Location = new System.Drawing.Point(grpEvent.Location.X, grpEvent.Location.Y + grpEvent.Size.Height + 5);
             }
-
-            if (cmbType.SelectedIndex == (int) SpellTypes.WarpTo)
+            else if (cmbType.SelectedIndex == (int) SpellTypes.WarpTo)
             {
                 grpTargetInfo.Show();
                 cmbTargetType.SelectedIndex = (int) SpellTargetTypes.Single;
                 cmbTargetType.Enabled = false;
                 UpdateTargetTypePanel();
+            }
+            else if (cmbType.SelectedIndex == (int)SpellTypes.Revive)
+            {
+                grpRevive.Show();
+                grpTargetInfo.Show();
+                nudReviveHP.Value = mEditorItem.Revive.VitalRestore[(int)Vitals.Health];
+                nudReviveMP.Value = mEditorItem.Revive.VitalRestore[(int)Vitals.Mana];
             }
         }
 
@@ -1102,6 +1111,16 @@ namespace Intersect.Editor.Forms.Editors
         {
             Guid animationId = AnimationBase.IdFromList(cmbTickAnimation.SelectedIndex - 1);
             mEditorItem.TickAnimation = AnimationBase.Get(animationId);
+        }
+
+        private void nudReviveHP_ValueChanged(object sender, EventArgs e)
+        {
+            mEditorItem.Revive.VitalRestore[(int)Vitals.Health] = (int)nudReviveHP.Value;
+        }
+
+        private void nudReviveMP_ValueChanged(object sender, EventArgs e)
+        {
+            mEditorItem.Revive.VitalRestore[(int)Vitals.Mana] = (int)nudReviveMP.Value;
         }
     }
 
