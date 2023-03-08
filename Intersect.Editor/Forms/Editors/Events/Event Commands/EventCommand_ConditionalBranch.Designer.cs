@@ -51,6 +51,7 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
             this.rdoManual = new DarkUI.Controls.DarkRadioButton();
             this.cmbItem = new DarkUI.Controls.DarkComboBox();
             this.lblItem = new System.Windows.Forms.Label();
+            this.rdoTimeSystem = new DarkUI.Controls.DarkRadioButton();
             this.grpVariable = new DarkUI.Controls.DarkGroupBox();
             this.grpSelectVariable = new DarkUI.Controls.DarkGroupBox();
             this.rdoPlayerVariable = new DarkUI.Controls.DarkRadioButton();
@@ -216,7 +217,7 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
             this.grpConditional.ForeColor = System.Drawing.Color.Gainsboro;
             this.grpConditional.Location = new System.Drawing.Point(3, 3);
             this.grpConditional.Name = "grpConditional";
-            this.grpConditional.Size = new System.Drawing.Size(278, 434);
+            this.grpConditional.Size = new System.Drawing.Size(278, 470);
             this.grpConditional.TabIndex = 17;
             this.grpConditional.TabStop = false;
             this.grpConditional.Text = "Conditional";
@@ -488,6 +489,16 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
             this.lblItem.TabIndex = 2;
             this.lblItem.Text = "Item:";
             // 
+            // rdoTimeSystem
+            // 
+            this.rdoTimeSystem.AutoSize = true;
+            this.rdoTimeSystem.Location = new System.Drawing.Point(10, 186);
+            this.rdoTimeSystem.Name = "rdoTimeSystem";
+            this.rdoTimeSystem.Size = new System.Drawing.Size(85, 17);
+            this.rdoTimeSystem.TabIndex = 52;
+            this.rdoTimeSystem.Text = "Time System";
+            this.rdoTimeSystem.CheckedChanged += new System.EventHandler(this.rdoTimeSystem_CheckedChanged);
+            // 
             // grpVariable
             // 
             this.grpVariable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -578,6 +589,7 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
             // 
             this.grpNumericVariable.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
             this.grpNumericVariable.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.grpNumericVariable.Controls.Add(this.rdoTimeSystem);
             this.grpNumericVariable.Controls.Add(this.cmbCompareUserVar);
             this.grpNumericVariable.Controls.Add(this.rdoVarCompareUserVar);
             this.grpNumericVariable.Controls.Add(this.cmbNumericComparitor);
@@ -593,7 +605,7 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
             this.grpNumericVariable.ForeColor = System.Drawing.Color.Gainsboro;
             this.grpNumericVariable.Location = new System.Drawing.Point(8, 139);
             this.grpNumericVariable.Name = "grpNumericVariable";
-            this.grpNumericVariable.Size = new System.Drawing.Size(247, 182);
+            this.grpNumericVariable.Size = new System.Drawing.Size(247, 222);
             this.grpNumericVariable.TabIndex = 51;
             this.grpNumericVariable.TabStop = false;
             this.grpNumericVariable.Text = "Numeric Variable:";
@@ -1968,6 +1980,7 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
             this.rdoVarCompareUserVar.TabIndex = 50;
             this.rdoVarCompareUserVar.Text = "Account Variable Value:";
             this.rdoVarCompareUserVar.CheckedChanged += new System.EventHandler(this.rdoVarCompareUserVar_CheckedChanged);
+
             // 
             // cmbBooleanUserVariable
             // 
@@ -2189,6 +2202,7 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
         internal DarkComboBox cmbCompareUserVar;
         internal DarkRadioButton rdoVarCompareUserVar;
         internal DarkComboBox cmbBooleanUserVariable;
+        internal DarkRadioButton rdoTimeSystem;
         internal DarkRadioButton optBooleanUserVariable;
     }
 }
