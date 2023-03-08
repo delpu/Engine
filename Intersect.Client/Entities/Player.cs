@@ -1480,8 +1480,22 @@ namespace Intersect.Client.Entities
 
         private void AutoTurnToTarget(Entity en)
         {
-            if (!Globals.Database.AutoTurnToTarget || !Options.Instance.PlayerOpts.EnableAutoTurnToTarget ||
-                Controls.KeyDown(Control.TurnAround) || Controls.KeyDown(Control.Block))
+            if (en == this)
+            {
+                return;
+            }
+
+            if (!Globals.Database.AutoTurnToTarget)
+            {
+                return;
+            }
+
+            if (!Options.Instance.PlayerOpts.EnableAutoTurnToTarget)
+            {
+                return;
+            }
+
+            if (Controls.KeyDown(Control.TurnAround))
             {
                 return;
             }
