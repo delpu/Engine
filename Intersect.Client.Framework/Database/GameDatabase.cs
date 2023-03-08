@@ -13,6 +13,7 @@ namespace Intersect.Client.Framework.Database
 
         public bool TargetAccountDirection { get; set; }
 
+        public bool BindDescriptionWindowToCursor { get; set; }
         public int MusicVolume { get; set; }
 
         public int SoundVolume { get; set; }
@@ -91,6 +92,7 @@ namespace Intersect.Client.Framework.Database
             FullScreen = LoadPreference(nameof(FullScreen), false);
             EnableLighting = LoadPreference(nameof(EnableLighting), true);
             HideOthersOnWindowOpen = LoadPreference(nameof(HideOthersOnWindowOpen), true);
+            BindDescriptionWindowToCursor = LoadPreference(nameof(BindDescriptionWindowToCursor), true);
             TargetAccountDirection = LoadPreference(nameof(TargetAccountDirection), false);
             StickyTarget = LoadPreference(nameof(StickyTarget), false);
             AutoTurnToTarget = LoadPreference(nameof(AutoTurnToTarget), false);
@@ -143,6 +145,7 @@ namespace Intersect.Client.Framework.Database
             SavePreference(nameof(ShowHealthAsPercentage), ShowHealthAsPercentage);
             SavePreference(nameof(ShowManaAsPercentage), ShowManaAsPercentage);
             SavePreference(nameof(TypewriterBehavior), TypewriterBehavior);
+            SavePreference(nameof(BindDescriptionWindowToCursor), BindDescriptionWindowToCursor);
         }
 
         public abstract bool LoadConfig();

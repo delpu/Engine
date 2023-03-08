@@ -1723,6 +1723,9 @@ namespace Intersect.Client.Localization
             public static LocalizedString AutoCloseWindows = @"Auto-close Windows";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString BindDescriptionWindowToCursor = @"Lock tooltips to window";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public static LocalizedString Cancel = @"Cancel";
 
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
