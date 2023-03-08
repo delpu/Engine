@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -219,15 +219,11 @@ namespace Intersect.Client.Framework.Gwen.Control
         /// <param name="skin">Skin to use.</param>
         protected override void Render(Skin.Base skin)
         {
-            var bottom = 0;
-            if (mInnerPanel.Children.Count > 0)
-            {
-                bottom = mInnerPanel.Children.Last().Y + mInnerPanel.Y;
-            }
+            var treeNodeHeight = CalculateTreeNodeHeight();
 
             skin.DrawTreeNode(
-                this, mInnerPanel.IsVisible, IsSelected, mTitle.Height, mTitle.TextRight,
-                (int) (mToggleButton.Y + mToggleButton.Height * 0.5f), bottom, mTreeControl == Parent
+                 this, mInnerPanel.IsVisible, IsSelected, treeNodeHeight, mTitle.TextRight,
+                (int)(mToggleButton.Y + mToggleButton.Height * 0.5f), mInnerPanel.Bottom, mTreeControl == Parent
             ); // IsRoot
 
             //[halfofastaple] HACK - The treenodes are taking two passes until their height is set correctly,
@@ -237,6 +233,25 @@ namespace Intersect.Client.Framework.Gwen.Control
             //  definitely a better solution (possibly: Make it set the height from childmost
             //  first and work it's way up?) that invalidates and draws properly in 1 loop.
             this.Invalidate();
+        }
+
+        /// <summary>
+        /// Calculates the height of tree node.
+        /// </summary>
+        private int CalculateTreeNodeHeight()
+        {
+            var height = mTitle.Height;
+
+            if (mInnerPanel.Children.Count > 0)
+            {
+                height = mInnerPanel.Children.Last().Y + height;
+            }
+            else if (height == 0)
+            {
+                height = mInnerPanel.Height;
+            }
+
+            return height;
         }
 
         /// <summary>
