@@ -256,20 +256,20 @@ namespace Intersect.Client.Interface.Game.EntityPanel
             TradeLabel.Show();
             PartyLabel.Show();
             FriendLabel.Show();
-            ExpBackground.Show();
+            //ExpBackground.Show();
             ExpBar.Show();
             ExpLbl.Show();
-            ExpTitle.Show();
+            //ExpTitle.Show();
             EntityMap.Show();
             EventDesc.Show();
-            MpBackground.Show();
+            //MpBackground.Show();
             MpBar.Show();
-            MpTitle.Show();
+            //MpTitle.Show();
             MpLbl.Show();
-            HpBackground.Show();
+            //HpBackground.Show();
             HpBar.Show();
             HpLbl.Show();
-            HpTitle.Show();
+            //HpTitle.Show();
 
             TryShowGuildButton();
         }
