@@ -1537,23 +1537,8 @@ namespace Intersect.Client.Entities
         public bool TryAttack()
         {
 
-            if (AttackTimer > Timing.Global.Milliseconds)
+            if (IsAttacking || IsBlocking || IsDead || (IsMoving && !Options.Instance.PlayerOpts.AllowCombatMovement))
             {
-                return false;
-            }
-
-            if (IsDead)
-            {
-                return false;
-            }
-
-            if (IsBlocking)
-            {
-                return false;
-            }
-
-            if (IsMoving && !Options.Instance.PlayerOpts.AllowCombatMovement)
-            { 
                 return false;
             }
 
@@ -2029,7 +2014,7 @@ namespace Intersect.Client.Entities
                 return;
             }
 
-            if (AttackTimer > Timing.Global.Milliseconds && !Options.Instance.PlayerOpts.AllowCombatMovement)
+            if (IsAttacking && !Options.Instance.PlayerOpts.AllowCombatMovement)
             {
                 return;
             }

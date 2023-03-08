@@ -1082,14 +1082,13 @@ namespace Intersect.Client.Entities
             string transformedSprite = "";
 
             // Loop through the entity status list in reverse.
-            for (int i = Status.Count - 1; i >= 0; i--)
+            for (var n = 0; n < Status.Count; n++)
             {
-                var status = Status[i];
+                var status = Status[n];
                 switch (status.Type)
                 {
                     case StatusTypes.Transform:
-                        sprite = status.Data;
-                        transformedSprite = sprite;
+                        transformedSprite = sprite = status.Data;
                         break;
                     // If entity is stealth, don't render unless the entity is the player or is within their party.
                     case StatusTypes.Stealth:
@@ -1193,7 +1192,9 @@ namespace Intersect.Client.Entities
                             var item = ItemBase.Get(itemId);
                             if (ItemBase.TryGet(itemId, out var itemDescriptor))
                             {
-                                var itemPaperdoll = Gender == 0 ? itemDescriptor.MalePaperdoll : itemDescriptor.FemalePaperdoll;
+                                var itemPaperdoll = Gender == 0
+                                      ? itemDescriptor.MalePaperdoll
+                                      : itemDescriptor.FemalePaperdoll;
                                 DrawEquipment(itemPaperdoll, item.Color * renderColor);
                             }
                         }
@@ -1229,7 +1230,7 @@ namespace Intersect.Client.Entities
         {
             get
             {
-                int frame;
+                var frame = WalkFrame;
 
                 if (IsBlocking)
                 {
@@ -1240,15 +1241,11 @@ namespace Intersect.Client.Entities
                     frame = Options.Instance.Sprites.NormalCastFrame;
                 }
                 // Checks if the entity is attacking or not.
-                // Note: the calculation is different compared to IsAttacking because
-                // frames are intended to behave differently for normal sprite-sheets.
-                else if (AttackTimer - (CalculateAttackTime() / 2f) > Timing.Global.Milliseconds)
+                // Note: the calculation differs with IsAttacking because
+                // frames are intended to behave differently with normal sprite-sheets.
+                else if (AttackTimer - (CalculateAttackTime() / 2) > Timing.Global.Milliseconds)
                 {
                     frame = Options.Instance.Sprites.NormalAttackFrame;
-                }
-                else
-                {
-                    frame = WalkFrame;
                 }
 
                 if (frame >= SpriteFrames)
@@ -1259,6 +1256,7 @@ namespace Intersect.Client.Entities
                 return frame;
             }
         }
+
         public void DrawChatBubbles()
         {
             //Don't draw if the entity is hidden
@@ -1305,18 +1303,28 @@ namespace Intersect.Client.Entities
                 SpriteAnimation == SpriteAnimations.Weapon)
             {
                 var animationName = Path.GetFileNameWithoutExtension(AnimatedTextures[SpriteAnimation].Name);
-                int separatorIndex = animationName.IndexOf('_') + 1;
+                // Extract the substring after the separator.
+                var separatorIndex = animationName.IndexOf('_') + 1;
                 var customAnimationName = animationName.Substring(separatorIndex);
                 // Try to get custom paperdoll texture.
                 var customPaperdollTex =
-                    Globals.ContentManager.GetTexture(TextureType.Paperdoll,
-                        $"{filenameNoExt}_{customAnimationName}.png");
+                   Globals.ContentManager.GetTexture(TextureType.Paperdoll,
+                       $"{filenameNoExt}_{customAnimationName}.png");
+
                 // If custom paperdoll texture exists, use it.
                 if (customPaperdollTex != null)
                 {
                     paperdollTex = customPaperdollTex;
                 }
             }
+
+            // If there's no custom paperdoll: use the paperdoll texture based on the SpriteAnimation.
+            if (paperdollTex == null && !string.IsNullOrEmpty($"{SpriteAnimation}"))
+            {
+                paperdollTex = Globals.ContentManager.GetTexture(TextureType.Paperdoll,
+                    $"{filenameNoExt}_{SpriteAnimation}.png");
+            }
+
 
             // If there's no custom paperdoll: use the paperdoll texture based on the SpriteAnimation.
             if (paperdollTex == null && !string.IsNullOrEmpty($"{SpriteAnimation}"))
