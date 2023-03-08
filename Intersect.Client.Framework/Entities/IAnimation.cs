@@ -1,4 +1,4 @@
-﻿using Intersect.GameObjects;
+using Intersect.GameObjects;
 using System;
 using Intersect.Enums;
 

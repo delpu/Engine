@@ -1,3 +1,4 @@
+using Intersect.Enums;
 using MessagePack;
 using System;
 
@@ -10,7 +11,7 @@ namespace Intersect.Network.Packets.Client
         public MovePacket()
         {
         }
-        public MovePacket(Guid mapId, byte x, byte y, byte dir)
+        public MovePacket(Guid mapId, byte x, byte y, Direction dir)
         {
             MapId = mapId;
             X = x;
@@ -28,7 +29,7 @@ namespace Intersect.Network.Packets.Client
         public byte Y { get; set; }
 
         [Key(6)]
-        public byte Dir { get; set; }
+        public Direction Dir { get; set; }
 
     }
 

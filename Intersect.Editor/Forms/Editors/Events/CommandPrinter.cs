@@ -923,7 +923,7 @@ namespace Intersect.Editor.Forms.Editors.Events
             if (command.ChangeInstance)
             {
                 return Strings.EventCommandList.InstancedWarp.ToString(
-                    mapName, command.X, command.Y, Strings.Direction.dir[(Direction)command.Direction - 1], command.InstanceType.ToString()
+                     mapName, command.X, command.Y, Strings.Direction.dir[(Direction)command.Direction - 1], command.InstanceType.ToString()
                 );
             } else
             {
@@ -1013,7 +1013,7 @@ namespace Intersect.Editor.Forms.Editors.Events
                         return Strings.EventCommandList.spawnnpc.ToString(
                             NpcBase.GetName(command.NpcId),
                             Strings.EventCommandList.spawnonmap.ToString(
-                                orderedMap.Name, command.X, command.Y, Strings.Direction.dir?[(Direction) command.Dir]
+                                orderedMap.Name, command.X, command.Y, Strings.Direction.dir?[command.Dir]
                             )
                         );
                     }
@@ -1076,7 +1076,7 @@ namespace Intersect.Editor.Forms.Editors.Events
                             AnimationBase.GetName(command.AnimationId),
                             Strings.EventCommandList.animationonmap.ToString(
                                 MapList.OrderedMaps[i].Name, command.X, command.Y,
-                                Strings.Direction.dir[(Direction) command.Dir]
+                                Strings.Direction.dir[(Direction)command.Dir]
                             )
                         );
                     }

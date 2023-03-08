@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Intersect.Enums;
 using Intersect.GameObjects;
@@ -336,7 +336,7 @@ namespace Intersect.Server.Entities.Events
                         return;
                     }
 
-                    var dir = (Direction)Randomization.Next(0, Options.Instance.MapOpts.MovementDirections);
+                    var dir = Randomization.NextDirection();
                     if (CanMove(dir) == -1)
                     {
                         Move(dir, Player);
@@ -348,7 +348,7 @@ namespace Intersect.Server.Entities.Events
 
         /// <inheritdoc />
         public override void Move(Direction moveDir, Player forPlayer, bool doNotUpdate = false,
-            bool correction = false)
+           bool correction = false)
         {
             base.Move(moveDir, forPlayer, doNotUpdate, correction);
 
@@ -446,7 +446,7 @@ namespace Intersect.Server.Entities.Events
                                     else
                                     {
                                         //Move Randomly
-                                        moveDir = (Direction)Randomization.Next(0, Options.Instance.MapOpts.MovementDirections);
+                                        moveDir = Randomization.NextDirection();
                                         if (CanMove(moveDir) == -1)
                                         {
                                             Move(moveDir, forPlayer);
@@ -457,7 +457,7 @@ namespace Intersect.Server.Entities.Events
                                 else
                                 {
                                     //Move Randomly
-                                    moveDir = (Direction)Randomization.Next(0, Options.Instance.MapOpts.MovementDirections);
+                                    moveDir = Randomization.NextDirection();
                                     if (CanMove(moveDir) == -1)
                                     {
                                         Move(moveDir, forPlayer);

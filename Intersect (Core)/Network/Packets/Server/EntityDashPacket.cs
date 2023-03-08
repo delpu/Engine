@@ -1,4 +1,5 @@
-﻿using MessagePack;
+using Intersect.Enums;
+using MessagePack;
 using System;
 
 namespace Intersect.Network.Packets.Server
@@ -11,7 +12,7 @@ namespace Intersect.Network.Packets.Server
         {
         }
 
-        public EntityDashPacket(Guid entityId, Guid endMapId, byte endX, byte endY, int dashTime, sbyte direction)
+        public EntityDashPacket(Guid entityId, Guid endMapId, byte endX, byte endY, int dashTime, Direction direction)
         {
             EntityId = entityId;
             EndMapId = endMapId;
@@ -37,7 +38,7 @@ namespace Intersect.Network.Packets.Server
         public int DashTime { get; set; }
 
         [Key(5)]
-        public sbyte Direction { get; set; }
+        public Direction Direction { get; set; }
 
     }
 

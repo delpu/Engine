@@ -1,8 +1,7 @@
 using Intersect.Enums;
-using Intersect.GameObjects;
-using Intersect.Server.Maps;
 using Intersect.Server.Networking;
 using Intersect.Utilities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Intersect.Server.Entities.Combat
 {
@@ -12,15 +11,9 @@ namespace Intersect.Server.Entities.Combat
 
         public Direction Direction;
 
-        public int DistanceTraveled;
-
         public Direction Facing;
 
         public int Range;
-
-        public long TransmissionTimer;
-
-        public SpellBase Spell;
 
         public Dash(
             Entity en,
@@ -29,10 +22,7 @@ namespace Intersect.Server.Entities.Combat
             bool blockPass = false,
             bool activeResourcePass = false,
             bool deadResourcePass = false,
-            bool zdimensionPass = false,
-            bool entityPass = false,
-            SpellBase spell = null,
-            long stunMs = 0
+            bool zdimensionPass = false
         )
         {
             Direction = direction;
@@ -44,25 +34,22 @@ namespace Intersect.Server.Entities.Combat
                 return;
             } //Remove dash instance if no where to dash
 
-            TransmissionTimer = Timing.Global.Milliseconds + (long)((float)Options.MaxDashSpeed / (float)Range);
-            en.DashTransmissionTimer = TransmissionTimer + stunMs;
             PacketSender.SendEntityDash(
                 en, en.MapId, (byte)en.X, (byte)en.Y, (int)(Options.MaxDashSpeed * (Range / 10f)),
-                Direction == Facing ? (sbyte)Direction : (sbyte)-1
+                Direction == Facing ? Direction : Direction.None
             );
 
             en.MoveTimer = Timing.Global.Milliseconds + Options.MaxDashSpeed;
         }
 
         public void CalculateRange(
-           Entity en,
-           int range,
-           bool blockPass = false,
-           bool activeResourcePass = false,
-           bool deadResourcePass = false,
-           bool zdimensionPass = false,
-           bool entityPass = false
-       )
+            Entity en,
+            int range,
+            bool blockPass = false,
+            bool activeResourcePass = false,
+            bool deadResourcePass = false,
+            bool zdimensionPass = false
+        )
         {
             var n = 0;
             en.MoveTimer = 0;
@@ -95,79 +82,7 @@ namespace Intersect.Server.Entities.Combat
                     return;
                 } //Check for players and solid events
 
-                if (n == (int)EntityTypes.Player && (entityPass == false || i == range))
-                {
-                    return;
-                }
-                // Proc dash spell if an enemy
-                else if (n == (int)EntityTypes.Player && Spell != null)
-                {
-                    var xOffset = 0;
-                    var yOffset = 0;
-
-                    var tile = new TileHelper(en.MapId, en.X, en.Y);
-                    switch (Direction)
-                    {
-                        case Direction.Up: //Up
-                            yOffset--;
-
-                            break;
-                        case Direction.Down: //Down
-                            yOffset++;
-
-                            break;
-                        case Direction.Left: //Left
-                            xOffset--;
-
-                            break;
-                        case Direction.Right: //Right
-                            xOffset++;
-
-                            break;
-                        case Direction.UpLeft: //NW
-                            yOffset--;
-                            xOffset--;
-
-                            break;
-                        case Direction.UpRight: //NE
-                            yOffset--;
-                            xOffset++;
-
-                            break;
-                        case Direction.DownLeft: //SW
-                            yOffset++;
-                            xOffset--;
-
-                            break;
-                        case Direction.DownRight: //SE
-                            yOffset++;
-                            xOffset++;
-
-                            break;
-                    }
-
-                    MapController mapController = null;
-                    int tileX = 0;
-                    int tileY = 0;
-
-                    if (tile.Translate(xOffset, yOffset))
-                    {
-                        mapController = MapController.Get(tile.GetMapId());
-                        tileX = tile.GetX();
-                        tileY = tile.GetY();
-
-                        var entities = en.GetEntitiesOnTile(tileX, tileY);
-                        foreach (var collidedEntity in entities)
-                        {
-                            if (en.CanAttack(collidedEntity, Spell) && en is Player attacker)
-                            {
-                                attacker.UseSpell(-1, null);
-                            }
-                        }
-                    }
-                }
-
-                if (n == (int)EntityTypes.Event)
+                if (n == (int)EntityTypes.Player || n == (int)EntityTypes.Event)
                 {
                     return;
                 }

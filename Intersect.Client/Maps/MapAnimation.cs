@@ -1,4 +1,4 @@
-﻿using Intersect.Client.Entities;
+using Intersect.Client.Entities;
 using Intersect.Client.Framework.Maps;
 using Intersect.GameObjects;
 using System;

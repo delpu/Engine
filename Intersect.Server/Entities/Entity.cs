@@ -895,7 +895,7 @@ namespace Intersect.Server.Entities
 
                         break;
                     case MoveRouteEnum.TurnRandomly:
-                        ChangeDir((Direction)Randomization.Next(0, Options.Instance.MapOpts.MovementDirections));
+                        ChangeDir(Randomization.NextDirection());
                         moved = true;
 
                         break;
@@ -950,7 +950,12 @@ namespace Intersect.Server.Entities
         //Returns the amount of time required to traverse 1 tile
         public virtual float GetMovementTime()
         {
-            var time = 1000f / (float) (1 + Math.Log(Stat[(int) Stats.Speed].Value()));
+            var time = 1000f / (float)(1 + Math.Log(Stat[(int)Stats.Speed].Value()));
+            if (Dir > Direction.Right)
+            {
+                time *= MathHelper.UnitDiagonalLength;
+            }
+
             if (Running)
             {
                 time *= 0.5f;
@@ -1301,7 +1306,7 @@ namespace Intersect.Server.Entities
         {
             return (int) (Options.MaxAttackRate +
                           (Options.MinAttackRate - Options.MaxAttackRate) *
-                          (((float) Options.MaxStatValue - Stat[(int) Stats.Speed].Value()) /
+                          (((float)Options.MaxStatValue - Stat[(int)Stats.Speed].Value()) /
                            Options.MaxStatValue));
         }
 
@@ -1579,7 +1584,7 @@ namespace Intersect.Server.Entities
             }
 
             // If there is knock-back: knock them backwards.
-            if (projectile.Knockback > 0 && !target.Immunities.Contains(StatusTypes.Knockback))
+            if (projectile.Knockback > 0 && ((int)projectileDir < Options.Instance.MapOpts.MovementDirections) && !target.Immunities.Contains(StatusTypes.Knockback))
             {
                 var dash = new Dash(target, projectile.Knockback, projectileDir, false, false, false, false);
             }
@@ -1620,8 +1625,8 @@ namespace Intersect.Server.Entities
                 }
             }
 
-            var deadAnimations = new List<KeyValuePair<Guid, sbyte>>();
-            var aliveAnimations = new List<KeyValuePair<Guid, sbyte>>();
+            var deadAnimations = new List<KeyValuePair<Guid, Direction>>();
+            var aliveAnimations = new List<KeyValuePair<Guid, Direction>>();
 
             //Only count safe zones and friendly fire if its a dangerous spell! (If one has been used)
             if (!spellBase.Combat.Friendly &&
@@ -1686,8 +1691,8 @@ namespace Intersect.Server.Entities
             if (spellBase.HitAnimationId != Guid.Empty &&
                 (spellBase.Combat.Effect != StatusTypes.OnHit || onHitTrigger))
             {
-                deadAnimations.Add(new KeyValuePair<Guid, sbyte>(spellBase.HitAnimationId, (sbyte) Direction.Up));
-                aliveAnimations.Add(new KeyValuePair<Guid, sbyte>(spellBase.HitAnimationId, (sbyte) Direction.Up));
+                deadAnimations.Add(new KeyValuePair<Guid, Direction>(spellBase.HitAnimationId, Direction.Up));
+                aliveAnimations.Add(new KeyValuePair<Guid, Direction>(spellBase.HitAnimationId, Direction.Up));
             }
 
             var statBuffTime = -1;
@@ -1799,7 +1804,7 @@ namespace Intersect.Server.Entities
             }
         }
 
-        private void Animate(Entity target, List<KeyValuePair<Guid, sbyte>> animations)
+        private void Animate(Entity target, List<KeyValuePair<Guid, Direction>> animations)
         {
             foreach (var anim in animations)
             {
@@ -1822,10 +1827,9 @@ namespace Intersect.Server.Entities
             int scaling,
             int critChance,
             double critMultiplier,
-            List<KeyValuePair<Guid, sbyte>> deadAnimations = null,
-            List<KeyValuePair<Guid, sbyte>> aliveAnimations = null,
-            ItemBase weapon = null
-        )
+            List<KeyValuePair<Guid, Direction>> deadAnimations = null,
+            List<KeyValuePair<Guid, Direction>> aliveAnimations = null,
+            ItemBase weapon = null)
         {
             if (IsAttacking)
             {
@@ -1903,8 +1907,8 @@ namespace Intersect.Server.Entities
             int scaling,
             int critChance,
             double critMultiplier,
-            List<KeyValuePair<Guid, sbyte>> deadAnimations = null,
-            List<KeyValuePair<Guid, sbyte>> aliveAnimations = null,
+            List<KeyValuePair<Guid, Direction>> deadAnimations = null,
+            List<KeyValuePair<Guid, Direction>> aliveAnimations = null,
             bool isAutoAttack = false
         )
         {
@@ -2176,7 +2180,7 @@ namespace Intersect.Server.Entities
                     foreach (var anim in deadAnimations)
                     {
                         PacketSender.SendAnimationToProximity(
-                            anim.Key, -1, Id, enemy.MapId, (byte) enemy.X, (byte) enemy.Y, anim.Value, MapInstanceId
+                            anim.Key, -1, Id, enemy.MapId, enemy.X, enemy.Y, anim.Value, MapInstanceId
                         );
                     }
                 }
@@ -2372,7 +2376,7 @@ namespace Intersect.Server.Entities
                             if (spellBase.HitAnimationId != Guid.Empty && spellBase.Combat.Effect != StatusTypes.OnHit)
                             {
                                 PacketSender.SendAnimationToProximity(
-                                    spellBase.HitAnimationId, 1, Id, MapId, 0, 0, (sbyte) Dir, MapInstanceId
+                                    spellBase.HitAnimationId, 1, Id, MapId, 0, 0, Dir, MapInstanceId
                                 ); //Target Type 1 will be global entity
                             }
 
@@ -2433,7 +2437,7 @@ namespace Intersect.Server.Entities
                                     mapInstance
                                         .SpawnMapProjectile(
                                             this, projectileBase, spellBase, null, MapId, (byte)X, (byte)Y, (byte)Z,
-                                            ProDirection, CastTarget
+                                            Dir, CastTarget
                                         );
                                 }
                             }
@@ -3019,7 +3023,7 @@ namespace Intersect.Server.Entities
             float newY,
             Direction newDir,
             bool adminWarp = false,
-            byte zOverride = 0,
+            int zOverride = 0,
             bool mapSave = false,
             bool fromWarpEvent = false,
             MapInstanceType? mapInstanceType = null,

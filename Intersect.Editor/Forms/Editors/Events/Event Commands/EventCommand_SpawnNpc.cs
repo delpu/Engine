@@ -95,9 +95,9 @@ namespace Intersect.Editor.Forms.Editors.Events.Event_Commands
             lblY.Text = Strings.Warping.y.ToString("");
             lblMap.Text = Strings.Warping.direction.ToString("");
             cmbDirection.Items.Clear();
-            for (Direction i = 0; i < (Direction)4; i++)
+            for (var i = 0; i < 4; i++)
             {
-                cmbDirection.Items.Add(Strings.Direction.dir[i]);
+                cmbDirection.Items.Add(Strings.Direction.dir[(Direction)i]);
             }
 
             cmbDirection.SelectedIndex = 0;

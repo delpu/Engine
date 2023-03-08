@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 
 namespace Intersect.Config
@@ -14,15 +15,6 @@ namespace Intersect.Config
         /// </summary>
         public int GameBorderStyle { get; set; }
 
-        /// <summary>
-        /// The height of the map in tiles.
-        /// </summary>
-        public int Height { get; set; } = 26;
-
-        /// <summary>
-        /// The width of the map in tiles.
-        /// </summary>
-        public int Width { get; set; } = 32;
 
         /// <summary>
         /// The height of each tile in pixels.
@@ -39,9 +31,6 @@ namespace Intersect.Config
         /// </summary>
         public int ItemAttributeRespawnTime { get; set; } = 15000;
 
-        // A private field to hold the value of the EnableDiagonalMovement.
-        private bool mEnableDiagonalMovement;
-
         /// <summary>
         /// Indicates whether or not diagonal movement is enabled for entities within the map.
         /// </summary>
@@ -50,11 +39,20 @@ namespace Intersect.Config
             get { return mEnableDiagonalMovement; }
             set
             {
-                mEnableDiagonalMovement = value ? value : false;
+                mEnableDiagonalMovement = value;
                 MovementDirections = mEnableDiagonalMovement ? 8 : 4;
             }
         }
 
+        /// <summary>
+        /// The height of the map in tiles.
+        /// </summary>
+        public int MapHeight { get; set; } = 26;
+
+        /// <summary>
+        /// The width of the map in tiles.
+        /// </summary>
+        public int MapWidth { get; set; } = 32;
         /// <summary>
         /// The number of movement directions available in the game for entities within the map.
         /// </summary>
@@ -76,12 +74,30 @@ namespace Intersect.Config
         /// </summary>
         public LayerOptions Layers { get; set; } = new LayerOptions();
 
+
+
+        // A private field to hold the value of the EnableDiagonalMovement.
+        private bool mEnableDiagonalMovement;
+
+        [Obsolete("Renamed to MapHeight, this will be removed in 0.8-beta.", true)]
+        public int Height
+        {
+            get => MapHeight;
+            set => MapHeight = value;
+        }
+
+        [Obsolete("Renamed to MapWidth, this will be removed in 0.8-beta.", true)]
+        public int Width
+        {
+            get => MapWidth;
+            set => MapWidth = value;
+        }
         /// <summary>
         /// Validates the properties of the map options object.
         /// </summary>
         public void Validate()
         {
-            if (Width < 10 || Width > 64 || Height < 10 || Height > 64)
+            if (MapWidth < 10 || MapWidth > 64 || MapHeight < 10 || MapHeight > 64)
             {
                 throw new Exception("Config Error: Map size out of bounds! (All values should be > 10 and < 64)");
             }

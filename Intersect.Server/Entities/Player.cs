@@ -246,7 +246,7 @@ namespace Intersect.Server.Entities
         }
         public int SharedInstanceRespawnX { get; set; }
         public int SharedInstanceRespawnY { get; set; }
-        public int SharedInstanceRespawnDir { get; set; }
+        public Direction SharedInstanceRespawnDir { get; set; }
 
         [NotMapped, JsonIgnore]
         public int InstanceLives { get; set; }
@@ -1710,7 +1710,7 @@ namespace Intersect.Server.Entities
         //Warping
         public override void Warp(Guid newMapId, float newX, float newY, bool adminWarp = false)
         {
-            Warp(newMapId, newX, newY, (byte)Direction.Up, adminWarp, 0, false);
+            Warp(newMapId, newX, newY, Direction.Up, adminWarp, 0, false);
         }
 
         public void AdminWarp(Guid newMapId, float newX, float newY, Guid newMapInstanceId, MapInstanceType instanceType, bool force)
@@ -1729,20 +1729,20 @@ namespace Intersect.Server.Entities
             {
                 PacketSender.SendChatMsg(this, Strings.Player.InstanceUpdate.ToString(PreviousMapInstanceId.ToString(), MapInstanceId.ToString()), ChatMessageType.Admin, CustomColors.Alerts.Info);
             }
-            Warp(newMapId, newX, newY, (byte)Direction.Up, forceInstanceChange: force);
+            Warp(newMapId, newX, newY, Direction.Up, forceInstanceChange: force);
         }
 
         public override void Warp(Guid newMapId,
-            float newX,
-            float newY,
-            Direction newDir,
-            bool adminWarp = false,
-            byte zOverride = 0,
-            bool mapSave = false,
-            bool fromWarpEvent = false,
-            MapInstanceType? mapInstanceType = null,
-            bool fromLogin = false,
-            bool forceInstanceChange = false)
+           float newX,
+           float newY,
+           Direction newDir,
+           bool adminWarp = false,
+           int zOverride = 0,
+           bool mapSave = false,
+           bool fromWarpEvent = false,
+           MapInstanceType? mapInstanceType = null,
+           bool fromLogin = false,
+           bool forceInstanceChange = false)
         {
             #region shortcircuit exits
             // First, deny the warp entirely if we CAN'T, for some reason, warp to the requested instance type. ONly do this if we're not forcing a change
@@ -1760,7 +1760,7 @@ namespace Intersect.Server.Entities
             // If we are moving TO a new shared instance, update the shared respawn point (if enabled)
             if (!fromLogin && mapInstanceType == MapInstanceType.Shared && Options.Instance.Instancing.SharedInstanceRespawnInInstance && MapController.Get(newMapId) != null)
             {
-                UpdateSharedInstanceRespawnLocation(newMapId, (int)newX, (int)newY, (int)newDir);
+                UpdateSharedInstanceRespawnLocation(newMapId, (int)newX, (int)newY, newDir);
             }
 
             // Make sure we're heading to a map that exists - otherwise, to spawn you go
@@ -1890,7 +1890,7 @@ namespace Intersect.Server.Entities
                 {
                     // Will warp to spawn if we fail to create an instance for the relevant map
                     Warp(
-                        MapId, (byte)X, (byte)Y, Dir, false, (byte)Z, false, false, InstanceType, true
+                        MapId, X, Y, Dir, false, Z, false, false, InstanceType, true
                     );
                 }
             }
@@ -1939,7 +1939,7 @@ namespace Intersect.Server.Entities
                 if (Options.Instance.Instancing.MaxSharedInstanceLives <= 0) // User has not configured shared instances to have lives
                 {
                     // Warp to the start of the shared instance - no concern for life total
-                    Warp(SharedInstanceRespawnId, SharedInstanceRespawnX, SharedInstanceRespawnY, (Direction)SharedInstanceRespawnDir);
+                    Warp(SharedInstanceRespawnId, SharedInstanceRespawnX, SharedInstanceRespawnY, SharedInstanceRespawnDir);
                     return;
                 }
 
@@ -1967,7 +1967,7 @@ namespace Intersect.Server.Entities
                     }
 
                     // And warp to the instance start
-                    Warp(SharedInstanceRespawnId, SharedInstanceRespawnX, SharedInstanceRespawnY, (Direction)SharedInstanceRespawnDir);
+                    Warp(SharedInstanceRespawnId, SharedInstanceRespawnX, SharedInstanceRespawnY, SharedInstanceRespawnDir);
                 }
                 else
                 {
@@ -2270,7 +2270,7 @@ namespace Intersect.Server.Entities
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="dir"></param>
-        public void UpdateSharedInstanceRespawnLocation(Guid respawnMapId, int x, int y, int dir)
+        public void UpdateSharedInstanceRespawnLocation(Guid respawnMapId, int x, int y, Direction dir)
         {
             SharedInstanceRespawnId = respawnMapId;
             SharedInstanceRespawnX = x;
@@ -3117,7 +3117,7 @@ namespace Intersect.Server.Entities
                 if (itemBase.Animation != null)
                 {
                     PacketSender.SendAnimationToProximity(
-                        itemBase.Animation.Id, 1, base.Id, MapId, 0, 0, (sbyte)Dir, MapInstanceId
+                        itemBase.Animation.Id, 1, base.Id, MapId, 0, 0, Dir, MapInstanceId
                     ); //Target Type 1 will be global entity
                 }
 
@@ -5208,7 +5208,7 @@ namespace Intersect.Server.Entities
                 if (spell.CastAnimationId != Guid.Empty)
                 {
                     PacketSender.SendAnimationToProximity(
-                        spell.CastAnimationId, 1, base.Id, MapId, 0, 0, (sbyte) Dir, MapInstanceId
+                       spell.CastAnimationId, 1, base.Id, MapId, 0, 0, Dir, MapInstanceId
                     ); //Target Type 1 will be global entity
                 }
 
@@ -6665,7 +6665,7 @@ namespace Intersect.Server.Entities
         }
 
         public override void Move(Direction moveDir, Player forPlayer, bool dontUpdate = false,
-            bool correction = false)
+             bool correction = false)
         {
             lock (EntityLock)
             {

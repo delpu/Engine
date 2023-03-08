@@ -392,8 +392,8 @@ namespace Intersect.Server.Entities
                 return;
             }
 
-            var deadAnimations = new List<KeyValuePair<Guid, sbyte>>();
-            var aliveAnimations = new List<KeyValuePair<Guid, sbyte>>();
+            var deadAnimations = new List<KeyValuePair<Guid, Direction>>();
+            var aliveAnimations = new List<KeyValuePair<Guid, Direction>>();
 
             //We were forcing at LEAST 1hp base damage.. but then you can't have guards that won't hurt the player.
             //https://www.ascensiongamedev.com/community/bug_tracker/intersect/npc-set-at-0-attack-damage-still-damages-player-by-1-initially-r915/
@@ -404,8 +404,8 @@ namespace Intersect.Server.Entities
             if (Base.AttackAnimation != null)
             {
                 PacketSender.SendAnimationToProximity(
-                    Base.AttackAnimationId, -1, Guid.Empty, target.MapId, (byte)target.X, (byte)target.Y,
-                    (sbyte)Dir, target.MapInstanceId
+                    Base.AttackAnimationId, -1, Guid.Empty, target.MapId, target.X, target.Y, Dir,
+                        target.MapInstanceId
                 );
 
             }
@@ -708,7 +708,7 @@ namespace Intersect.Server.Entities
 
             if (spellBase.CastAnimationId != Guid.Empty)
             {
-                PacketSender.SendAnimationToProximity(spellBase.CastAnimationId, 1, Id, MapId, 0, 0, (sbyte) Dir, MapInstanceId);
+                PacketSender.SendAnimationToProximity(spellBase.CastAnimationId, 1, Id, MapId, 0, 0, Dir, MapInstanceId);
 
                 //Target Type 1 will be global entity
             }
@@ -899,7 +899,7 @@ namespace Intersect.Server.Entities
                                 {
                                     case PathfinderResult.Success:
 
-                                        var dir = (Direction)mPathFinder.GetMove();
+                                        var dir = mPathFinder.GetMove();
                                         if (dir > Direction.None)
                                         {
                                             if (fleeing)
@@ -1116,17 +1116,17 @@ namespace Intersect.Server.Entities
                         }
                         else if (Base.Movement == (int)NpcMovement.TurnRandomly)
                         {
-                            ChangeDir((Direction)Randomization.Next(0, Options.Instance.MapOpts.MovementDirections));
+                            ChangeDir(Randomization.NextDirection());
                             LastRandomMove = Timing.Global.Milliseconds + Randomization.Next(1000, 3000);
 
                             return;
                         }
 
-                        var i = (Direction)Randomization.Next(0, 1);
+                        var i = Randomization.Next(0, 1);
                         if (i == 0)
                         {
-                            i = (Direction)Randomization.Next(0, Options.Instance.MapOpts.MovementDirections);
-                            if (CanMove(i) == -1)
+                            var direction = Randomization.NextDirection();
+                            if (CanMove(direction) == -1)
                             {
                                 //check if NPC is snared or stunned
                                 foreach (var status in CachedStatuses)
@@ -1139,7 +1139,7 @@ namespace Intersect.Server.Entities
                                     }
                                 }
 
-                                Move(i, null);
+                                Move(direction, null);
                             }
                         }
 
@@ -1147,7 +1147,7 @@ namespace Intersect.Server.Entities
 
                         if (fleeing)
                         {
-                            LastRandomMove = Timing.Global.Milliseconds + (long) GetMovementTime();
+                            LastRandomMove = Timing.Global.Milliseconds + (long)GetMovementTime();
                         }
                     }
 
@@ -1546,16 +1546,16 @@ namespace Intersect.Server.Entities
         }
 
         public override void Warp(Guid newMapId,
-            float newX,
-            float newY,
-            Direction newDir,
-            bool adminWarp = false,
-            byte zOverride = 0,
-            bool mapSave = false,
-            bool fromWarpEvent = false,
-            MapInstanceType? mapInstanceType = null,
-            bool fromLogin = false,
-            bool forceInstanceChange = false)
+          float newX,
+          float newY,
+          Direction newDir,
+          bool adminWarp = false,
+          int zOverride = 0,
+          bool mapSave = false,
+          bool fromWarpEvent = false,
+          MapInstanceType? mapInstanceType = null,
+          bool fromLogin = false,
+          bool forceInstanceChange = false)
         {
             if (!MapController.TryGetInstanceFromMap(newMapId, MapInstanceId, out var map))
             {

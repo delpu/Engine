@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 
 namespace Intersect.Utilities
 {
 
     public static partial class MathHelper
     {
+
+        public static readonly float UnitDiagonalLength = (float)Math.Sqrt(2);
+
         public static decimal Clamp(decimal value, decimal minimum, decimal maximum)
         {
             return Math.Min(Math.Max(value, minimum), maximum);

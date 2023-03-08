@@ -32,6 +32,11 @@ namespace Intersect.Config
         public bool EnableFriendLoginNotifications { get; set; } = true;
 
         /// <summary>
+        /// When enabled, 'Auto-turn to target' ignores entities behind players.
+        /// </summary>
+        public bool AutoTurnToTargetIgnoresEntitiesBehind { get; set; } = false;
+
+        /// <summary>
         /// If true, it will remove the associated exp, otherwise you will lose the exp based on the exp required to level up.
         /// </summary>
         public bool ExpLossFromCurrentExp { get; set; } = true;
@@ -45,6 +50,7 @@ namespace Intersect.Config
         /// Intersect default for initial player bank slots
         /// </summary>
         private const int DefaultInitialBankSlots = 100;
+
 
         /// <summary>
         /// Number of hotbar slots a player has.

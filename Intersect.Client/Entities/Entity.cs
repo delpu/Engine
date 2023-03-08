@@ -526,7 +526,11 @@ namespace Intersect.Client.Entities
         //Returns the amount of time required to traverse 1 tile
         public virtual float GetMovementTime()
         {
-            var time = 1000f / (float) (1 + Math.Log(Stat[(int) Stats.Speed]));
+            var time = 1000f / (float)(1 + Math.Log(Stat[(int)Stats.Speed]));
+            if (Dir > Direction.Right)
+            {
+                time *= MathHelper.UnitDiagonalLength;
+            }
 
             if (Running)
             {
@@ -898,7 +902,7 @@ namespace Intersect.Client.Entities
 
             //Otherwise return the legacy attack speed calculation
             return (int)(Options.MaxAttackRate +
-                          (Options.MinAttackRate - Options.MaxAttackRate) *
+                           (Options.MinAttackRate - Options.MaxAttackRate) *
                           (((float)Options.MaxStatValue - Stat[(int)Stats.Speed]) /
                            Options.MaxStatValue));
         }
@@ -1128,7 +1132,7 @@ namespace Intersect.Client.Entities
                 return;
             }
 
-            var d = PickSpriteRow(Dir);
+            var spriteRow = PickSpriteRow(Dir);
 
             var frameWidth = texture.GetWidth() / SpriteFrames;
             var frameHeight = texture.GetHeight() / Options.Instance.Sprites.Directions;
@@ -1143,7 +1147,7 @@ namespace Intersect.Client.Entities
                 frame = NormalSpriteAnimationFrame;
             }
 
-            var srcRectangle = new FloatRect(frame * frameWidth, d * frameHeight, frameWidth, frameHeight);
+            var srcRectangle = new FloatRect(frame * frameWidth, spriteRow * frameHeight, frameWidth, frameHeight);
             var destRectangle = new FloatRect(
                 (int)Math.Ceiling(Origin.X - frameWidth /2f),
                 (int)Math.Ceiling(Origin.Y - frameHeight),
@@ -1154,9 +1158,9 @@ namespace Intersect.Client.Entities
             WorldPos = destRectangle;
 
             //Order the layers of paperdolls and sprites
-            for (var z = 0; z < Options.PaperdollOrder[d].Count; z++)
+            for (var z = 0; z < Options.PaperdollOrder[spriteRow].Count; z++)
             {
-                var paperdoll = Options.PaperdollOrder[d][z];
+                var paperdoll = Options.PaperdollOrder[spriteRow][z];
                 var equipSlot = Options.EquipmentSlots.IndexOf(paperdoll);
 
                 //Check for player
@@ -1197,6 +1201,8 @@ namespace Intersect.Client.Entities
                 }
             }
         }
+
+
 
         private static int PickSpriteRow(Direction direction)
         {
@@ -1330,7 +1336,7 @@ namespace Intersect.Client.Entities
                 return;
             }
 
-            var d = PickSpriteRow(Dir);
+            var spriteRow = PickSpriteRow(Dir);
             // Calculate: direction, frame width and frame height.
             //var d = (Dir + (Options.Instance.Sprites.Directions - 1)) % Options.Instance.Sprites.Directions;
             var frameWidth = paperdollTex.GetWidth() / spriteFrames;
@@ -1342,7 +1348,7 @@ namespace Intersect.Client.Entities
                 frame = NormalSpriteAnimationFrame;
             }
 
-            var srcRectangle = new FloatRect(frame * frameWidth, d * frameHeight, frameWidth, frameHeight);
+            var srcRectangle = new FloatRect(frame * frameWidth, spriteRow * frameHeight, frameWidth, frameHeight);
             var destRectangle = new FloatRect(
                 (int)Math.Ceiling(Center.X - frameWidth / 2f),
                 (int)Math.Ceiling(Center.Y - frameHeight / 2f),
@@ -2239,10 +2245,10 @@ namespace Intersect.Client.Entities
             }
 
             // Calculate the offset between origin and target along both of their axis.
-            int yDiff = originY - targetY;
-            int xDiff = originX - targetX;
+            var yDiff = originY - targetY;
+            var xDiff = originX - targetX;
 
-            // If Y offset is 0, direction is determined by X offset.
+             // If Y offset is 0, direction is determined by X offset.
             if (yDiff == 0)
             {
                 return xDiff > 0 ? Direction.Left : Direction.Right;
@@ -2255,15 +2261,15 @@ namespace Intersect.Client.Entities
             }
 
             // If both X and Y offset are non-zero, direction is determined by both offsets.
-            int xSign = Math.Sign(xDiff);
-            int ySign = Math.Sign(yDiff);
+            var xPositive = xDiff > 0;
+            var yPositive = yDiff > 0;
 
-            if (xSign > 0)
+            if (xPositive)
             {
-                return ySign > 0 ? Direction.UpLeft : Direction.DownLeft;
+                return yPositive ? Direction.UpLeft : Direction.DownLeft;
             }
 
-            return ySign > 0 ? Direction.UpRight : Direction.DownRight;
+            return yPositive ? Direction.UpRight : Direction.DownRight;
         }
 
         //Movement

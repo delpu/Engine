@@ -434,105 +434,72 @@ namespace Intersect.Server.Entities.Pathfinding
             mWaitTime = timeMs + 1000;
         }
 
-        public sbyte GetMove()
+        public Direction GetMove()
         {
             if (mPath == null)
             {
-                return -1;
+                return Direction.None;
             }
 
-            var enm = mPath.GetEnumerator();
-            while (enm.MoveNext())
+            using (var enm = mPath.GetEnumerator())
             {
-                if (enm.Current.X - Options.MapWidth == mEntity.X && enm.Current.Y - Options.MapHeight == mEntity.Y)
+                while (enm.MoveNext())
                 {
-                    if (enm.MoveNext())
+                    if (enm.Current.X - Options.MapWidth != mEntity.X || enm.Current.Y - Options.MapHeight != mEntity.Y)
                     {
-                        var newX = enm.Current.X - Options.MapWidth;
-                        var newY = enm.Current.Y - Options.MapHeight;
+                        continue;
+                    }
+                    if (!enm.MoveNext())
+                    {
+                        continue;
+                    }
 
-                        if (Options.Instance.MapOpts.EnableDiagonalMovement)
+                    var newX = enm.Current.X - Options.MapWidth;
+                    var newY = enm.Current.Y - Options.MapHeight;
+
+                    if (mEntity.Y > newY && mEntity.X == newX)
+                    {
+                        return Direction.Up;
+                    }
+
+                    if (mEntity.Y < newY && mEntity.X == newX)
+                    {
+                        return Direction.Down;
+                    }
+
+                    if (mEntity.X > newX && mEntity.Y == newY)
+                    {
+                        return Direction.Left;
+                    }
+
+                    if (mEntity.X < newX && mEntity.Y == newY)
+                    {
+                        return Direction.Right;
+                    }
+
+                    if (Options.Instance.MapOpts.EnableDiagonalMovement)
+                    {
+                        if (mEntity.Y > newY && mEntity.X > newX)
                         {
-                            if (mEntity.X < newX && mEntity.Y == newY)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Right;
-                            }
-
-                            if (mEntity.X > newX && mEntity.Y == newY)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Left;
-                            }
-
-                            if (mEntity.Y < newY && mEntity.X == newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Down;
-                            }
-
-                            if (mEntity.Y > newY && mEntity.X == newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Up;
-                            }
-
-                            if (mEntity.Y > newY && mEntity.X > newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.UpLeft;
-                            }
-
-                            if (mEntity.Y > newY && mEntity.X < newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.UpRight;
-                            }
-
-                            if (mEntity.Y < newY && mEntity.X > newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.DownLeft;
-                            }
-
-                            if (mEntity.Y < newY && mEntity.X < newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.DownRight;
-                            }
+                            return Direction.UpLeft;
                         }
-                        else
+                        if (mEntity.Y > newY && mEntity.X < newX)
                         {
-                            if (mEntity.X < newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Right;
-                            }
+                            return Direction.UpRight;
+                        }
+                        if (mEntity.Y < newY && mEntity.X < newX)
+                        {
+                            return Direction.DownRight;
+                        }
 
-                            if (mEntity.X > newX)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Left;
-                            }
-
-                            if (mEntity.Y < newY)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Down;
-                            }
-
-                            if (mEntity.Y > newY)
-                            {
-                                enm.Dispose();
-                                return (int)Direction.Up;
-                            }
+                        if (mEntity.Y < newY && mEntity.X > newX)
+                        {
+                            return Direction.DownLeft;
                         }
                     }
                 }
             }
-
-            enm.Dispose();
-            return -1;
+            return Direction.None;
         }
     }
 

@@ -1464,11 +1464,11 @@ Tick timer saved in server config.json.";
 
             public static Dictionary<Enums.Direction, LocalizedString> dir = new Dictionary<Enums.Direction, LocalizedString>()
             {
-                {(Enums.Direction)(-1), @"Retain Direction"},
-                {(Enums.Direction)(0), @"Up"},
-                {(Enums.Direction)(1), @"Down"},
-                {(Enums.Direction)(2), @"Left"},
-                {(Enums.Direction)(3), @"Right"}
+                {Enums.Direction.None, @"Retain Direction"},
+                {Enums.Direction.Up, @"Up"},
+                {Enums.Direction.Down, @"Down"},
+                {Enums.Direction.Left, @"Left"},
+                {Enums.Direction.Right, @"Right"}
             };
 
             public static Dictionary<int, LocalizedString> WarpDirections = new Dictionary<int, LocalizedString>()
