@@ -74,12 +74,16 @@ namespace Intersect.Configuration
 
         public void Validate()
         {
-            
             ChatLines = Math.Min(Math.Max(ChatLines, 10), 500);
-            var entityBarDirections = EntityBarDirections.Distinct()?.ToList();
- 
 
-            EntityBarDirections = new List<DisplayDirection>(EntityBarDirections.Distinct() ?? new List<DisplayDirection>());
+            var entityBarDirections = EntityBarDirections.Distinct()?.ToList();
+            EntityBarDirections = DEFAULT_ENTITY_BAR_DIRECTIONS.Select(
+                (direction, index) =>
+                    (entityBarDirections?.Count ?? 0) > index
+                        ? entityBarDirections[index]
+                        : direction
+            ).ToList();
+
             GameFont = string.IsNullOrWhiteSpace(GameFont) ? DEFAULT_FONT : GameFont.Trim();
             Host = string.IsNullOrWhiteSpace(Host) ? DEFAULT_HOST : Host.Trim();
             IntroImages = new List<string>(IntroImages?.Distinct() ?? new List<string>());
