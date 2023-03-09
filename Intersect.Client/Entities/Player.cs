@@ -1053,8 +1053,10 @@ namespace Intersect.Client.Entities
                 {
                     return;
                 }
-
-                PacketSender.SendUseSpell(index, Globals.Me.Id);
+               
+               PacketSender.SendUseSpell(index, TargetIndex);
+                
+                
             }
         }
 
@@ -1210,6 +1212,10 @@ namespace Intersect.Client.Entities
             {
                 movex += 1;
             }
+
+
+
+
 
             Globals.Me.MoveDir = Direction.None;
             if (movex != 0f || movey != 0f)

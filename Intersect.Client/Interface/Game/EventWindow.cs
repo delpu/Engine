@@ -141,7 +141,7 @@ namespace Intersect.Client.Interface.Game
                         responseCount++;
                         maxResponse = 4;
                     }
-                    _typewriting = ClientConfiguration.Instance.TypewriterEnabled && Globals.Database.TypewriterBehavior == Enums.TypewriterBehavior.Word;
+                   // _typewriting = ClientConfiguration.Instance.TypewriterEnabled && Globals.Database.TypewriterBehavior == Enums.TypewriterBehavior.Word;
                     mEventResponse1.Name = "";
                     mEventResponse2.Name = "";
                     mEventResponse3.Name = "";

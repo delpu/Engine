@@ -715,6 +715,7 @@ namespace Intersect.Client.Localization
                 {"togglegui", @"Toggle Interface:"},
                 {"turnaround", @"Hold to turn around:"},
                 {"running", @"Running:"},
+                {"selfcast", @"Self Cast Key:"},
             };
 
             public static LocalizedString listening = @"Listening";

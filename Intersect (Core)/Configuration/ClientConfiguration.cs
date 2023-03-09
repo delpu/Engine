@@ -55,7 +55,7 @@ namespace Intersect.Configuration
 
         public const string DEFAULT_MENU_MUSIC = "RPG-Theme_v001_Looping.ogg";
 
-        public const bool DEFAULT_TYPEWRITER_ENABLED = true;
+        public const bool DEFAULT_TYPEWRITER_ENABLED = false;
 
         public const long DEFAULT_TYPEWRITER_FULL_STOP_DELAY = 400;
 

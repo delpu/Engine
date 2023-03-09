@@ -72,6 +72,8 @@ namespace Intersect.Client.Core.Controls
 
         Running,
 
+        SelfCast,
+
     }
 
 }
