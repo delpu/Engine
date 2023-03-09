@@ -562,6 +562,24 @@ namespace Intersect.GameObjects.Events.Commands
 
     }
 
+    public class ChangeHairCommand : EventCommand
+    {
+
+        public override EventCommandType Type { get; } = EventCommandType.ChangeHair;
+
+        public string Hair { get; set; } = "";
+
+    }
+
+    public class ChangeEyesCommand : EventCommand
+    {
+
+        public override EventCommandType Type { get; } = EventCommandType.ChangeEyes;
+
+        public string Eyes { get; set; } = "";
+
+    }
+
     public partial class ChangeGenderCommand : EventCommand
     {
 

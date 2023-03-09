@@ -36,7 +36,8 @@ namespace Intersect.Client.Framework.Gwen.ControlInternal
             TextColor = Skin.Colors.Label.Default;
             MouseInputEnabled = false;
             TextColorOverride = Color.FromArgb(0, 255, 255, 255); // A==0, override disabled
-        }
+            
+    }
 
         /// <summary>
         ///     Font used to display the text.
@@ -87,6 +88,8 @@ namespace Intersect.Client.Framework.Gwen.ControlInternal
         ///     Text color override - used by tooltips.
         /// </summary>
         public Color TextColorOverride { get; set; }
+
+        public Color TextColorOutline { get; set; }
 
         /// <summary>
         ///     Text override - used to display different string.

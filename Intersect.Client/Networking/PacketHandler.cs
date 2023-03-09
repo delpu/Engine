@@ -1517,6 +1517,20 @@ namespace Intersect.Client.Networking
             Audio.StopMusic(ClientConfiguration.Instance.MusicFadeTimer);
         }
 
+        private static void HandlePacket(IPacketSender packetSender, CustomSpriteLayersPacket packet)
+        {
+            var entityId = packet.EntityId;
+            if (Globals.Entities.ContainsKey(entityId))
+            {
+                var entity = Globals.Entities[entityId];
+                if (entity != null)
+                {
+                    ((Player)entity).CustomSpriteLayers = packet.CustomSpriteLayers;
+                }
+            }
+        }
+
+
         //PlaySoundPacket
         public void HandlePacket(IPacketSender packetSender, PlaySoundPacket packet)
         {
@@ -2049,7 +2063,7 @@ namespace Intersect.Client.Networking
             foreach (var chr in packet.Characters)
             {
                 characters.Add(
-                    new Character(chr.Id, chr.Name, chr.Sprite, chr.Face, chr.Level, chr.ClassName, chr.Equipment)
+                    new Character(chr.Id, chr.Name, chr.Sprite, chr.Face, chr.Level, chr.ClassName, chr.Equipment, chr.CustomSpriteLayers)
                 );
             }
 

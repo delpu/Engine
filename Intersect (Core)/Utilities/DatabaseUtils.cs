@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 using Newtonsoft.Json;
 
@@ -15,6 +15,23 @@ namespace Intersect.Utilities
             if (json != null)
             {
                 jsonList = JsonConvert.DeserializeObject<List<int>>(json);
+            }
+
+            for (var i = 0; i < arrayLen && i < jsonList.Count; i++)
+            {
+                output[i] = jsonList[i];
+            }
+
+            return output;
+        }
+
+        public static string[] LoadStringArray(string json, int arrayLen)
+        {
+            var output = new string[arrayLen];
+            var jsonList = new List<string>();
+            if (json != null)
+            {
+                jsonList = JsonConvert.DeserializeObject<List<string>>(json);
             }
 
             for (var i = 0; i < arrayLen && i < jsonList.Count; i++)
@@ -56,6 +73,30 @@ namespace Intersect.Utilities
 
             return JsonConvert.SerializeObject(output);
         }
+
+        public static string SaveStringArray(string[] array, int arrayLen)
+        {
+            if (array == null)
+            {
+                array = new string[arrayLen];
+            }
+
+            var output = new List<string>();
+            for (var i = 0; i < arrayLen; i++)
+            {
+                if (i < array.Length)
+                {
+                    output.Add(array[i]);
+                }
+                else
+                {
+                    output.Add(string.Empty);
+                }
+            }
+
+            return JsonConvert.SerializeObject(output);
+        }
+
 
         public static string SaveColor(Color color)
         {

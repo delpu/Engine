@@ -367,6 +367,7 @@ namespace Intersect.Server.Networking
                 case Player entityPlayer:
                     SendPlayerEquipmentTo(player, entityPlayer);
                     SendPlayerDeathInfoTo(player, entityPlayer);
+                    SendCustomSpriteLayersTo(player, entityPlayer);
                     break;
 
                 case Npc npc:
@@ -400,7 +401,7 @@ namespace Intersect.Server.Networking
             player.SendPacket(new MapEntitiesPacket(enPackets.ToArray()));
 
             SendMapEntityEquipmentTo(player, sendEntities); //Send the equipment of each player
-
+            SendMapCustomSpriteLayersTo(player, sendEntities);
             foreach (var sendEntity in sendEntities)
             {
                 if (sendEntity is Npc npc)
@@ -412,6 +413,39 @@ namespace Intersect.Server.Networking
                     SendPlayerDeathInfoTo(player, play);
                 }
             }
+        }
+
+        public static void SendMapCustomSpriteLayersTo(Player player, List<Entity> entities)
+        {
+            for (var i = 0; i < entities.Count; i++)
+            {
+                if (entities[i] != null && entities[i] != player)
+                {
+                    //If a player, send equipment to all (for paperdolls)
+                    if (entities[i].GetType() == typeof(Player) && player != entities[i])
+                    {
+                        SendCustomSpriteLayersTo(player, (Player)entities[i]);
+                    }
+                }
+            }
+        }
+
+        //CustomSpriteLayerPacket
+        public static CustomSpriteLayersPacket GenerateCustomSpriteLayersPacket(Player en)
+        {
+            return new CustomSpriteLayersPacket(en.Id, en.CustomSpriteLayers);
+        }
+
+        public static void SendCustomSpriteLayersTo(Player forPlayer, Player en)
+        {
+            forPlayer.SendPacket(GenerateCustomSpriteLayersPacket(en));
+        }
+
+        public static void SendCustomSpriteLayersToProximity(Player player)
+        {
+
+            SendDataToProximityOnMapInstance(player.MapId, player.MapInstanceId, GenerateCustomSpriteLayersPacket(player));
+           
         }
 
         public static void SendMapInstanceChangedPacket(Player player, MapController oldMap, Guid oldLayer)
@@ -519,6 +553,7 @@ namespace Intersect.Server.Networking
                 // If a player, send equipment to all (for paperdolls)
                 case Player player:
                     SendPlayerEquipmentToProximity(player);
+                    SendCustomSpriteLayersToProximity(player);
                     break;
 
                 case Npc npc:
@@ -1360,7 +1395,7 @@ namespace Intersect.Server.Networking
                     characters.Add(
                         new CharacterPacket(
                             character.Id, character.Name, character.Sprite, character.Face, character.Level,
-                            ClassBase.GetName(character.ClassId), equipment
+                            ClassBase.GetName(character.ClassId), equipment, character.CustomSpriteLayers
                         )
                     );
                 }

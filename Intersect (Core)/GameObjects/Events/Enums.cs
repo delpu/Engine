@@ -222,6 +222,13 @@ namespace Intersect.GameObjects.Events
         //Player Label
         PlayerLabel,
 
+        //Change Hair
+        ChangeHair,
+
+        //Change Hair
+        ChangeEyes,
+
+
         // Player Color
         ChangePlayerColor,
 

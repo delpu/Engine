@@ -1,3 +1,4 @@
+using Intersect.Enums;
 using MessagePack;
 using System;
 
@@ -28,7 +29,8 @@ namespace Intersect.Network.Packets.Server
             string face,
             int level,
             string className,
-            EquipmentFragment[] equipment
+            EquipmentFragment[] equipment,
+            string[] customspritelayers
         )
         {
             Id = id;
@@ -38,6 +40,7 @@ namespace Intersect.Network.Packets.Server
             Level = level;
             ClassName = className;
             Equipment = equipment;
+            CustomSpriteLayers = customspritelayers;
         }
 
         [Key(0)]
@@ -61,6 +64,8 @@ namespace Intersect.Network.Packets.Server
         [Key(6)]
         public EquipmentFragment[] Equipment { get; set; }
 
+        [Key(7)]
+        public string[] CustomSpriteLayers { get; set; }
     }
 
 }

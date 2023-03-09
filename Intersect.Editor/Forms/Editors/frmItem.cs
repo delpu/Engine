@@ -578,11 +578,11 @@ namespace Intersect.Editor.Forms.Editors
                 grpShieldProperties.Hide();
                 grpWeaponProperties.Show();
             }
-            else if (cmbEquipmentSlot.SelectedIndex == Options.ShieldIndex)
-            {
-                grpWeaponProperties.Hide();
-                grpShieldProperties.Show();
-            }
+          //  else if (cmbEquipmentSlot.SelectedIndex == Options.ShieldIndex)
+      //      {
+     //           grpWeaponProperties.Hide();
+      //          grpShieldProperties.Show();
+     //       }
             else
             {
                 grpWeaponProperties.Hide();

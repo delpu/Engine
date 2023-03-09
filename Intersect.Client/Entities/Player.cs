@@ -9,6 +9,7 @@ using Intersect.Client.Entities.Projectiles;
 using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Entities;
 using Intersect.Client.Framework.GenericClasses;
+using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Items;
 using Intersect.Client.Framework.Content;
 using Intersect.Client.General;
@@ -58,6 +59,11 @@ namespace Intersect.Client.Entities
         IReadOnlyList<IFriendInstance> IPlayer.Friends => Friends;
 
         public List<IFriendInstance> Friends { get; set; } = new List<IFriendInstance>();
+
+        protected string[] mMyCustomSpriteLayers { get; set; } = new string[(int)Enums.CustomSpriteLayers.CustomCount];
+
+        public GameTexture[] CustomSpriteLayersTexture { get; set; } = new GameTexture[(int)Enums.CustomSpriteLayers.CustomCount];
+        public Dictionary<SpriteAnimations, GameTexture[]> CustomSpriteLayersAnimationTexture { get; set; } = new Dictionary<SpriteAnimations, GameTexture[]>();
 
         IReadOnlyList<IHotbarInstance> IPlayer.HotbarSlots => Hotbar.ToList();
 
@@ -324,6 +330,16 @@ namespace Intersect.Client.Entities
                 }
             }
 
+            for (var i = 0; i <= (int)SpriteAnimations.Weapon; i++)
+            {
+                CustomSpriteLayersAnimationTexture[(SpriteAnimations)i] = new GameTexture[(int)Enums.CustomSpriteLayers.CustomCount];
+            }
+
+            if (playerPacket.CustomSpriteLayers != null)
+            {
+                this.CustomSpriteLayers = playerPacket.CustomSpriteLayers.CustomSpriteLayers;
+            }
+
             if (this == Globals.Me && TargetBox == null && Interface.Interface.GameUi != null)
             {
                 TargetBox = new EntityBox(Interface.Interface.GameUi.GameCanvas, EntityTypes.Player, null);
@@ -458,6 +474,150 @@ namespace Intersect.Client.Entities
             }
 
             return 0;
+        }
+
+        public virtual string[] CustomSpriteLayers
+        {
+            get => mMyCustomSpriteLayers;
+            set
+            {
+                mMyCustomSpriteLayers = value;
+                CustomSpriteLayersTexture = GetCustomSpriteTextures(value);
+            }
+        }
+
+        private GameTexture[] GetCustomSpriteTextures(string[] customSpriteLayers)
+        {
+            var textures = new GameTexture[(int)Enums.CustomSpriteLayers.CustomCount];
+            for (int i = 0; i < (int)Enums.CustomSpriteLayers.CustomCount; i++)
+            {
+                switch (i)
+                {
+                    case (int)Enums.CustomSpriteLayers.Hair:
+                        textures[i] = Globals.ContentManager.GetTexture(TextureType.Hair, customSpriteLayers[i]);
+                        LoadCustomSpriteLayerAnimationTextures(customSpriteLayers[i], Enums.CustomSpriteLayers.Hair, TextureType.Hair);
+                        break;
+                }
+            }
+
+            return textures;
+        }
+
+        public void LoadCustomSpriteLayerAnimationTextures(string tex, CustomSpriteLayers layer, TextureType textype)
+        {
+            var file = System.IO.Path.GetFileNameWithoutExtension(tex);
+            var ext = System.IO.Path.GetExtension(tex);
+
+            foreach (var anim in Enum.GetValues(typeof(SpriteAnimations)))
+            {
+                CustomSpriteLayersAnimationTexture[(SpriteAnimations)anim][(int)layer] = Globals.ContentManager.GetTexture(textype, $@"{file}_{anim}{ext}");
+            }
+        }
+
+        public virtual void DrawCustomSpriteLayer(CustomSpriteLayers layer, TextureType textype, int alpha)
+        {
+            var map = Maps.MapInstance.Get(MapId);
+            if (map == null)
+            {
+                return;
+            }
+
+            if (CustomSpriteLayersAnimationTexture[SpriteAnimation][(int)layer] == null && CustomSpriteLayersTexture[(int)layer] == null)
+            {
+                return;
+            }
+
+            var srcRectangle = new FloatRect();
+            var destRectangle = new FloatRect();
+            var d = 0;
+
+            var texture = CustomSpriteLayersAnimationTexture[SpriteAnimation][(int)layer] ?? CustomSpriteLayersTexture[(int)layer];
+
+            if (texture != null)
+            {
+                if (texture.GetHeight() / 4 > Options.TileHeight)
+                {
+                    destRectangle.X = map.GetX() + X * Options.TileWidth + OffsetX + Options.TileWidth / 2;
+                    destRectangle.Y = Center.Y - texture.GetHeight() / 8;
+                }
+                else
+                {
+                    destRectangle.X = map.GetX() + X * Options.TileWidth + OffsetX + Options.TileWidth / 2;
+                    destRectangle.Y = map.GetY() + Y * Options.TileHeight + OffsetY;
+                }
+
+                destRectangle.X -= texture.GetWidth() / 8;
+                switch (Dir)
+                {
+                    case Direction.Down:
+                        d = 3;
+
+                        break;
+                    case Direction.Up:
+                        d = 0;
+
+                        break;
+                    case Direction.Left:
+                        d = 1;
+
+                        break;
+                    case Direction.Right:
+                        d = 2;
+
+                        break;
+                    default:
+                        Dir = Direction.None;
+                        d = 3;
+
+                        break;
+                }
+
+                destRectangle.X = (int)Math.Ceiling(destRectangle.X);
+                destRectangle.Y = (int)Math.Ceiling(destRectangle.Y);
+                if (Options.AnimatedSprites.Contains(CustomSpriteLayers[(int)layer].ToLower()))
+                {
+                    srcRectangle = new FloatRect(
+                        AnimationFrame * (int)texture.GetWidth() / 4, d * (int)texture.GetHeight() / 4,
+                        (int)texture.GetWidth() / 4, (int)texture.GetHeight() / 4
+                    );
+                }
+                else
+                {
+                    if (SpriteAnimation == SpriteAnimations.Normal)
+                    {
+                        var attackTime = CalculateAttackTime();
+                        if (AttackTimer - CalculateAttackTime() / 2 > Timing.Global.Milliseconds || IsBlocking)
+                        {
+                            srcRectangle = new FloatRect(
+                                3 * (int)texture.GetWidth() / 4, d * (int)texture.GetHeight() / 4,
+                                (int)texture.GetWidth() / 4, (int)texture.GetHeight() / 4
+                            );
+                        }
+                        else
+                        {
+                            //Restore Original Attacking/Blocking Code
+                            srcRectangle = new FloatRect(
+                                WalkFrame * (int)texture.GetWidth() / 4, d * (int)texture.GetHeight() / 4,
+                                (int)texture.GetWidth() / 4, (int)texture.GetHeight() / 4
+                            );
+                        }
+                    }
+                    else
+                    {
+                        srcRectangle = new FloatRect(
+                            SpriteFrame * (int)texture.GetWidth() / 4, d * (int)texture.GetHeight() / 4,
+                            (int)texture.GetWidth() / 4, (int)texture.GetHeight() / 4
+                        );
+                    }
+                }
+
+                destRectangle.Width = srcRectangle.Width;
+                destRectangle.Height = srcRectangle.Height;
+
+                Graphics.DrawGameTexture(
+                            texture, srcRectangle, destRectangle, new Color(alpha, 255, 255, 255)
+                        );
+            }
         }
 
         public int FindHotbarItem(IHotbarInstance hotbarInstance)

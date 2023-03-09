@@ -277,7 +277,7 @@ namespace Intersect.Client.Interface.Game.DescriptionWindows
                 }
             }
 
-            //Blocking options
+            /*Blocking options
             if (mItem.EquipmentSlot == Options.ShieldIndex)
             {
                 if (mItem.BlockChance > 0)
@@ -294,7 +294,7 @@ namespace Intersect.Client.Interface.Game.DescriptionWindows
                 {
                     rows.AddKeyValueRow(Strings.ItemDescription.BlockAbsorption, Strings.ItemDescription.Percentage.ToString(mItem.BlockAbsorption));
                 }
-            }
+            }*/
 
             // Vitals
             for (var i = 0; i < (int)Vitals.VitalCount; i++)

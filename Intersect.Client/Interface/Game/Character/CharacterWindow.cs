@@ -6,6 +6,7 @@ using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Gwen;
 using Intersect.Client.Framework.Gwen.Control;
 using Intersect.Client.Framework.Gwen.Control.EventArguments;
+using Intersect.Client.Framework.Content;
 using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
@@ -247,6 +248,7 @@ namespace Intersect.Client.Interface.Game.Character
                 for (var z = 0; z < Options.PaperdollOrder[1].Count; z++)
                 {
                     var paperdoll = "";
+                    var type = TextureType.Paperdoll;
                     if (Options.EquipmentSlots.IndexOf(Options.PaperdollOrder[1][z]) > -1)
                     {
                         var equipment = Globals.Me.MyEquipment;
@@ -276,6 +278,18 @@ namespace Intersect.Client.Interface.Game.Character
                         Align.Center(PaperdollPanels[z]);
                     }
 
+                    if (paperdoll == "" && Options.PaperdollOrder[2][z] == Options.Equipment.HairSlot)
+                    {
+                        paperdoll = Globals.Me.CustomSpriteLayers[(int)Enums.CustomSpriteLayers.Hair];
+                        type = TextureType.Hair;
+                    }
+
+                    if (paperdoll == "" && Options.PaperdollOrder[4][z] == Options.Equipment.EyesSlot)
+                    {
+                        paperdoll = Globals.Me.CustomSpriteLayers[(int)Enums.CustomSpriteLayers.Eyes];
+                        type = TextureType.Hair;
+                    }
+
                     if (string.IsNullOrWhiteSpace(paperdoll) && !string.IsNullOrWhiteSpace(PaperdollTextures[z]) && Options.PaperdollOrder[1][z] != "Player")
                     {
                         PaperdollPanels[z].Texture = null;
@@ -285,7 +299,7 @@ namespace Intersect.Client.Interface.Game.Character
                     else if (paperdoll != "" && paperdoll != PaperdollTextures[z])
                     {
                         var paperdollTex = Globals.ContentManager.GetTexture(
-                            Framework.Content.TextureType.Paperdoll, paperdoll
+                            type, paperdoll
                         );
 
                         PaperdollPanels[z].Texture = paperdollTex;

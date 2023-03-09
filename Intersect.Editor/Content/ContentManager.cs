@@ -49,6 +49,10 @@ namespace Intersect.Editor.Content
 
             Misc,
 
+            Hairs,
+
+            Eyes
+
         }
 
         //Game Content
@@ -74,6 +78,10 @@ namespace Intersect.Editor.Content
         static IDictionary<string, Texture> sImageDict = new Dictionary<string, Texture>();
 
         static IDictionary<string, Texture> sItemDict = new Dictionary<string, Texture>();
+
+        static IDictionary<string, Texture> sHairsDict = new Dictionary<string, Texture>();
+
+        static IDictionary<string, Texture> sEyesDict = new Dictionary<string, Texture>();
 
         static IDictionary<string, Texture> sMiscDict = new Dictionary<string, Texture>();
 
@@ -139,6 +147,18 @@ namespace Intersect.Editor.Content
             LoadShaders();
             LoadSounds();
             LoadMusic();
+            LoadHairs();
+            LoadEyes();
+        }
+
+        private static void LoadHairs()
+        {
+            LoadTextureGroup("hairs", sHairsDict);
+        }
+
+        private static void LoadEyes()
+        {
+            LoadTextureGroup("eyes", sEyesDict);
         }
 
         public static void Update()
@@ -453,6 +473,16 @@ namespace Intersect.Editor.Content
                     textureDict = sMiscDict;
 
                     break;
+                case TextureType.Hairs:
+                    textureDict = sHairsDict;
+
+
+                    break;
+                case TextureType.Eyes:
+                    textureDict = sEyesDict;
+
+                    break;
+
                 default:
                     return null;
             }
@@ -579,6 +609,14 @@ namespace Intersect.Editor.Content
                     break;
                 case TextureType.Misc:
                     textureDict = sMiscDict;
+
+                    break;
+                case TextureType.Hairs:
+                    textureDict = sHairsDict;
+
+                    break;
+                case TextureType.Eyes:
+                    textureDict = sEyesDict;
 
                     break;
                 default:

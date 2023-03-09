@@ -52,6 +52,10 @@ namespace Intersect.Client.Framework.File_Management
 
         protected Dictionary<string, IAsset> mTagDict = new Dictionary<string, IAsset>();
 
+        protected Dictionary<string, IAsset> mHairDict = new Dictionary<string, IAsset>();
+
+        protected Dictionary<string, IAsset> mEyesDict = new Dictionary<string, IAsset>();
+
         protected Dictionary<string, IAsset> mMusicDict = new Dictionary<string, IAsset>();
 
         protected Dictionary<string, IAsset> mPaperdollDict = new Dictionary<string, IAsset>();
@@ -109,8 +113,13 @@ namespace Intersect.Client.Framework.File_Management
             LoadGui();
             LoadFonts();
             LoadShaders();
+            LoadHairs();
+            LoadEyes();
         }
 
+        public abstract void LoadHairs();
+
+        public abstract void LoadEyes();
         public abstract void LoadTexturePacks();
 
         public abstract void LoadTilesets(string[] tilesetnames);
@@ -207,6 +216,12 @@ namespace Intersect.Client.Framework.File_Management
 
                 case TextureType.Tag:
                     return mTagDict.Keys.ToArray();
+
+                case TextureType.Hair:
+                    return mHairDict.Keys.ToArray();
+
+                case TextureType.Eyes:
+                    return mHairDict.Keys.ToArray();
             }
 
             return null;
@@ -284,6 +299,16 @@ namespace Intersect.Client.Framework.File_Management
                     break;
 
                 case TextureType.Tag:
+                    textureDict = mTagDict;
+
+                    break;
+
+                case TextureType.Hair:
+                    textureDict = mTagDict;
+
+                    break;
+
+                case TextureType.Eyes:
                     textureDict = mTagDict;
 
                     break;

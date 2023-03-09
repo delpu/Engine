@@ -120,7 +120,7 @@ namespace Intersect
 
         public static int WeaponIndex => Instance.EquipmentOpts.WeaponSlot;
 
-        public static int ShieldIndex => Instance.EquipmentOpts.ShieldSlot;
+     //   public static int ShieldIndex => Instance.EquipmentOpts.ShieldSlot;
 
         public static List<string> EquipmentSlots => Instance.EquipmentOpts.Slots;
 

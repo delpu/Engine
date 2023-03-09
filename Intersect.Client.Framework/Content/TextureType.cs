@@ -35,5 +35,9 @@ namespace Intersect.Client.Framework.Content
         
         Tag,
 
+        Hair,
+
+        Eyes
+
     }
 }

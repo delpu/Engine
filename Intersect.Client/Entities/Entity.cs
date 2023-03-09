@@ -22,6 +22,7 @@ using Intersect.GameObjects.Maps;
 using Intersect.Logging;
 using Intersect.Network.Packets.Server;
 using Intersect.Utilities;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace Intersect.Client.Entities
 {
@@ -1225,6 +1226,19 @@ namespace Intersect.Client.Entities
                                       ? itemDescriptor.MalePaperdoll
                                       : itemDescriptor.FemalePaperdoll;
                                 DrawEquipment(itemPaperdoll, item.Color * renderColor);
+                            }
+                            else
+                            {
+                                // Render a hairstyle here if we're currently rendering the desired hair slot without any equipment in it.
+                                if (this is Player && paperdoll == Options.EquipmentSlots[Options.EquipmentSlots.IndexOf(Options.Equipment.HairSlot)])
+                                {
+                                    ((Player)this).DrawCustomSpriteLayer(CustomSpriteLayers.Hair, TextureType.Hair, 255);
+                                }
+                                // Render a hairstyle here if we're currently rendering the desired hair slot without any equipment in it.
+                                if (this is Player && paperdoll == Options.EquipmentSlots[Options.EquipmentSlots.IndexOf(Options.Equipment.EyesSlot)])
+                                {
+                                    ((Player)this).DrawCustomSpriteLayer(CustomSpriteLayers.Hair, TextureType.Eyes, 255);
+                                }
                             }
                         }
                     }

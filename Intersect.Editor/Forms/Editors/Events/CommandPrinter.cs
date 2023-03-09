@@ -977,6 +977,11 @@ namespace Intersect.Editor.Forms.Editors.Events
             return Strings.EventCommandList.holdplayer;
         }
 
+        private static string GetCommandText(ChangeHairCommand command, MapInstance map)
+        {
+            return Strings.EventCommandList.sethair.ToString(command.Hair);
+        }
+
         private static string GetCommandText(ReleasePlayerCommand command, MapInstance map)
         {
             return Strings.EventCommandList.releaseplayer;

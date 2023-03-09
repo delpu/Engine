@@ -16,41 +16,61 @@ namespace Intersect.Config
         public List<string> Down = new List<string>()
         {
             "Player",
-            "Armor",
-            "Helmet",
+            "Headwear",
+            "Hairstyle",
+            "Eyes",
+            "Gloves",
+            "Shirt",
             "Weapon",
-            "Shield",
-            "Boots"
+            "Pants",
+            "Shoes",
+            "Accessory",
+            "Jacket"
         };
 
         public List<string> Left = new List<string>()
         {
             "Player",
-            "Armor",
-            "Helmet",
+            "Headwear",
+            "Hairstyle",
+            "Eyes",
+            "Gloves",
+            "Shirt",
             "Weapon",
-            "Shield",
-            "Boots"
+            "Pants",
+            "Shoes",
+            "Accessory",
+            "Jacket"
         };
 
         public List<string> Right = new List<string>()
         {
             "Player",
-            "Armor",
-            "Helmet",
+            "Headwear",
+            "Hairstyle",
+            "Eyes",
+            "Gloves",
+            "Shirt",
             "Weapon",
-            "Shield",
-            "Boots"
+            "Pants",
+            "Shoes",
+            "Accessory",
+            "Jacket"
         };
 
         public List<string> Up = new List<string>()
         {
             "Player",
-            "Armor",
-            "Helmet",
+            "Headwear",
+            "Hairstyle",
+            "Eyes",
+            "Gloves",
+            "Shirt",
             "Weapon",
-            "Shield",
-            "Boots"
+            "Pants",
+            "Shoes",
+            "Accessory",
+            "Jacket"
         };
 
         public PaperdollOptions()

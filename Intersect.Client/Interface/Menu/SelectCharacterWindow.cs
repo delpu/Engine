@@ -11,6 +11,7 @@ using Intersect.Client.Interface.Game;
 using Intersect.Client.Interface.Game.Chat;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
+using Intersect.Enums;
 using Intersect.Network.Packets.Server;
 
 namespace Intersect.Client.Interface.Menu
@@ -292,6 +293,8 @@ namespace Intersect.Client.Interface.Menu
                                 paperdollPortrait.Texture = null;
                                 continue;
                             }
+                            
+
 
                             paperdollPortrait.Texture = Globals.ContentManager.GetTexture(
                                 Framework.Content.TextureType.Paperdoll, equipment.Name
@@ -457,6 +460,7 @@ namespace Intersect.Client.Interface.Menu
         {
             Id = id;
         }
+        public string[] CustomSpriteLayers = new string[(int)Enums.CustomSpriteLayers.CustomCount];
 
         public Character(
             Guid id,
@@ -465,9 +469,11 @@ namespace Intersect.Client.Interface.Menu
             string face,
             int level,
             string charClass,
-            EquipmentFragment[] equipment
+            EquipmentFragment[] equipment,
+            string[] customspritelayers
         )
         {
+            CustomSpriteLayers = customspritelayers;
             Equipment = equipment;
             Id = id;
             Name = name;
