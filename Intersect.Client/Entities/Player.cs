@@ -1054,7 +1054,7 @@ namespace Intersect.Client.Entities
                     return;
                 }
 
-                PacketSender.SendUseSpell(index, TargetIndex);
+                PacketSender.SendUseSpell(index, Globals.Me.Id);
             }
         }
 

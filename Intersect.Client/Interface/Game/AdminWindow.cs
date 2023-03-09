@@ -9,7 +9,6 @@ using Intersect.Client.General;
 using Intersect.Client.Localization;
 using Intersect.Client.Networking;
 using Intersect.GameObjects.Maps.MapList;
-
 using static Intersect.Client.Framework.File_Management.GameContentManager;
 
 namespace Intersect.Client.Interface.Game
@@ -77,7 +76,7 @@ namespace Intersect.Client.Interface.Game
         private Button ButtonWarpMeTo;
 
         private Button ButtonWarpToMe;
-        
+
         private Button ButtonOverworldReturn;
 
         public ImagePanel PanelSprite;
@@ -88,23 +87,17 @@ namespace Intersect.Client.Interface.Game
         public AdminWindow(Base gameCanvas)
         {
             mAdminWindow = new WindowControl(gameCanvas, Strings.Admin.title, false, nameof(AdminWindow));
-           
             mAdminWindow.SetPosition(
-                 (Graphics.Renderer.ScreenWidth - mAdminWindow.Width) / 2,
+                (Graphics.Renderer.ScreenWidth - mAdminWindow.Width) / 2,
                 (Graphics.Renderer.ScreenHeight - mAdminWindow.Height) / 2
             );
-
             mAdminWindow.DisableResizing();
             mAdminWindow.Margin = Margin.Zero;
             mAdminWindow.Padding = Padding.Zero;
 
-            //Player Mods
             LabelName = new Label(mAdminWindow, nameof(LabelName));
-           
             LabelName.Text = Strings.Admin.name;
-
             TextboxName = new TextBox(mAdminWindow, nameof(TextboxName));
-            
             Interface.FocusElements.Add(TextboxName);
 
             LabelAccess = new Label(mAdminWindow, nameof(LabelAccess));
@@ -124,10 +117,10 @@ namespace Intersect.Client.Interface.Game
             ButtonWarpMeTo.Text = Strings.Admin.warpme2;
             ButtonWarpMeTo.Clicked += _warpMeToButton_Clicked;
 
-
             ButtonOverworldReturn = new Button(mAdminWindow, nameof(ButtonOverworldReturn));
             ButtonOverworldReturn.Text = Strings.Admin.OverworldReturn;
             ButtonOverworldReturn.Clicked += _overWorldReturn_Clicked;
+
             ButtonKick = new Button(mAdminWindow, nameof(ButtonKick));
             ButtonKick.Text = Strings.Admin.kick;
             ButtonKick.Clicked += _kickButton_Clicked;
@@ -136,23 +129,24 @@ namespace Intersect.Client.Interface.Game
             ButtonKill.Text = Strings.Admin.kill;
             ButtonKill.Clicked += _killButton_Clicked;
 
+            ButtonBan = new Button(mAdminWindow, nameof(ButtonBan));
+            ButtonBan.Text = Strings.Admin.ban;
+            ButtonBan.Clicked += _banButton_Clicked;
+
             ButtonUnban = new Button(mAdminWindow, nameof(ButtonUnban));
             ButtonUnban.Text = Strings.Admin.unban;
-            ButtonBan.Clicked += _banButton_Clicked;
+            ButtonUnban.Clicked += _unbanButton_Clicked;
 
             ButtonMute = new Button(mAdminWindow, nameof(ButtonMute));
             ButtonMute.Text = Strings.Admin.mute;
             ButtonMute.Clicked += _muteButton_Clicked;
 
-
             ButtonUnmute = new Button(mAdminWindow, nameof(ButtonUnmute));
             ButtonUnmute.Text = Strings.Admin.unmute;
-            ButtonUnmute.SetBounds(144, 84, 50, 18);
             ButtonUnmute.Clicked += _unmuteButton_Clicked;
 
             LabelSprite = new Label(mAdminWindow, nameof(LabelSprite));
             LabelSprite.Text = Strings.Admin.sprite;
-
             DropdownSprite = new ComboBox(mAdminWindow, nameof(DropdownSprite));
             DropdownSprite.AddItem(Strings.Admin.none);
             var sprites = Globals.ContentManager.GetTextureNames(Framework.Content.TextureType.Entity);
@@ -161,23 +155,16 @@ namespace Intersect.Client.Interface.Game
             {
                 DropdownSprite.AddItem(sprite);
             }
-
             DropdownSprite.ItemSelected += _spriteDropdown_ItemSelected;
-
             ButtonSetSprite = new Button(mAdminWindow, nameof(ButtonSetSprite));
             ButtonSetSprite.Text = Strings.Admin.setsprite;
             ButtonSetSprite.Clicked += _setSpriteButton_Clicked;
-
             PanelSprite = new ImagePanel(mAdminWindow, nameof(PanelSprite));
-         
             SpritePanel = new ImagePanel(PanelSprite);
 
             LabelFace = new Label(mAdminWindow, nameof(LabelFace));
-
             LabelFace.Text = Strings.Admin.face;
-
             DropdownFace = new ComboBox(mAdminWindow, nameof(DropdownFace));
-         
             DropdownFace.AddItem(Strings.Admin.none);
             var faces = Globals.ContentManager.GetTextureNames(Framework.Content.TextureType.Face);
             Array.Sort(faces, new AlphanumComparatorFast());
@@ -185,46 +172,36 @@ namespace Intersect.Client.Interface.Game
             {
                 DropdownFace.AddItem(face);
             }
-
             DropdownFace.ItemSelected += _faceDropdown_ItemSelected;
-
-
             ButtonSetFace = new Button(mAdminWindow, nameof(ButtonSetFace));
             ButtonSetFace.Text = Strings.Admin.setface;
-            ButtonSetFace.SetBounds(6, 208, 80, 18);
             ButtonSetFace.Clicked += _setFaceButton_Clicked;
-
             PanelFace = new ImagePanel(mAdminWindow, nameof(PanelFace));
-
             FacePanel = new ImagePanel(PanelFace);
 
             LabelMapList = new Label(mAdminWindow, nameof(LabelMapList)) { Text = Strings.Admin.maplist };
             CheckboxChronological = new CheckBox(mAdminWindow, nameof(CheckboxChronological));
             CheckboxChronological.SetToolTipText(Strings.Admin.chronologicaltip);
-         
             CheckboxChronological.CheckChanged += _chkChronological_CheckChanged;
-
             LabelChronological = new Label(mAdminWindow, nameof(LabelChronological))
             {
                 Text = Strings.Admin.chronological
             };
-
             CreateMapList();
-
             mAdminWindow.LoadJsonUi(UI.InGame, Graphics.Renderer.GetResolutionString(), true);
-
             UpdateMapList();
         }
 
         private void _spriteDropdown_ItemSelected(Base sender, ItemSelectedEventArgs arguments)
         {
             SpritePanel.Texture = Globals.ContentManager.GetTexture(
-                 Framework.Content.TextureType.Entity, DropdownSprite.Text);
+                Framework.Content.TextureType.Entity, DropdownSprite.Text);
 
             if (SpritePanel.Texture == null)
             {
                 return;
             }
+
             var textFrameWidth = SpritePanel.Texture.Width / Options.Instance.Sprites.NormalFrames;
             var textFrameHeight = SpritePanel.Texture.Height / Options.Instance.Sprites.Directions;
             SpritePanel.SetTextureRect(0, 0, textFrameWidth, textFrameHeight);
@@ -235,7 +212,7 @@ namespace Intersect.Client.Interface.Game
         private void _faceDropdown_ItemSelected(Base sender, ItemSelectedEventArgs arguments)
         {
             FacePanel.Texture = Globals.ContentManager.GetTexture(
-               Framework.Content.TextureType.Face, DropdownFace.Text);
+                Framework.Content.TextureType.Face, DropdownFace.Text);
 
             if (FacePanel.Texture == null)
             {
@@ -351,10 +328,8 @@ namespace Intersect.Client.Interface.Game
         {
             if (TextboxName.Text.Trim().Length > 0)
             {
-                mBanMuteWindow = new BanMuteBox(
-                    Strings.Admin.mutecaption.ToString(TextboxName.Text),
-                    Strings.Admin.muteprompt.ToString(TextboxName.Text), true, MuteUser
-                );
+                mBanMuteWindow = new BanMuteBox(Strings.Admin.mutecaption.ToString(TextboxName.Text),
+                    Strings.Admin.muteprompt.ToString(TextboxName.Text), true, MuteUser);
             }
         }
 
@@ -371,7 +346,6 @@ namespace Intersect.Client.Interface.Game
             PacketSender.SendAdminAction(new BanAction(TextboxName.Text, mBanMuteWindow.GetDuration(),
                 mBanMuteWindow.GetReason(), mBanMuteWindow.BanIp()));
 
-
             mBanMuteWindow.Dispose();
         }
 
@@ -381,6 +355,7 @@ namespace Intersect.Client.Interface.Game
             {
                 return;
             }
+
             var name = TextboxName.Text.Trim();
 
             if (string.Equals(name, Globals.Me.Name, StringComparison.CurrentCultureIgnoreCase))
@@ -405,7 +380,8 @@ namespace Intersect.Client.Interface.Game
             if (TextboxName.Text.Trim().Length > 0)
             {
                 new InputBox(Strings.Admin.unmutecaption.ToString(TextboxName.Text),
-                    Strings.Admin.unmuteprompt.ToString(TextboxName.Text), true, InputBox.InputType.YesNo, UnmuteUser, null, -1);
+                    Strings.Admin.unmuteprompt.ToString(TextboxName.Text), true, InputBox.InputType.YesNo, UnmuteUser,
+                    null, -1);
             }
         }
 
@@ -414,7 +390,8 @@ namespace Intersect.Client.Interface.Game
             if (TextboxName.Text.Trim().Length > 0)
             {
                 new InputBox(Strings.Admin.unbancaption.ToString(TextboxName.Text),
-                    Strings.Admin.unbanprompt.ToString(TextboxName.Text), true, InputBox.InputType.YesNo, UnbanUser, null, -1);
+                    Strings.Admin.unbanprompt.ToString(TextboxName.Text), true, InputBox.InputType.YesNo, UnbanUser,
+                    null, -1);
             }
         }
 
@@ -453,7 +430,7 @@ namespace Intersect.Client.Interface.Game
 
         static void tmpNode_DoubleClicked(Base sender, ClickedEventArgs arguments)
         {
-            PacketSender.SendAdminAction(new WarpToMapAction((Guid) ((TreeNode) sender).UserData));
+            PacketSender.SendAdminAction(new WarpToMapAction((Guid)((TreeNode)sender).UserData));
         }
 
         public void Update()
@@ -474,7 +451,5 @@ namespace Intersect.Client.Interface.Game
         {
             mAdminWindow.IsHidden = true;
         }
-
     }
-
 }
