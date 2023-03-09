@@ -3,14 +3,16 @@ using System;
 using Intersect.Server.Database.PlayerData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Intersect.Server.Migrations
 {
     [DbContext(typeof(PlayerContext))]
-    partial class PlayerContextModelSnapshot : ModelSnapshot
+    [Migration("20230309161634_AddHair")]
+    partial class AddHair
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -418,6 +420,9 @@ namespace Intersect.Server.Migrations
 
                     b.Property<DateTime?>("CreationDate");
 
+                    b.Property<string>("CustomSpriteLayersJson")
+                        .HasColumnName("CustomSpriteLayers");
+
                     b.Property<Guid?>("DbGuildId");
 
                     b.Property<int>("Dir");
@@ -515,9 +520,6 @@ namespace Intersect.Server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Players");
-
-                    b.Property<string>("CustomSpriteLayersJson")
-                        .HasColumnName("CustomSpriteLayers");
                 });
 
             modelBuilder.Entity("Intersect.Server.Database.PlayerData.Api.RefreshToken", b =>
