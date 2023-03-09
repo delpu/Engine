@@ -2639,6 +2639,7 @@ namespace Intersect.Client.Entities
                     Dir = Globals.Me.MoveDir;
                     PacketSender.SendDirection(Dir);
                     Globals.Me.MoveDir = Direction.None;
+                    PickLastDirection(Dir);
                 }
 
                 // Hold the player in place if the requested direction is the same as the current one.
@@ -2649,7 +2650,7 @@ namespace Intersect.Client.Entities
             }
         }
         
-        // Checks if the target is at the opposite direction of the current player's direction.
+        // Checks if the target is atSSSS the opposite direction of the current player's direction.
         // The comparison also takes into account whether diagonal movement is enabled or not.
         private static bool IsTargetAtOppositeDirection(Direction currentDir, Direction targetDir)
         {
