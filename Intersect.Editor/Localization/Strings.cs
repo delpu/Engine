@@ -3603,6 +3603,8 @@ Tick timer saved in server config.json.";
 
             public static LocalizedString cooldown = @"Cooldown (ms):";
 
+            public static LocalizedString currency = @"Main Currency";
+
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public static LocalizedString CooldownGroup = @"Cooldown Group:";
 

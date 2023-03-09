@@ -353,6 +353,7 @@ namespace Intersect.Server.Networking
             {
                 SendExperience(player);
                 SendInventory(player);
+                SendInventoryCoinsUpdate(player);
                 SendPlayerSpells(player);
                 SendPointsTo(player);
                 SendHotbarSlots(player);
@@ -1212,6 +1213,19 @@ namespace Intersect.Server.Networking
                     slot, player.Items[slot].ItemId, player.Items[slot].Quantity, player.Items[slot].BagId,
                     player.Items[slot].StatBuffs
                 )
+            );
+        }
+
+        //InventoryCoinsUpdatePacket
+        public static void SendInventoryCoinsUpdate(Player player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            player.SendPacket(
+                new InventoryCoinsUpdatePacket(player.Coins)
             );
         }
 

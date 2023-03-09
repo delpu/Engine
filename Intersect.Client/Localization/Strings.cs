@@ -1184,6 +1184,15 @@ namespace Intersect.Client.Localization
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
             public static LocalizedString Title = @"Inventory";
 
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString CoinLabel = @"Coins: {0}";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString DropCoinTitle = @"Drop Coins";
+
+            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+            public static LocalizedString DropCoinPrompt = @"How many coins you want to drop?";
+
         }
 
         public partial struct ItemContextMenu

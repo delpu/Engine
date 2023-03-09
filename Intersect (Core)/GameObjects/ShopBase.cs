@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -88,6 +88,10 @@ namespace Intersect.GameObjects
         [NotMapped]
         [JsonIgnore]
         public ItemBase Item => ItemBase.Get(ItemId);
+
+        [NotMapped]
+        [JsonIgnore]
+        public ItemBase CostItem => ItemBase.Get(CostItemId);
 
     }
 

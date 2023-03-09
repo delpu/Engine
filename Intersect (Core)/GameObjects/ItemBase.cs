@@ -326,6 +326,8 @@ namespace Intersect.GameObjects
                                    ItemType != ItemTypes.Equipment &&
                                    ItemType != ItemTypes.Bag;
 
+        public bool IsMainCurrency { get; set; }
+
         [NotMapped]
         public List<EffectData> Effects { get; set; }
 

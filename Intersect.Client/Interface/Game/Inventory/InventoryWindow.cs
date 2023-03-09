@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using Intersect.Admin.Actions;
 using Intersect.Client.Core;
 using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.GenericClasses;
 using Intersect.Client.Framework.Gwen.Control;
+using Intersect.Client.Framework.Gwen.Control.EventArguments;
 using Intersect.Client.General;
 using Intersect.Client.Localization;
+using Intersect.Client.Networking;
 using Intersect.GameObjects;
 
 namespace Intersect.Client.Interface.Game.Inventory
@@ -36,6 +40,10 @@ namespace Intersect.Client.Interface.Game.Inventory
 
         private MenuItem mDropItemContextItem;
 
+        private Label CoinLabel;
+
+        private Button ButtonDrop;
+
         //Init
         public InventoryWindow(Canvas gameCanvas)
         {
@@ -50,6 +58,15 @@ namespace Intersect.Client.Interface.Game.Inventory
             mContextMenu = new Framework.Gwen.Control.Menu(gameCanvas, "InventoryContextMenu");
             mContextMenu.IsHidden = true;
             mContextMenu.IconMarginDisabled = true;
+
+            CoinLabel = new Label(mInventoryWindow, nameof(CoinLabel));
+            CoinLabel.SetPosition(6, 172);
+
+            ButtonDrop = new Button(mInventoryWindow, nameof(ButtonDrop));
+
+            ButtonDrop.SetBounds(90, 84, 50, 18);
+            ButtonDrop.Clicked += _dropButton_Clicked;
+
             //TODO: Is this a memory leak?
             mContextMenu.Children.Clear();
             mUseItemContextItem = mContextMenu.AddItem(Strings.ItemContextMenu.Use);
@@ -237,6 +254,8 @@ namespace Intersect.Client.Interface.Game.Inventory
                     mValues[i].IsHidden = true;
                 }
             }
+
+            CoinLabel.Text = Strings.Inventory.CoinLabel.ToString(Globals.Me.Coins);
         }
 
         private void InitItemContainer()
@@ -307,6 +326,24 @@ namespace Intersect.Client.Interface.Game.Inventory
             };
 
             return rect;
+        }
+
+        void _dropButton_Clicked(Base sender, ClickedEventArgs arguments)
+        {
+            var confirmWindow = new InputBox(
+                Strings.Inventory.DropCoinTitle,
+                Strings.Inventory.DropCoinPrompt, true, InputBox.InputType.NumericSliderInput, DropCoin,
+                null, -1, maxQuantity: Globals.Me.Coins
+            );
+        }
+
+        void DropCoin(object sender, EventArgs e)
+        {
+            var value = (int)Math.Round(((InputBox)sender).Value);
+            if (value > 0)
+            {
+                PacketSender.SendDropCoin(value);
+            }
         }
 
     }

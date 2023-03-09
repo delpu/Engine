@@ -376,6 +376,11 @@ namespace Intersect.Client.Networking
             Network.SendPacket(new AdminActionPacket(action));
         }
 
+        public static void SendDropCoin(int quantity)
+        {
+            Network.SendPacket(new DropCoinPacket(quantity));
+        }
+
         public static void SendBumpEvent(Guid mapId, Guid eventId)
         {
             Network.SendPacket(new BumpPacket(mapId, eventId));

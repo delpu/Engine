@@ -251,6 +251,8 @@ namespace Intersect.Server.Entities
         [NotMapped, JsonIgnore]
         public int InstanceLives { get; set; }
 
+        public int Coins { get; set; }
+
         public static Player FindOnline(Guid id)
         {
             return OnlinePlayers.ContainsKey(id) ? OnlinePlayers[id] : null;
@@ -2341,6 +2343,11 @@ namespace Intersect.Server.Entities
         {
             if (item.Descriptor != null)
             {
+                if (item.Descriptor.ItemType == ItemTypes.Currency && item.Descriptor.IsMainCurrency)
+                {
+                    return true;
+                }
+
                 // Is the item stackable?
                 if (item.Descriptor.IsStackable)
                 {
@@ -2610,6 +2617,20 @@ namespace Intersect.Server.Entities
             {
                 return;
             }
+
+            if (item.Descriptor.ItemType == ItemTypes.Currency && item.Descriptor.IsMainCurrency)
+            {
+                this.Coins += item.Quantity;
+
+                if (sendUpdate)
+                {
+                    PacketSender.SendInventoryCoinsUpdate(this);
+                }
+
+                return;
+            }
+
+            var fps = 60;
 
             // Decide how we're going to handle this item.
             var existingSlots = FindInventoryItemSlots(item.Descriptor.Id);
@@ -2924,6 +2945,34 @@ namespace Intersect.Server.Entities
             _ = TryTakeItem(slot, drop.Quantity);
         }
 
+        public void DropCoin(int quantity)
+        {
+            if (quantity <= 0 || quantity > Coins)
+            {
+                return;
+            }
+
+            var coinItemBase = ItemBase.Lookup.Where(x => ((ItemBase)x.Value).ItemType == ItemTypes.Currency && ((ItemBase)x.Value).IsMainCurrency).FirstOrDefault();
+
+            if (coinItemBase.Value != null)
+            {
+                if (!MapController.TryGetInstanceFromMap(MapId, MapInstanceId, out var mapInstance))
+                {
+                    Log.Error(
+                        Map == default
+                            ? $"Could not find map {MapId} for player '{Name}'."
+                            : $"Could not find map instance {MapInstanceId} for player '{Name}' on map {Map.Name}."
+                    );
+                    return;
+                }
+
+                mapInstance.SpawnItem(X, Y, new Item(coinItemBase.Key, quantity), quantity, Id);
+
+                Coins -= quantity;
+                PacketSender.SendInventoryCoinsUpdate(this);
+            }
+        }
+
         public void UseItem(int slot, Entity target = null)
         {
             if (PlayerDead)
@@ -3132,6 +3181,25 @@ namespace Intersect.Server.Entities
                 {
                     UpdateGlobalCooldown();
                 }
+            }
+        }
+
+        public bool TryTakeCoins(int amount, bool sendUpdate = true)
+        {
+            if (amount > Coins)
+            {
+                return false;
+            }
+            else
+            {
+                Coins -= amount;
+
+                if (sendUpdate)
+                {
+                    PacketSender.SendInventoryCoinsUpdate(this);
+                }
+
+                return true;
             }
         }
 
@@ -3644,18 +3712,29 @@ namespace Intersect.Server.Entities
                                 shop.SellingItems[slot].CostItemId,
                                 shop.SellingItems[slot].CostItemQuantity * buyItemAmt
                             ) !=
-                            null)
+                            null ||
+                            (shop.SellingItems[slot].CostItem != null &&
+                            shop.SellingItems[slot].CostItem.ItemType == ItemTypes.Currency &&
+                            shop.SellingItems[slot].CostItem.IsMainCurrency &&
+                            Coins > shop.SellingItems[slot].CostItemQuantity))
                         {
                             if (CanGiveItem(buyItemNum, buyItemAmt))
                             {
                                 if (shop.SellingItems[slot].CostItemQuantity > 0)
                                 {
-                                    TryTakeItem(
-                                        FindInventoryItemSlot(
-                                            shop.SellingItems[slot].CostItemId,
-                                            shop.SellingItems[slot].CostItemQuantity * buyItemAmt
-                                        ), shop.SellingItems[slot].CostItemQuantity * buyItemAmt
-                                    );
+                                    if (shop.SellingItems[slot].CostItem.IsMainCurrency)
+                                    {
+                                        TryTakeCoins(shop.SellingItems[slot].CostItemQuantity, true);
+                                    }
+                                    else
+                                    {
+                                        TryTakeItem(
+                                            FindInventoryItemSlot(
+                                                shop.SellingItems[slot].CostItemId,
+                                                shop.SellingItems[slot].CostItemQuantity * buyItemAmt
+                                            ), shop.SellingItems[slot].CostItemQuantity * buyItemAmt
+                                        );
+                                    }
                                 }
 
                                 TryGiveItem(buyItemNum, buyItemAmt);

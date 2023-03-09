@@ -304,6 +304,8 @@ namespace Intersect.Editor.Forms.Editors
             lblCannotUse.Text = Strings.ItemEditor.cannotuse;
             btnEditRequirements.Text = Strings.ItemEditor.requirements;
 
+            chkMainCurrency.Text = Strings.ItemEditor.currency;
+
             //Searching/Sorting
             btnAlphabetical.ToolTipText = Strings.ItemEditor.sortalphabetically;
             txtSearch.Text = Strings.ItemEditor.searchplaceholder;
@@ -522,6 +524,8 @@ namespace Intersect.Editor.Forms.Editors
                 // Whether this item type is stackable is not up for debate.
                 chkStackable.Checked = true;
                 chkStackable.Enabled = false;
+                chkMainCurrency.Visible = true;
+                chkMainCurrency.Checked = mEditorItem.IsMainCurrency;
             }
 
             mEditorItem.ItemType = (ItemTypes) cmbType.SelectedIndex;
@@ -1353,6 +1357,11 @@ namespace Intersect.Editor.Forms.Editors
             EffectValueUpdating = true;
             nudEffectPercent.Value = mEditorItem.GetEffectPercentage(selected);
             EffectValueUpdating = false;
+        }
+
+        private void chkMainCurrency_CheckedChanged(object sender, EventArgs e)
+        {
+            mEditorItem.IsMainCurrency = chkMainCurrency.Checked;
         }
     }
 

@@ -219,6 +219,7 @@ namespace Intersect.Editor.Forms.Editors
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripItemUndo = new System.Windows.Forms.ToolStripButton();
             this.tooltips = new System.Windows.Forms.ToolTip(this.components);
+            this.chkMainCurrency = new DarkUI.Controls.DarkCheckBox();
             this.grpItems.SuspendLayout();
             this.grpGeneral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudItemDespawnTime)).BeginInit();
@@ -360,6 +361,7 @@ namespace Intersect.Editor.Forms.Editors
             // 
             this.grpGeneral.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
             this.grpGeneral.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(90)))), ((int)(((byte)(90)))), ((int)(((byte)(90)))));
+            this.grpGeneral.Controls.Add(this.chkMainCurrency);
             this.grpGeneral.Controls.Add(this.nudItemDespawnTime);
             this.grpGeneral.Controls.Add(this.lblDespawnTime);
             this.grpGeneral.Controls.Add(this.grpRequirements);
@@ -2933,6 +2935,17 @@ namespace Intersect.Editor.Forms.Editors
             this.toolStripItemUndo.Text = "Undo";
             this.toolStripItemUndo.Click += new System.EventHandler(this.toolStripItemUndo_Click);
             // 
+            // chkMainCurrency
+            // 
+            this.chkMainCurrency.AutoSize = true;
+            this.chkMainCurrency.Location = new System.Drawing.Point(262, 427);
+            this.chkMainCurrency.Name = "chkMainCurrency";
+            this.chkMainCurrency.Size = new System.Drawing.Size(100, 17);
+            this.chkMainCurrency.TabIndex = 103;
+            this.chkMainCurrency.Text = "Main Currency?";
+            this.chkMainCurrency.Visible = false;
+            this.chkMainCurrency.CheckedChanged += new System.EventHandler(this.chkMainCurrency_CheckedChanged);
+            // 
             // FrmItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3219,5 +3232,6 @@ namespace Intersect.Editor.Forms.Editors
         private ToolTip tooltips;
         private DarkGroupBox grpEffects;
         private ListBox lstBonusEffects;
+        private DarkCheckBox chkMainCurrency;
     }
 }

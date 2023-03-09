@@ -103,6 +103,8 @@ namespace Intersect.Client.Entities
         //Inventory/Spells/Equipment
         public IItem[] Inventory { get; set; } = new IItem[Options.MaxInvItems];
 
+        public int Coins { get; set; }
+
         IReadOnlyList<IItem> IEntity.Items => Inventory.ToList();
 
         public bool InView { get; set; } = true;
