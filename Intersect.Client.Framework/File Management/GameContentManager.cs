@@ -221,7 +221,7 @@ namespace Intersect.Client.Framework.File_Management
                     return mHairDict.Keys.ToArray();
 
                 case TextureType.Eyes:
-                    return mHairDict.Keys.ToArray();
+                    return mEyesDict.Keys.ToArray();
             }
 
             return null;
@@ -304,12 +304,12 @@ namespace Intersect.Client.Framework.File_Management
                     break;
 
                 case TextureType.Hair:
-                    textureDict = mTagDict;
+                    textureDict = mHairDict;
 
                     break;
 
                 case TextureType.Eyes:
-                    textureDict = mTagDict;
+                    textureDict = mEyesDict;
 
                     break;
 
@@ -321,8 +321,11 @@ namespace Intersect.Client.Framework.File_Management
             {
                 return null;
             }
-
-            return textureDict.TryGetValue(name.ToLower(), out var asset) ? asset as GameTexture : default;
+   
+                return textureDict.TryGetValue(name.ToLower(), out var asset) ? asset as GameTexture : default;
+            
+           
+           
         }
 
         public virtual GameShader GetShader(string name)

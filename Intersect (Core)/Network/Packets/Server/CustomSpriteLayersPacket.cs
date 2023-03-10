@@ -1,20 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MessagePack;
+using System;
+
 
 namespace Intersect.Network.Packets.Server
 {
     [MessagePackObject]
-    public partial class CustomSpriteLayersPacket : IntersectPacket
+    public class CustomSpriteLayersPacket : IntersectPacket
     {
-
+        //Parameterless Constructor for MessagePack
         public CustomSpriteLayersPacket()
         {
-  
         }
+
         public CustomSpriteLayersPacket(Guid entityId, string[] customSpriteLayers)
         {
             EntityId = entityId;
@@ -26,5 +23,7 @@ namespace Intersect.Network.Packets.Server
 
         [Key(1)]
         public Guid EntityId { get; set; }
+
     }
+
 }

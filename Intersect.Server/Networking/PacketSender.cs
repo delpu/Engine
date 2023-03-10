@@ -431,6 +431,7 @@ namespace Intersect.Server.Networking
         }
 
         //CustomSpriteLayerPacket
+        //CustomSpriteLayerPacket
         public static CustomSpriteLayersPacket GenerateCustomSpriteLayersPacket(Player en)
         {
             return new CustomSpriteLayersPacket(en.Id, en.CustomSpriteLayers);
@@ -441,11 +442,9 @@ namespace Intersect.Server.Networking
             forPlayer.SendPacket(GenerateCustomSpriteLayersPacket(en));
         }
 
-        public static void SendCustomSpriteLayersToProximity(Player player)
+        public static void SendCustomSpriteLayersToProximity(Player en)
         {
-
-            SendDataToProximityOnMapInstance(player.MapId, player.MapInstanceId, GenerateCustomSpriteLayersPacket(player));
-           
+            SendDataToProximityOnMapInstance(en.MapId, en.MapInstanceId, GenerateCustomSpriteLayersPacket(en), null, TransmissionMode.Any);
         }
 
         public static void SendMapInstanceChangedPacket(Player player, MapController oldMap, Guid oldLayer)

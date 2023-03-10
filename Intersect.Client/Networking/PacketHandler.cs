@@ -1517,7 +1517,8 @@ namespace Intersect.Client.Networking
             Audio.StopMusic(ClientConfiguration.Instance.MusicFadeTimer);
         }
 
-        private static void HandlePacket(IPacketSender packetSender, CustomSpriteLayersPacket packet)
+        //CustomPacker
+        public void HandlePacket(IPacketSender packetSender, CustomSpriteLayersPacket packet)
         {
             var entityId = packet.EntityId;
             if (Globals.Entities.ContainsKey(entityId))
@@ -1529,6 +1530,7 @@ namespace Intersect.Client.Networking
                 }
             }
         }
+
 
 
         //PlaySoundPacket

@@ -222,13 +222,6 @@ namespace Intersect.GameObjects.Events
         //Player Label
         PlayerLabel,
 
-        //Change Hair
-        ChangeHair,
-
-        //Change Hair
-        ChangeEyes,
-
-
         // Player Color
         ChangePlayerColor,
 
@@ -243,6 +236,12 @@ namespace Intersect.GameObjects.Events
 
         //Reset Stats
         ResetStatPointAllocations,
+
+        //Change Hair
+        ChangeHair,
+
+        //Change Hair
+        ChangeEyes,
     }
     public enum DeathType
     {

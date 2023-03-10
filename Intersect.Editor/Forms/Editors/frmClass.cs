@@ -15,6 +15,7 @@ using Intersect.Enums;
 using Intersect.GameObjects;
 using Intersect.GameObjects.Maps.MapList;
 using Intersect.Utilities;
+using static Intersect.GameObjects.ClassBase;
 
 namespace Intersect.Editor.Forms.Editors
 {
@@ -219,6 +220,7 @@ namespace Intersect.Editor.Forms.Editors
                 }
 
                 RefreshSpriteList(false);
+                RefreshHairList(false);
 
                 // Don't select if there are no Spells, to avoid crashes.
                 if (lstSprites.Items.Count > 0)
@@ -260,6 +262,17 @@ namespace Intersect.Editor.Forms.Editors
                     cmbWarpMap.SelectedIndex = mapIndex;
                 }
 
+                if (mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair].Count > 0)
+                {
+                    lstHair.SelectedIndex = 0;
+                }
+                else
+                {
+                    lstHair.SelectedIndex = -1;
+                    cmbHair.SelectedIndex = 0;
+                    rbMale2.Checked = true;
+                }
+
                 nudX.Value = mEditorItem.SpawnX;
                 nudY.Value = mEditorItem.SpawnY;
                 cmbDirection.SelectedIndex = mEditorItem.SpawnDir;
@@ -293,6 +306,11 @@ namespace Intersect.Editor.Forms.Editors
             cmbFace.Items.Clear();
             cmbFace.Items.Add(Strings.General.None);
             cmbFace.Items.AddRange(GameContentManager.GetSmartSortedTextureNames(GameContentManager.TextureType.Face));
+
+            cmbHair.Items.Clear();
+            cmbHair.Items.Add(Strings.General.None);
+            cmbHair.Items.AddRange(
+                GameContentManager.GetSmartSortedTextureNames(GameContentManager.TextureType.Hairs));
             cmbSpawnItem.Items.Clear();
             cmbSpawnItem.Items.Add(Strings.General.None);
             cmbSpawnItem.Items.AddRange(ItemBase.Names);
@@ -476,6 +494,14 @@ namespace Intersect.Editor.Forms.Editors
             expGrid.Columns.Add(tnlCol);
             expGrid.Columns.Add(totalCol);
 
+
+            grpHair.Text = Strings.ClassEditor.hairstyles;
+            grpGender2.Text = Strings.ClassEditor.gender;
+            rbMale2.Text = Strings.ClassEditor.male;
+            rbFemale2.Text = Strings.ClassEditor.female;
+            lblHair.Text = Strings.ClassEditor.hair;
+
+
             //Searching/Sorting
             btnAlphabetical.ToolTipText = Strings.ClassEditor.sortalphabetically;
             txtSearch.Text = Strings.ClassEditor.searchplaceholder;
@@ -599,6 +625,44 @@ namespace Intersect.Editor.Forms.Editors
             }
         }
 
+        private void RefreshHairList(bool saveSpot = true)
+        {
+            // Refresh List
+            var n = lstHair.SelectedIndex;
+            lstHair.Items.Clear();
+            for (var i = 0; i < mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair].Count; i++)
+            {
+                if (mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][i].Gender == 0)
+                {
+                    lstHair.Items.Add(
+                        Strings.ClassEditor.spriteitemmale.ToString(
+                            i + 1, TextUtils.NullToNone(mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][i].Texture)
+                        )
+                    );
+                }
+                else
+                {
+                    lstHair.Items.Add(
+                        Strings.ClassEditor.spriteitemfemale.ToString(
+                            i + 1, TextUtils.NullToNone(mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][i].Texture)
+                        )
+                    );
+                }
+            }
+
+            if (saveSpot)
+            {
+                lstHair.SelectedIndex = n;
+            }
+            else if (lstHair.Items.Count > 0)
+            {
+                lstHair.SelectedIndex = 0;
+            }
+
+            lstHair_Click(null, null);
+        }
+
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             var n = new ClassSprite
@@ -690,6 +754,29 @@ namespace Intersect.Editor.Forms.Editors
 
             gfx.Dispose();
             picFace.BackgroundImage = picFaceBmp;
+        }
+
+        private void DrawHair()
+        {
+            var picSpriteBmp = new Bitmap(picHair.Width, picHair.Height);
+            var gfx = Graphics.FromImage(picSpriteBmp);
+            gfx.FillRectangle(Brushes.Black, new Rectangle(0, 0, picSprite.Width, picSprite.Height));
+            if (cmbHair.SelectedIndex > 0)
+            {
+                if (File.Exists("resources/hairs/" + cmbHair.Text))
+                {
+                    var img = Image.FromFile("resources/hairs/" + cmbHair.Text);
+                    gfx.DrawImage(
+                        img, new Rectangle(0, 0, img.Width / 4, img.Height / 4),
+                        new Rectangle(0, 0, img.Width / 4, img.Height / 4), GraphicsUnit.Pixel
+                    );
+
+                    img.Dispose();
+                }
+            }
+
+            gfx.Dispose();
+            picHair.BackgroundImage = picSpriteBmp;
         }
 
         private void btnVisualMapSelector_Click(object sender, EventArgs e)
@@ -1203,6 +1290,107 @@ namespace Intersect.Editor.Forms.Editors
         }
 
         #region "Exp Grid"
+        private void cmbHair_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstHair.SelectedIndex >= 0)
+            {
+                mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][lstHair.SelectedIndex].Texture = TextUtils.SanitizeNone(cmbHair?.Text);
+
+                RefreshHairList();
+            }
+
+            DrawHair();
+        }
+
+        private void BtnAddHair_Click(object sender, EventArgs e)
+        {
+            var n = new CustomSpriteLayer
+            {
+                Texture = null,
+                Gender = 0
+            };
+
+            mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair].Add(n);
+
+            if (n.Gender == 0)
+            {
+                lstHair.Items.Add(
+                    Strings.ClassEditor.spriteitemmale.ToString(
+                        mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair].Count, TextUtils.NullToNone(n.Texture)
+                    )
+                );
+            }
+            else
+            {
+                lstHair.Items.Add(
+                    Strings.ClassEditor.spriteitemfemale.ToString(
+                        mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair].Count, TextUtils.NullToNone(n.Texture)
+                    )
+                );
+            }
+
+            lstHair.SelectedIndex = lstHair.Items.Count - 1;
+            lstHair_Click(null, null);
+        }
+
+        private void btnRemoveHair_Click(object sender, EventArgs e)
+        {
+            if (lstHair.SelectedIndex == -1)
+            {
+                return;
+            }
+
+            mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair].RemoveAt(lstHair.SelectedIndex);
+            lstHair.Items.RemoveAt(lstHair.SelectedIndex);
+
+            RefreshHairList(false);
+
+            if (lstHair.Items.Count > 0)
+            {
+                lstHair.SelectedIndex = 0;
+            }
+        }
+
+        private void lstHair_Click(object sender, EventArgs e)
+        {
+            if (lstHair.Items.Count > 0)
+            {
+                cmbHair.SelectedIndex = cmbHair.FindString(
+                    TextUtils.NullToNone(mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][lstHair.SelectedIndex].Texture)
+                );
+
+                if (mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][lstHair.SelectedIndex].Gender == 0)
+                {
+                    rbMale2.Checked = true;
+                }
+                else
+                {
+                    rbFemale2.Checked = true;
+                }
+            }
+        }
+
+        private void rbMale2_Click(object sender, EventArgs e)
+        {
+            if (lstHair.SelectedIndex == -1) return;
+
+            if (lstHair.Items.Count > 0)
+            {
+                mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][lstHair.SelectedIndex].Gender = Gender.Male;
+                RefreshHairList();
+            }
+        }
+
+        private void rbFemale2_Click(object sender, EventArgs e)
+        {
+            if (lstHair.SelectedIndex == -1) return;
+
+            if (lstHair.Items.Count > 0)
+            {
+                mEditorItem.CustomSpriteLayers[CustomSpriteLayers.Hair][lstHair.SelectedIndex].Gender = Gender.Female;
+                RefreshHairList();
+            }
+        }
 
         private void btnExpGrid_Click(object sender, EventArgs e)
         {

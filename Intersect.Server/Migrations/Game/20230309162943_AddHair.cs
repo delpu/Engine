@@ -9,7 +9,8 @@ namespace Intersect.Server.Migrations.Game
             migrationBuilder.AddColumn<string>(
                 name: "CustomSpriteLayers",
                 table: "Classes",
-                nullable: true);
+                nullable: true,
+                defaultValue: null);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

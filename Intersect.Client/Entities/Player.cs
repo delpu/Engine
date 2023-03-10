@@ -497,6 +497,10 @@ namespace Intersect.Client.Entities
                         textures[i] = Globals.ContentManager.GetTexture(TextureType.Hair, customSpriteLayers[i]);
                         LoadCustomSpriteLayerAnimationTextures(customSpriteLayers[i], Enums.CustomSpriteLayers.Hair, TextureType.Hair);
                         break;
+                    case (int)Enums.CustomSpriteLayers.Eyes:
+                        textures[i] = Globals.ContentManager.GetTexture(TextureType.Eyes, customSpriteLayers[i]);
+                        LoadCustomSpriteLayerAnimationTextures(customSpriteLayers[i], Enums.CustomSpriteLayers.Eyes, TextureType.Eyes);
+                        break;
                 }
             }
 

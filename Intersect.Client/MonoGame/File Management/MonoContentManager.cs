@@ -178,7 +178,7 @@ namespace Intersect.Client.MonoGame.File_Management
 
         public override void LoadEyes()
         {
-            LoadTextureGroup("eyes", mHairDict);
+            LoadTextureGroup("eyes", mEyesDict);
         }
 
         public override void LoadAnimations()
