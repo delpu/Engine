@@ -960,17 +960,14 @@ namespace Intersect.Server.Entities
             {
                 time *= 0.5f;
             }
-            if (Dir > Direction.Right)
-            {
-                time *= PythagoreanMultiplier;
-            }
-           // if (IsBlocking)
-          //  {
-          //      time += time * Options.BlockingSlow;
-          //  }
+            // if (IsBlocking)
+            //{
+            //     time += time * Options.BlockingSlow;
+            //  }
 
             return Math.Min(1000f, time);
         }
+     
 
         public virtual EntityTypes GetEntityType()
         {

@@ -535,10 +535,6 @@ namespace Intersect.Client.Entities
             {
                 time *= 0.5f;
             }
-            if (Dir > Direction.Right)
-            {
-                time *= PythagoreanMultiplier;
-            }
            // if (IsBlocking)
             //{
            //     time += time * Options.BlockingSlow;
@@ -1637,7 +1633,7 @@ namespace Intersect.Client.Entities
 
         public float GetLabelLocation(LabelType type)
         {
-            var y = GetTop() + 20;
+            var y = GetTop() + 40;
 
             //Need room for HP bar if not an event.
             if (!(this is Event) && ShouldDrawHpBar)
@@ -1932,7 +1928,7 @@ namespace Intersect.Client.Entities
 
             var destRectangle = new FloatRect(
                 (float)Math.Ceiling(WorldPos.X + (WorldPos.Width - targetTexture.GetWidth() / 2) / 2),
-                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight()) / 2 ),
+                (float)Math.Ceiling(WorldPos.Y + (WorldPos.Height - targetTexture.GetHeight() * 5) / 2 ),
                 srcRectangle.Width,
                 srcRectangle.Height
             );
