@@ -295,11 +295,11 @@ namespace Intersect.Client.Interface.Game
             if (mSelectedQuest == null)
             {
                 mQuestList.Show();
-                mQuestTitle.Hide();
-                mQuestDescArea.Hide();
-                mQuestStatus.Hide();
-                mBackButton.Hide();
-                mQuitButton.Hide();
+                mQuestTitle.Show();
+                mQuestDescArea.Show();
+                mQuestStatus.Show();
+                mBackButton.Show();
+                mQuitButton.Show();
             }
             else
             {
@@ -402,15 +402,15 @@ namespace Intersect.Client.Interface.Game
                     }
                 }
 
-                mQuestList.Hide();
+                //mQuestList.Hide();
                 mQuestTitle.IsHidden = false;
                 mQuestTitle.Text = mSelectedQuest.Name;
                 mQuestDescArea.IsHidden = false;
                 mQuestDescLabel.Width = mQuestDescArea.Width - mQuestDescArea.GetVerticalScrollBar().Width;
                 mQuestDescLabel.SizeToChildren(false, true);
-                mQuestStatus.Show();
-                mBackButton.Show();
-                mQuitButton.Show();
+                //mQuestStatus.Show();
+               // mBackButton.Show();
+               // mQuitButton.Show();
             }
         }
 

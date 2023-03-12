@@ -1,4 +1,4 @@
-﻿using Intersect.Client.Core;
+using Intersect.Client.Core;
 using Intersect.Client.Framework.File_Management;
 using Intersect.Client.Framework.Graphics;
 using Intersect.Client.Framework.Gwen.Control;
@@ -177,7 +177,7 @@ namespace Intersect.Client.Interface.Game
             mCharacterWindow.Hide();
             mFriendsWindow.Hide();
             mInventoryWindow.Hide();
-            mPartyWindow.Hide();
+            //mPartyWindow.Hide();
             mQuestsWindow.Hide();
             mSpellsWindow.Hide();
             mGuildWindow.Hide();
