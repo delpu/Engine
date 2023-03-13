@@ -416,6 +416,8 @@ namespace Intersect.Client.MonoGame.Graphics
             return new MonoRenderTexture(mGraphicsDevice, width, height);
         }
 
+  
+
         public override void DrawString(
             string text,
             GameFont gameFont,
@@ -442,13 +444,37 @@ namespace Intersect.Client.MonoGame.Graphics
                     text = text.Replace(chr, ' ');
                 }
             }
-
-            if (borderColor != null && borderColor != Color.Transparent)
+            var kolor = new Color(30, 30, 30);
+            var AKolor = ConvertColor(fontColor);
+            if (borderColor == kolor)
             {
                 mSpriteBatch.DrawString(
-                    font, text, new Vector2(x, y - 1), ConvertColor(borderColor), 0f, Vector2.Zero,
+                    font, text, new Vector2(x, y - 2), ConvertColor(borderColor), 0f, Vector2.Zero,
                     new Vector2(fontScale, fontScale), SpriteEffects.None, 0
                 );
+
+                mSpriteBatch.DrawString(
+                    font, text, new Vector2(x - 2, y ), ConvertColor(borderColor), 0f, Vector2.Zero,
+                    new Vector2(fontScale, fontScale), SpriteEffects.None, 0
+                );
+
+                mSpriteBatch.DrawString(
+                    font, text, new Vector2(x + 2, y), ConvertColor(borderColor), 0f, Vector2.Zero,
+                    new Vector2(fontScale, fontScale), SpriteEffects.None, 0
+                );
+
+                mSpriteBatch.DrawString(
+                    font, text, new Vector2(x, y + 2), ConvertColor(borderColor), 0f, Vector2.Zero,
+                    new Vector2(fontScale, fontScale), SpriteEffects.None, 0
+                );
+               
+            }
+            else if (borderColor != null && borderColor != Color.Transparent)
+            {
+                mSpriteBatch.DrawString(
+                                    font, text, new Vector2(x, y - 1), ConvertColor(borderColor), 0f, Vector2.Zero,
+                                    new Vector2(fontScale, fontScale), SpriteEffects.None, 0
+                                );
 
                 mSpriteBatch.DrawString(
                     font, text, new Vector2(x - 1, y), ConvertColor(borderColor), 0f, Vector2.Zero,
@@ -466,7 +492,9 @@ namespace Intersect.Client.MonoGame.Graphics
                 );
             }
 
-            mSpriteBatch.DrawString(font, text, new Vector2(x, y), ConvertColor(fontColor));
+
+
+            mSpriteBatch.DrawString(font, text, new Vector2(x, y), AKolor);
         }
 
         public override void DrawString(

@@ -1562,6 +1562,7 @@ namespace Intersect.Client.Entities
 
             int x = Globals.Me.X;
             int y = Globals.Me.Y;
+
             var map = Globals.Me.MapId;
 
             switch (Globals.Me.Dir)
@@ -2513,7 +2514,14 @@ namespace Intersect.Client.Entities
                 }
 
                 en.Value.DrawTarget((int)TargetTypes.Selected);
-                AutoTurnToTarget(en.Value);
+                int x = Globals.Me.X;
+                int y = Globals.Me.Y;
+
+                if (en.Value.X == x + 1 && en.Value.Y == y || en.Value.X == x - 1 && en.Value.Y == y || en.Value.X == x && en.Value.Y == y + 1 || en.Value.X == x && en.Value.Y == y - 1)
+                {
+                    AutoTurnToTarget(en.Value);
+                }
+
             }
 
             foreach (MapInstance eventMap in Maps.MapInstance.Lookup.Values)
@@ -2551,7 +2559,13 @@ namespace Intersect.Client.Entities
                     }
 
                     en.Value.DrawTarget((int)TargetTypes.Selected);
-                    AutoTurnToTarget(en.Value);
+                    int x = Globals.Me.X;
+                    int y = Globals.Me.Y;
+
+                    if (en.Value.X == x+1  && en.Value.Y == y || en.Value.X == x -1 && en.Value.Y == y || en.Value.X == x && en.Value.Y == y+1 || en.Value.X == x && en.Value.Y == y-1)
+                    {
+                        AutoTurnToTarget(en.Value);
+                    }
                 }
             }
 

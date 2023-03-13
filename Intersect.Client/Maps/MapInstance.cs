@@ -1263,16 +1263,16 @@ namespace Intersect.Client.Maps
                     1000
                 );
 
-                var x = (int)Math.Ceiling(GetX() + ActionMessages[n].X * Options.TileWidth + ActionMessages[n].XOffset);
+                var x = (int)Math.Ceiling(GetX() + ActionMessages[n].X * Options.TileWidth + ActionMessages[n].XOffset * (2 * (1000 - (ActionMessages[n].TransmissionTimer - Timing.Global.Milliseconds)) /100));
                 var textWidth = Graphics.Renderer.MeasureText(ActionMessages[n].Msg, Graphics.ActionMsgFont, 1).X;
                 Graphics.Renderer.DrawString(
                     ActionMessages[n].Msg, Graphics.ActionMsgFont, x - textWidth / 2f, y, 1, ActionMessages[n].Color,
-                    true, null, new Color(40, 40, 40)
+                    true, null, new Color(30, 30, 30)
                 );
 
                 //Try to remove
                 ActionMessages[n].TryRemove();
-            }
+            }   
         }
 
         //Events

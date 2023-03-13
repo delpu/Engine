@@ -1,4 +1,4 @@
-﻿using Intersect.Client.Framework.Maps;
+using Intersect.Client.Framework.Maps;
 using Intersect.Client.General;
 using Intersect.Utilities;
 
@@ -25,11 +25,11 @@ namespace Intersect.Client.Maps
         public ActionMessage(MapInstance map, int x, int y, string message, Color color)
         {
             Map = map;
-            X = x;
-            Y = y;
+            X = x+1;
+            Y = y-1;
             Msg = message;
             Color = color;
-            XOffset = Globals.Random.Next(-30, 30); //+- 16 pixels so action msg's don't overlap!
+            XOffset = Globals.Random.Next(-2, 2); //+- 16 pixels so action msg's don't overlap!
             TransmissionTimer = Timing.Global.Milliseconds + 1000;
         }
 
