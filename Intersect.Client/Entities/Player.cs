@@ -1639,6 +1639,7 @@ namespace Intersect.Client.Entities
                         continue;
                     }
 
+
                     // Attack the entity.
                     PacketSender.SendAttack(en.Key);
                     AttackTimer = Timing.Global.Milliseconds + CalculateAttackTime();
@@ -2517,10 +2518,15 @@ namespace Intersect.Client.Entities
                 int x = Globals.Me.X;
                 int y = Globals.Me.Y;
 
-                if (en.Value.X == x + 1 && en.Value.Y == y || en.Value.X == x - 1 && en.Value.Y == y || en.Value.X == x && en.Value.Y == y + 1 || en.Value.X == x && en.Value.Y == y - 1)
+                if (IsAttacking)
                 {
-                    AutoTurnToTarget(en.Value);
+                    if (en.Value.X == x + 1 && en.Value.Y == y || en.Value.X == x - 1 && en.Value.Y == y || en.Value.X == x && en.Value.Y == y + 1 || en.Value.X == x && en.Value.Y == y - 1 || en.Value.X == x - 1 && en.Value.Y == y - 1 || en.Value.X == x + 1 && en.Value.Y == y + 1 || en.Value.X == x + 1 && en.Value.Y == y - 1 || en.Value.X == x - 1 && en.Value.Y == y + 1)
+                    {
+                        AutoTurnToTarget(en.Value);
+                    }
+
                 }
+                
 
             }
 
@@ -2562,9 +2568,14 @@ namespace Intersect.Client.Entities
                     int x = Globals.Me.X;
                     int y = Globals.Me.Y;
 
-                    if (en.Value.X == x+1  && en.Value.Y == y || en.Value.X == x -1 && en.Value.Y == y || en.Value.X == x && en.Value.Y == y+1 || en.Value.X == x && en.Value.Y == y-1)
+
+                    if (IsAttacking)
                     {
-                        AutoTurnToTarget(en.Value);
+                        if (en.Value.X == x + 1 && en.Value.Y == y || en.Value.X == x - 1 && en.Value.Y == y || en.Value.X == x && en.Value.Y == y + 1 || en.Value.X == x && en.Value.Y == y - 1 || en.Value.X == x - 1 && en.Value.Y == y - 1 || en.Value.X == x + 1 && en.Value.Y == y + 1 || en.Value.X == x + 1 && en.Value.Y == y - 1 || en.Value.X == x - 1 && en.Value.Y == y + 1)
+                        {
+                            AutoTurnToTarget(en.Value);
+                        }
+
                     }
                 }
             }
